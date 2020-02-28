@@ -82,20 +82,22 @@ void drawSphere(int radius, int slices, int stacks) {
 
 	GLfloat alpha = 2 * M_PI / slices;
 
-	// Desenhar os circulos de cima e de baixo
-	for (GLfloat angle = 0; angle < (2 * M_PI); angle += alpha) {
+	GLfloat beta = M_PI / stacks;
 
-		GLfloat nextAngle = angle + alpha;
+	for (GLfloat angleB = -M_PI/2; angleB < (2 * M_PI / 2); angleB += beta) {
+		// Desenhar os circulos de cima e de baixo
+		for (GLfloat angleA = 0; angleA < (2 * M_PI); angleA += alpha) {
 
-		glBegin(GL_TRIANGLES);
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(radius * sin(angle), 0.0f, radius * cos(angle));
-		glVertex3f(radius * sin(nextAngle), 0.0f, radius * cos(nextAngle));
-		glEnd();
+			GLfloat nextAngle = angleA + alpha;
 
+			glBegin(GL_TRIANGLES);
+			glColor3f(0.0f, 0.0f, 1.0f);
+			glVertex3f(0.0f, radius*sin(angleB), 0.0f);
+			glVertex3f((radius * cos(angleB)) * sin(angleA), radius * sin(angleB), (radius * cos(angleB)) * cos(angleA));
+			glVertex3f((radius * cos(angleB)) * sin(nextAngle), radius * sin(angleB), (radius * cos(angleB)) * cos(nextAngle));
+			glEnd();
+		}
 	}
-
 }
 
 
@@ -120,13 +122,13 @@ void renderScene(void) {
 	//Eixos
 	drawAxis();
 	//Plano
-	drawPlane();
+	//drawPlane();
 	//Cubo
-	glColor3f(1.0f, 1.0f, 0.0f);
-	glTranslatef(6, 1, 0);
-	glutSolidCube(5);
+	//glColor3f(1.0f, 1.0f, 0.0f);
+	//glTranslatef(6, 1, 0);
+	//glutSolidCube(5);
 	// Esfera
-	//drawSphere(1, 10, 10);
+	drawSphere(2, 100, 100);
 
 	// Cone
 	// ..
