@@ -10,6 +10,7 @@
 // VARIAVEIS
 float varx = 0, vary = 0, varz = 0;
 
+float angle = 0;
 
 void changeSize(int w, int h) {
 
@@ -55,22 +56,22 @@ void drawAxis() {
 
 }
 
-void drawPlane() {
+void drawPlane(float size) {
 
 // put code to draw cylinder in here
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(0.0f, -5.0f, 5.0f);
-	glVertex3f(0.0f, -5.0f, -5.0f);
-	glVertex3f(0.0f, 5.0f, -5.0f);
+	glVertex3f(0.0f, -size, size);
+	glVertex3f(0.0f, -size, -size);
+	glVertex3f(0.0f, size, -size);
 	glEnd();
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(0.0f, -5.0f, 5.0f);
-	glVertex3f(0.0f, 5.0f, -5.0f);
-	glVertex3f(0.0f, 5.0f, 5.0f);
+	glVertex3f(0.0f, -size, size);
+	glVertex3f(0.0f, size, -size);
+	glVertex3f(0.0f, size, size);
 	glEnd();
 
 }
@@ -80,21 +81,58 @@ void drawPlane() {
 */
 void drawSphere(int radius, int slices, int stacks) {
 
+	// Usado para a construcao de cada uma das circunferencias
 	GLfloat alpha = 2 * M_PI / slices;
 
+	// Angulo usado para a construcao das circunferencias
 	GLfloat beta = M_PI / stacks;
 
+	// Usado para dar uma cor diferente
+	GLfloat cy = 0.0f;
+
 	for (GLfloat angleB = -M_PI/2; angleB < (2 * M_PI / 2); angleB += beta) {
+
+		cy += 0.0185f;
+
 		// Desenhar os circulos de cima e de baixo
 		for (GLfloat angleA = 0; angleA < (2 * M_PI); angleA += alpha) {
 
 			GLfloat nextAngle = angleA + alpha;
 
 			glBegin(GL_TRIANGLES);
-			glColor3f(0.0f, 0.0f, 1.0f);
+			glColor3f(1.0f, cy, 0.0f);
 			glVertex3f(0.0f, radius*sin(angleB), 0.0f);
 			glVertex3f((radius * cos(angleB)) * sin(angleA), radius * sin(angleB), (radius * cos(angleB)) * cos(angleA));
 			glVertex3f((radius * cos(angleB)) * sin(nextAngle), radius * sin(angleB), (radius * cos(angleB)) * cos(nextAngle));
+			glEnd();
+		}
+	}
+}
+
+/*
+	Desenho de um cone
+*/
+void drawCone(int bottomRadius, int height, int slices, int stacks) {
+
+	GLfloat reason = (GLfloat) height / stacks;
+
+	GLfloat alpha = 2 * M_PI / slices;
+
+	GLfloat currentRadius=bottomRadius;
+
+	for (GLfloat currentHeight = 0.0f; currentHeight <= height; currentHeight += reason) {
+
+		currentRadius = ((height-currentHeight) * bottomRadius) / height;
+
+		for (GLfloat angle = 0; angle < (2 * M_PI); angle += alpha) {
+
+			GLfloat nextAngle = angle + alpha;
+
+			glBegin(GL_TRIANGLES);
+			glColor3f(1.0f, 0.0f, 0.0f);
+			glVertex3f(0.0f, currentHeight, 0.0f);
+			glVertex3f(currentRadius * sin(angle), currentHeight, currentRadius * cos(angle));
+			glVertex3f(currentRadius * sin(nextAngle), currentHeight, currentRadius * cos(nextAngle));
 			glEnd();
 		}
 	}
@@ -122,16 +160,20 @@ void renderScene(void) {
 	//Eixos
 	drawAxis();
 	//Plano
-	//drawPlane();
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	//drawPlane(1.0f);
+
 	//Cubo
-	//glColor3f(1.0f, 1.0f, 0.0f);
-	//glTranslatef(6, 1, 0);
-	//glutSolidCube(5);
+	
+	// ....
+
 	// Esfera
-	drawSphere(2, 100, 100);
+	//glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	//drawSphere(2, 100, 100);
+	
 
 	// Cone
-	// ..
+	drawCone(1,5,100,500);
 
 	// End of frame
 	glutSwapBuffers();
@@ -142,6 +184,14 @@ void processKeys(unsigned char c, int xx, int yy) {
 
 // put code to process regular keys in here
 
+	switch (c)
+	{
+	case 'r':
+		angle += 1.0f;
+		break;
+	default:
+		break;
+	}
 }
 
 
