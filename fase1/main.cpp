@@ -76,6 +76,101 @@ void drawPlane(float size) {
 
 }
 
+void drawBox(float x, float y, float z) {
+
+	// put code to draw cylinder in here
+
+	//Base da caixa
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.2f, 1.0f);
+	glVertex3f(-x / 2, -y / 2, -z / 2);
+	glVertex3f(x / 2, -y / 2, -z / 2);
+	glVertex3f(-x / 2, -y / 2, z / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.2f, 1.0f);
+	glVertex3f(x / 2, -y / 2, -z / 2);
+	glVertex3f(x / 2, -y / 2, z / 2);
+	glVertex3f(-x / 2, -y / 2, z / 2);
+	glEnd();
+
+	//Tampa da caixa
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.2f, 1.0f);
+	glVertex3f(-x / 2, y / 2, -z / 2);
+	glVertex3f(-x / 2, y / 2, z / 2);
+	glVertex3f(x / 2, y / 2, -z / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.2f, 1.0f);
+	glVertex3f(x / 2, y / 2, -z / 2);
+	glVertex3f(-x / 2, y / 2, z / 2);
+	glVertex3f(x / 2, y / 2, z / 2);
+	glEnd();
+
+	//Face ao longo do eixo x no z positivo
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(x / 2, y / 2, z / 2);
+	glVertex3f(-x / 2, y / 2, z / 2);
+	glVertex3f(-x / 2, -y / 2, z / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(x / 2, y / 2, z / 2);
+	glVertex3f(-x / 2, -y / 2, z / 2);
+	glVertex3f(x / 2, -y / 2, z / 2);
+	glEnd();
+
+	//Face ao longo do eixo x no z negativo
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(x / 2, y / 2, -z / 2);
+	glVertex3f(-x / 2, -y / 2, -z / 2);
+	glVertex3f(-x / 2, y / 2, -z / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(x / 2, y / 2, -z / 2);
+	glVertex3f(x / 2, -y / 2, -z / 2);
+	glVertex3f(-x / 2, -y / 2, -z / 2);
+	glEnd();
+
+	//Face ao longo do eixo z no x negativo
+	glBegin(GL_TRIANGLES);
+	glColor3f(2.0f, 1.0f, 1.0f);
+	glVertex3f(-x / 2, y / 2, -z / 2);
+	glVertex3f(-x / 2, -y / 2, z / 2);
+	glVertex3f(-x / 2, y / 2, z / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(2.0f, 1.0f, 0.0f);
+	glVertex3f(-x / 2, y / 2, -z / 2);
+	glVertex3f(-x / 2, -y / 2, -z / 2);
+	glVertex3f(-x / 2, -y / 2, z / 2);
+	glEnd();
+
+	//Face ao longo do eixo z no x positivo
+	glBegin(GL_TRIANGLES);
+	glColor3f(2.0f, 1.0f, 1.0f);
+	glVertex3f(x / 2, y / 2, -z / 2);
+	glVertex3f(x / 2, y / 2, z / 2);
+	glVertex3f(x / 2, -y / 2, z / 2);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(2.0f, 1.0f, 0.0f);
+	glVertex3f(x / 2, y / 2, -z / 2);
+	glVertex3f(x / 2, -y / 2, z / 2);
+	glVertex3f(x / 2, -y / 2, -z / 2);
+	glEnd();
+}
+
 /**
 	Desenho da esfera (INCOMPLETO)
 */
