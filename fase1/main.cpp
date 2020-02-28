@@ -36,6 +36,24 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void drawAxis() {
+
+	glBegin(GL_LINES);
+	// X axis in red
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(100.0f, 0.0f, 0.0f);
+	// Y Axis in Green
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 100.0f, 0.0f);
+	// Z Axis in Blue
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 100.0f);
+	glEnd();
+
+}
 
 void drawPlane() {
 
@@ -57,22 +75,26 @@ void drawPlane() {
 
 }
 
-void drawAxis() {
+/**
+	Desenho da esfera (INCOMPLETO)
+*/
+void drawSphere(int radius, int slices, int stacks) {
 
-	glBegin(GL_LINES);
-	// X axis in red
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(100.0f, 0.0f, 0.0f);
-	// Y Axis in Green
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 100.0f, 0.0f);
-	// Z Axis in Blue
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 100.0f);
-	glEnd();
+	GLfloat alpha = 2 * M_PI / slices;
+
+	// Desenhar os circulos de cima e de baixo
+	for (GLfloat angle = 0; angle < (2 * M_PI); angle += alpha) {
+
+		GLfloat nextAngle = angle + alpha;
+
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.0f, 0.0f, 1.0f);
+		glVertex3f(0.0f, 0.0f, 0.0f);
+		glVertex3f(radius * sin(angle), 0.0f, radius * cos(angle));
+		glVertex3f(radius * sin(nextAngle), 0.0f, radius * cos(nextAngle));
+		glEnd();
+
+	}
 
 }
 
@@ -104,7 +126,7 @@ void renderScene(void) {
 	glTranslatef(6, 1, 0);
 	glutSolidCube(5);
 	// Esfera
-	// ..
+	//drawSphere(1, 10, 10);
 
 	// Cone
 	// ..
