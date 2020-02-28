@@ -9,8 +9,9 @@
 
 // VARIAVEIS
 float varx = 0, vary = 0, varz = 0;
-
 float angle = 0;
+
+char pol = 'e';
 
 void changeSize(int w, int h) {
 
@@ -77,8 +78,6 @@ void drawPlane(float size) {
 }
 
 void drawBox(float x, float y, float z) {
-
-	// put code to draw cylinder in here
 
 	//Base da caixa
 	glBegin(GL_TRIANGLES);
@@ -172,7 +171,7 @@ void drawBox(float x, float y, float z) {
 }
 
 /**
-	Desenho da esfera (INCOMPLETO)
+	Desenho da esfera 
 */
 void drawSphere(int radius, int slices, int stacks) {
 
@@ -252,23 +251,29 @@ void renderScene(void) {
 
 	// put drawing instructions here
 
-	//Eixos
+	//AXIS
 	drawAxis();
-	//Plano
+
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
-	//drawPlane(1.0f);
 
-	//Cubo
-	
-	// ....
-
-	// Esfera
-	//glRotatef(angle, 0.0f, 1.0f, 0.0f);
-	//drawSphere(2, 100, 100);
-	
-
-	// Cone
-	drawCone(1,5,100,500);
+	// POLYGONS
+	switch (pol)
+	{
+	case 'e':
+		drawSphere(2, 100, 100);
+		break;
+	case 'b':
+		drawBox(5, 5, 5);
+		break;
+	case 'c':
+		drawCone(2, 5, 100, 100);
+		break;
+	case 'p':
+		drawPlane(5);
+		break;
+	default:
+		break;
+	}
 
 	// End of frame
 	glutSwapBuffers();
@@ -283,6 +288,18 @@ void processKeys(unsigned char c, int xx, int yy) {
 	{
 	case 'r':
 		angle += 1.0f;
+		break;
+	case 'e':
+		pol = 'e';
+		break;
+	case 'b':
+		pol = 'b';
+		break;
+	case 'c':
+		pol = 'c';
+		break;
+	case 'p':
+		pol = 'p';
 		break;
 	default:
 		break;
@@ -313,6 +330,21 @@ void processSpecialKeys(int key, int xx, int yy) {
 }
 
 
+void processMouse(int button, int state, int x, int y) {
+
+	switch (button) {
+	case GLUT_LEFT_BUTTON:
+		vary += 0.1;
+		break;
+	case GLUT_RIGHT_BUTTON:
+		vary -= 0.1;
+		break;
+	default:
+		break;
+	}
+}
+
+
 int main(int argc, char **argv) {
 
 // init GLUT and the window
@@ -331,6 +363,7 @@ int main(int argc, char **argv) {
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(processSpecialKeys);
+	glutMouseFunc(processMouse);
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
