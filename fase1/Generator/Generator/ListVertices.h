@@ -1,6 +1,12 @@
 #ifndef __LISTVERTICES_H__
 #define __LISTVERTICES_H__
 
+#include "vertice.h"
+
+/**
+Definição de uma estrutura de dados 
+que implementa uma lista de vértices
+*/
 typedef struct vertices* ListVertices;
 
 /**
@@ -15,5 +21,12 @@ uma estrutura de dados do tipo
 ListVertices
 */
 void printList(ListVertices lv);
+
+/**
+Função que retorna o próximo vértice,
+retornando NULL caso se teha chegado ao
+fim da lista de vértices
+*/
+Vertice nextV(ListVertices lv);
 
 #endif

@@ -6,6 +6,7 @@
 
 struct vertices {
 
+	int pointer;
 	int size;
 	int nVertices;
 	Vertice* lista;
@@ -19,6 +20,7 @@ ListVertices newListVertices(int n) {
 
 	ListVertices novo = (ListVertices)malloc(sizeof(struct vertices));
 	novo->nVertices = 0;
+	novo->pointer = 0;
 	novo->size = n;
 	novo->lista = (Vertice*) malloc(sizeof(Vertice)*n);
 	return novo;
@@ -72,4 +74,17 @@ void printList(ListVertices lv) {
 		apresentaVertice(lv->lista[i]);
 		printf(";\n");
 	}
+}
+
+/**
+Função que retorna o próximo vértice, 
+retornando NULL caso se teha chegado ao 
+fim da lista de vértices
+*/
+Vertice nextV(ListVertices lv) {
+
+	if (lv->pointer < lv->nVertices)
+		return lv->lista[lv->pointer++];
+	else 
+		return NULL;
 }

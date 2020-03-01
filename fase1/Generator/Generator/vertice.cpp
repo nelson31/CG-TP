@@ -22,6 +22,36 @@ Vertice newVertice(float nx, float ny, float nz) {
 }
 
 /**
+Função que retorna a coordenada 
+x da estrutura de dados vértice 
+que é passada por parâmetro
+*/
+int getX(Vertice v) {
+
+	return v->x;
+}
+
+/**
+Função que retorna a coordenada
+y da estrutura de dados vértice
+que é passada por parâmetro
+*/
+int getY(Vertice v) {
+
+	return v->y;
+}
+
+/**
+Função que retorna a coordenada
+z da estrutura de dados vértice
+que é passada por parâmetro
+*/
+int getZ(Vertice v) {
+
+	return v->z;
+}
+
+/**
 Função que apresenta para o ecrã uma 
 estrutura de dados do tipo vértice
 */
