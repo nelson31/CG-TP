@@ -1,0 +1,10 @@
+﻿  ListVertices.cpp
+C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(60,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(61,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(62,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating code
+  2 of 10 functions (20.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Generator.vcxproj -> C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Release\Generator.exe

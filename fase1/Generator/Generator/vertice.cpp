@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include "vertice.h"
 
+/**
+Definição da estrutura de dados 
+que define um vertice
+*/
 struct vertice {
 
 	float x, y, z;

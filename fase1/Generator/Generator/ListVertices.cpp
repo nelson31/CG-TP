@@ -4,6 +4,10 @@
 #include "ListVertices.h"
 #include "vertice.h"
 
+/**
+Definição da estrutura de dados que 
+representará uma lista de vértices
+*/
 struct vertices {
 
 	int pointer;
