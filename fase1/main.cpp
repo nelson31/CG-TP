@@ -75,12 +75,15 @@ void drawScene() {
 	Vertice v;
 	while((v = nextV(lv)) != NULL){
 		glBegin(GL_TRIANGLES);
-		glColor3f(1.0f, 0.5f, 0.0f);
-		glVertex3f(getX(v), getY(v), getZ(v));
+		glColor3f(0.0f, 0.0f, 1.0f);
+		printf("%f ; %f ; %f \n", getX(v), getY(v), getZ(v));
+		glVertex3f((GLfloat) getX(v), (GLfloat)getY(v), (GLfloat)getZ(v));
 		v = nextV(lv);
-		glVertex3f(getX(v), getY(v), getZ(v));
+		printf("%f ; %f ; %f \n", getX(v), getY(v), getZ(v));
+		glVertex3f((GLfloat) getX(v), (GLfloat) getY(v), (GLfloat) getZ(v));
 		v = nextV(lv);
-		glVertex3f(getX(v), getY(v), getZ(v));
+		printf("%f ; %f ; %f \n", getX(v), getY(v), getZ(v));
+		glVertex3f((GLfloat) getX(v), (GLfloat) getY(v), (GLfloat) getZ(v));
 		glEnd();
 	}
 }
@@ -106,7 +109,7 @@ void renderScene(void) {
 	//AXIS
 	drawAxis();
 
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	//glRotatef(angle, 0.0f, 1.0f, 0.0f);
 
 	drawScene();
 
@@ -183,16 +186,14 @@ void processMouse(int button, int state, int x, int y) {
 
 int main(int argc, char **argv) {
 
-	lv = carregaFile(argv[1]);
+	lv = carregaFile("box.3D");
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
 	glutCreateWindow("CG@TP@Fase1");
-
-	//numVertices = drawTriangles();
-		
+	
 // Required callback registry 
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
