@@ -8,9 +8,9 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include "Generator\Generator\ListVertices.h"
-#include "Generator\Generator\vertice.h"
 
+#include "vertice.h"
+#include "ListVertices.h"
 
 
 // VARIAVEIS
@@ -25,7 +25,6 @@ vertices a serem desenhados
 */
 ListVertices lv;
 
-char pol = 'e';
 
 void changeSize(int w, int h) {
 
@@ -52,6 +51,9 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+/**
+Função usada para desenhar os eixos
+*/
 void drawAxis() {
 
 	glBegin(GL_LINES);
@@ -70,22 +72,25 @@ void drawAxis() {
 	glEnd();
 }
 
+/**
+Função que desenha os triangulos das formas a partir da lista de vertices
+*/
 void drawScene() {
 
-	Vertice v;
-	while((v = nextV(lv)) != NULL){
+	Vertice v,v2,v3;
+	while ((v = nextV(lv)) != NULL) {
+		v2 = nextV(lv);
+		v3 = nextV(lv);
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.0f, 0.0f, 1.0f);
-		printf("%f ; %f ; %f \n", getX(v), getY(v), getZ(v));
-		glVertex3f((GLfloat) getX(v), (GLfloat)getY(v), (GLfloat)getZ(v));
-		v = nextV(lv);
-		printf("%f ; %f ; %f \n", getX(v), getY(v), getZ(v));
-		glVertex3f((GLfloat) getX(v), (GLfloat) getY(v), (GLfloat) getZ(v));
-		v = nextV(lv);
-		printf("%f ; %f ; %f \n", getX(v), getY(v), getZ(v));
-		glVertex3f((GLfloat) getX(v), (GLfloat) getY(v), (GLfloat) getZ(v));
+		glVertex3f(getX(v),getY(v),getZ(v));
+		glVertex3f(getX(v2),getY(v2),getZ(v2));
+		glVertex3f(getX(v3),getY(v3),getZ(v3));
 		glEnd();
 	}
+
+	// Colocar o pointer novamente a 0
+	atualizaPointer(lv);
 }
 
 void renderScene(void) {
@@ -122,26 +127,7 @@ void processKeys(unsigned char c, int xx, int yy) {
 
 // put code to process regular keys in here
 
-	switch (c)
-	{
-	case 'r':
-		angle += 1.0f;
-		break;
-	case 'e':
-		pol = 'e';
-		break;
-	case 'b':
-		pol = 'b';
-		break;
-	case 'c':
-		pol = 'c';
-		break;
-	case 'p':
-		pol = 'p';
-		break;
-	default:
-		break;
-	}
+	
 }
 
 
