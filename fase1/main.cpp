@@ -13,7 +13,6 @@
 
 
 
-
 // VARIAVEIS
 float varx = 0, vary = 0, varz = 0;
 float angle = 0;
