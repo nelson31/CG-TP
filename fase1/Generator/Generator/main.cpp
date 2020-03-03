@@ -188,23 +188,46 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 	}
 }
 
+
+
 /**
  * Funcao principal do Generator
 */
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
 
 	if (argc < 2) printf("INSIRA O NUMERO CORRETO DE PARAMETROS!");
 	else {
-
 		// IMPORTANTE: VER AQUELA QUESTAO DO NUMERO DE VERTICES!!!!!!!!!!
 		// COMPLETAR
+		
+		FILE* fp;
 
-		FILE* fp = fopen("box.3D", "w");
+		switch ( argv[1][0] ) {
 
-		drawBox(fp, 5, 5, 5);
-
-		fclose(fp);
+			case 'p':
+				fp = fopen(argv[3], "w");
+				drawPlane(fp,atof(argv[2]));
+				fclose(fp);
+				break;
+			case 'b':
+				fp = fopen(argv[5], "w");
+				drawBox(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
+				fclose(fp);
+				break;
+			case 's':
+				fp = fopen(argv[5], "w");
+				drawSphere(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
+				fclose(fp);
+				break;
+			case 'c':
+				fp = fopen(argv[6], "w");
+				drawCone(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]), atof(argv[5]));
+				fclose(fp);
+				break;
+			default:
+				printf("INSIRA OS PARAMETROS CORRETOS!");
+		}
 
 	}
 
