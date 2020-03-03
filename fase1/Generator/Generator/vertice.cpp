@@ -30,7 +30,7 @@ Função que retorna a coordenada
 x da estrutura de dados vértice 
 que é passada por parâmetro
 */
-int getX(Vertice v) {
+float getX(Vertice v) {
 
 	return v->x;
 }
@@ -40,7 +40,7 @@ Função que retorna a coordenada
 y da estrutura de dados vértice
 que é passada por parâmetro
 */
-int getY(Vertice v) {
+float getY(Vertice v) {
 
 	return v->y;
 }
@@ -50,7 +50,7 @@ Função que retorna a coordenada
 z da estrutura de dados vértice
 que é passada por parâmetro
 */
-int getZ(Vertice v) {
+float getZ(Vertice v) {
 
 	return v->z;
 }

@@ -8,6 +8,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include "Generator\Generator\ListVertices.h"
+#include "Generator\Generator\vertice.h"
 
 
 
@@ -17,6 +19,12 @@ float varx = 0, vary = 0, varz = 0;
 float angle = 0;
 
 int numVertices;
+
+/**
+Estrutura de dados que guarda os 
+vertices a serem desenhados
+*/
+ListVertices lv;
 
 char pol = 'e';
 
@@ -63,239 +71,20 @@ void drawAxis() {
 	glEnd();
 }
 
-void drawPlane(float size) {
-
-// put code to draw cylinder in here
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(0.0f, -size/2, size/2);
-	glVertex3f(0.0f, -size/2, -size/2);
-	glVertex3f(0.0f, size/2, -size/2);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(0.0f, -size/2, size/2);
-	glVertex3f(0.0f, size/2, -size/2);
-	glVertex3f(0.0f, size/2, size/2);
-	glEnd();
-
-}
-
-void drawBox(float x, float y, float z) {
-
-	//Base da caixa
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(-x / 2, -y / 2, -z / 2);
-	glVertex3f(x / 2, -y / 2, -z / 2);
-	glVertex3f(-x / 2, -y / 2, z / 2);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(x / 2, -y / 2, -z / 2);
-	glVertex3f(x / 2, -y / 2, z / 2);
-	glVertex3f(-x / 2, -y / 2, z / 2);
-	glEnd();
-
-	//Tampa da caixa
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(-x / 2, y / 2, -z / 2);
-	glVertex3f(-x / 2, y / 2, z / 2);
-	glVertex3f(x / 2, y / 2, -z / 2);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(x / 2, y / 2, -z / 2);
-	glVertex3f(-x / 2, y / 2, z / 2);
-	glVertex3f(x / 2, y / 2, z / 2);
-	glEnd();
-
-	//Face ao longo do eixo x no z positivo
-	glBegin(GL_TRIANGLES);
-	glColor3f(1.0f, 0.0f, 1.0f);
-	glVertex3f(x / 2, y / 2, z / 2);
-	glVertex3f(-x / 2, y / 2, z / 2);
-	glVertex3f(-x / 2, -y / 2, z / 2);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(1.0f, 0.0f, 1.0f);
-	glVertex3f(x / 2, y / 2, z / 2);
-	glVertex3f(-x / 2, -y / 2, z / 2);
-	glVertex3f(x / 2, -y / 2, z / 2);
-	glEnd();
-
-	//Face ao longo do eixo x no z negativo
-	glBegin(GL_TRIANGLES);
-	glColor3f(1.0f, 1.0f, 0.0f);
-	glVertex3f(x / 2, y / 2, -z / 2);
-	glVertex3f(-x / 2, -y / 2, -z / 2);
-	glVertex3f(-x / 2, y / 2, -z / 2);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(1.0f, 1.0f, 0.0f);
-	glVertex3f(x / 2, y / 2, -z / 2);
-	glVertex3f(x / 2, -y / 2, -z / 2);
-	glVertex3f(-x / 2, -y / 2, -z / 2);
-	glEnd();
-
-	//Face ao longo do eixo z no x negativo
-	glBegin(GL_TRIANGLES);
-	glColor3f(2.0f, 1.0f, 1.0f);
-	glVertex3f(-x / 2, y / 2, -z / 2);
-	glVertex3f(-x / 2, -y / 2, z / 2);
-	glVertex3f(-x / 2, y / 2, z / 2);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(2.0f, 1.0f, 0.0f);
-	glVertex3f(-x / 2, y / 2, -z / 2);
-	glVertex3f(-x / 2, -y / 2, -z / 2);
-	glVertex3f(-x / 2, -y / 2, z / 2);
-	glEnd();
-
-	//Face ao longo do eixo z no x positivo
-	glBegin(GL_TRIANGLES);
-	glColor3f(2.0f, 1.0f, 1.0f);
-	glVertex3f(x / 2, y / 2, -z / 2);
-	glVertex3f(x / 2, y / 2, z / 2);
-	glVertex3f(x / 2, -y / 2, z / 2);
-	glEnd();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(2.0f, 1.0f, 0.0f);
-	glVertex3f(x / 2, y / 2, -z / 2);
-	glVertex3f(x / 2, -y / 2, z / 2);
-	glVertex3f(x / 2, -y / 2, -z / 2);
-	glEnd();
-}
-
-/**
-	Desenho da esfera 
-*/
-void drawSphere(int radius, int slices, int stacks) {
-
-	// Usado para a construcao de cada uma das circunferencias
-	GLfloat alpha = 2 * M_PI / slices;
-
-	// Angulo usado para a construcao das circunferencias
-	GLfloat beta = M_PI / stacks;
-
-	// Usado para dar uma cor diferente
-	GLfloat cy = 0.0f;
-
-	for (GLfloat angleB = -M_PI/2; angleB < (2 * M_PI / 2); angleB += beta) {
-
-		cy += 0.0185f;
-
-		// Desenhar os circulos de cima e de baixo
-		for (GLfloat angleA = 0; angleA < (2 * M_PI); angleA += alpha) {
-
-			GLfloat nextAngle = angleA + alpha;
-
-			glBegin(GL_TRIANGLES);
-			glColor3f(1.0f, cy, 0.0f);
-			glVertex3f(0.0f, radius*sin(angleB), 0.0f);
-			glVertex3f((radius * cos(angleB)) * sin(angleA), radius * sin(angleB), (radius * cos(angleB)) * cos(angleA));
-			glVertex3f((radius * cos(angleB)) * sin(nextAngle), radius * sin(angleB), (radius * cos(angleB)) * cos(nextAngle));
-			glEnd();
-		}
-	}
-}
-
-/*
-	Desenho de um cone
-*/
-void drawCone(int bottomRadius, int height, int slices, int stacks) {
-
-	GLfloat reason = (GLfloat) height / stacks;
-
-	GLfloat alpha = 2 * M_PI / slices;
-
-	GLfloat currentRadius=bottomRadius;
-
-	for (GLfloat currentHeight = 0.0f; currentHeight <= height; currentHeight += reason) {
-
-		currentRadius = ((height-currentHeight) * bottomRadius) / height;
-
-		for (GLfloat angle = 0; angle < (2 * M_PI); angle += alpha) {
-
-			GLfloat nextAngle = angle + alpha;
-
-			glBegin(GL_TRIANGLES);
-			glColor3f(1.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, currentHeight, 0.0f);
-			glVertex3f(currentRadius * sin(angle), currentHeight, currentRadius * cos(angle));
-			glVertex3f(currentRadius * sin(nextAngle), currentHeight, currentRadius * cos(nextAngle));
-			glEnd();
-		}
-	}
-}
-
-/*FUNCAO USADA PARA LER DO FICHEIRO E DESENHAR OS TRIANGULOS*/
-int drawTriangles() {
-
-	FILE* fp = fopen("sphere.3D", "r");
-
-	char point1[50], point2[50], point3[50];
-
-	float x, y, z;
-
-	int i = 0;
-
-	while (fgets(point1, 50, fp)) {
-		fgets(point2, 50, fp);
-		fgets(point3, 50, fp);
-
-		// pRIMEIROS Pontos
-		x = atof(strtok(point1, " "));
-		y = atof(strtok(NULL, " "));
-		z = atof(strtok(NULL, " "));
-		
-
-
-		i++;  // Aumenta o numero de vertices
-		// segundos Pontos
-		x = atof(strtok(point2, " "));
-		y = atof(strtok(NULL, " "));
-		z = atof(strtok(NULL, " "));
-		
-
-
-		i++;  // Aumenta o numero de vertices
-		// terceiros Pontos
-		x = atof(strtok(point3, " "));
-		y = atof(strtok(NULL, " "));
-		z = atof(strtok(NULL, " "));
-		
-
-
-		i++; // Aumenta o numero de vertices
-	}
-	return i;
-}
-
-/*
 void drawScene() {
 
-	for (int i = 0; i < numVertices; i++) {
+	Vertice v;
+	while((v = nextV(lv)) != NULL){
 		glBegin(GL_TRIANGLES);
 		glColor3f(1.0f, 0.5f, 0.0f);
-		glVertex3f(Vertices[i].x, Vertices[i].y, Vertices[i].z);
-		i++;
-		glVertex3f(Vertices[i].x, Vertices[i].y, Vertices[i].z);
-		i++;
-		glVertex3f(Vertices[i].x, Vertices[i].y, Vertices[i].z);
+		glVertex3f(getX(v), getY(v), getZ(v));
+		v = nextV(lv);
+		glVertex3f(getX(v), getY(v), getZ(v));
+		v = nextV(lv);
+		glVertex3f(getX(v), getY(v), getZ(v));
 		glEnd();
 	}
 }
-*/
 
 void renderScene(void) {
 
@@ -320,25 +109,7 @@ void renderScene(void) {
 
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 
-	// POLYGONS
-	switch (pol)
-	{
-	case 'e':
-		drawSphere(2, 100, 100);
-		//drawScene();
-		break;
-	case 'b':
-		drawBox(5, 5, 5);
-		break;
-	case 'c':
-		drawCone(2, 5, 100, 100);
-		break;
-	case 'p':
-		drawPlane(5);
-		break;
-	default:
-		break;
-	}
+	drawScene();
 
 	// End of frame
 	glutSwapBuffers();
@@ -413,6 +184,7 @@ void processMouse(int button, int state, int x, int y) {
 
 int main(int argc, char **argv) {
 
+	lv = carregaFile(argv[1]);
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
