@@ -15,13 +15,13 @@
 void drawPlane(FILE* fp, float size) {
 
 
-	fprintf(fp, "%f %f %f\n", 0.0f, -size, size);
-	fprintf(fp, "%f %f %f\n", 0.0f, -size, -size);
-	fprintf(fp, "%f %f %f\n", 0.0f, size, -size);
+	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, size/2);
+	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, -size/2);
+	fprintf(fp, "%f %f %f\n", 0.0f, size/2, -size/2);
 
-	fprintf(fp, "%f %f %f\n", 0.0f, -size, size);
-	fprintf(fp, "%f %f %f\n", 0.0f, size, -size);
-	fprintf(fp, "%f %f %f\n", 0.0f, size, size);
+	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, size/2);
+	fprintf(fp, "%f %f %f\n", 0.0f, size/2, -size/2);
+	fprintf(fp, "%f %f %f\n", 0.0f, size/2, size/2);
 
 }
 

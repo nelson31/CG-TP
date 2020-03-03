@@ -63,16 +63,16 @@ void drawPlane(float size) {
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(0.0f, -size, size);
-	glVertex3f(0.0f, -size, -size);
-	glVertex3f(0.0f, size, -size);
+	glVertex3f(0.0f, -size/2, size/2);
+	glVertex3f(0.0f, -size/2, -size/2);
+	glVertex3f(0.0f, size/2, -size/2);
 	glEnd();
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.0f, 0.2f, 1.0f);
-	glVertex3f(0.0f, -size, size);
-	glVertex3f(0.0f, size, -size);
-	glVertex3f(0.0f, size, size);
+	glVertex3f(0.0f, -size/2, size/2);
+	glVertex3f(0.0f, size/2, -size/2);
+	glVertex3f(0.0f, size/2, size/2);
 	glEnd();
 
 }
