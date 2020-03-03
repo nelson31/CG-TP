@@ -6,10 +6,17 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
+
+
+
 
 // VARIAVEIS
 float varx = 0, vary = 0, varz = 0;
 float angle = 0;
+
+int numVertices;
 
 char pol = 'e';
 
@@ -54,7 +61,6 @@ void drawAxis() {
 	glVertex3f(0.0f, 0.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 100.0f);
 	glEnd();
-
 }
 
 void drawPlane(float size) {
@@ -232,6 +238,64 @@ void drawCone(int bottomRadius, int height, int slices, int stacks) {
 	}
 }
 
+/*FUNCAO USADA PARA LER DO FICHEIRO E DESENHAR OS TRIANGULOS*/
+int drawTriangles() {
+
+	FILE* fp = fopen("sphere.3D", "r");
+
+	char point1[50], point2[50], point3[50];
+
+	float x, y, z;
+
+	int i = 0;
+
+	while (fgets(point1, 50, fp)) {
+		fgets(point2, 50, fp);
+		fgets(point3, 50, fp);
+
+		// pRIMEIROS Pontos
+		x = atof(strtok(point1, " "));
+		y = atof(strtok(NULL, " "));
+		z = atof(strtok(NULL, " "));
+		
+
+
+		i++;  // Aumenta o numero de vertices
+		// segundos Pontos
+		x = atof(strtok(point2, " "));
+		y = atof(strtok(NULL, " "));
+		z = atof(strtok(NULL, " "));
+		
+
+
+		i++;  // Aumenta o numero de vertices
+		// terceiros Pontos
+		x = atof(strtok(point3, " "));
+		y = atof(strtok(NULL, " "));
+		z = atof(strtok(NULL, " "));
+		
+
+
+		i++; // Aumenta o numero de vertices
+	}
+	return i;
+}
+
+/*
+void drawScene() {
+
+	for (int i = 0; i < numVertices; i++) {
+		glBegin(GL_TRIANGLES);
+		glColor3f(1.0f, 0.5f, 0.0f);
+		glVertex3f(Vertices[i].x, Vertices[i].y, Vertices[i].z);
+		i++;
+		glVertex3f(Vertices[i].x, Vertices[i].y, Vertices[i].z);
+		i++;
+		glVertex3f(Vertices[i].x, Vertices[i].y, Vertices[i].z);
+		glEnd();
+	}
+}
+*/
 
 void renderScene(void) {
 
@@ -261,6 +325,7 @@ void renderScene(void) {
 	{
 	case 'e':
 		drawSphere(2, 100, 100);
+		//drawScene();
 		break;
 	case 'b':
 		drawBox(5, 5, 5);
@@ -345,6 +410,7 @@ void processMouse(int button, int state, int x, int y) {
 }
 
 
+
 int main(int argc, char **argv) {
 
 // init GLUT and the window
@@ -353,6 +419,8 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
 	glutCreateWindow("CG@TP@Fase1");
+
+	//numVertices = drawTriangles();
 		
 // Required callback registry 
 	glutDisplayFunc(renderScene);
@@ -368,9 +436,10 @@ int main(int argc, char **argv) {
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+
 	
 // enter GLUT's main cycle
 	glutMainLoop();
-	
+
 	return 1;
 }
