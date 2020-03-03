@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ListVertices.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="TesteList.cpp" />
     <ClCompile Include="vertice.cpp" />
   </ItemGroup>

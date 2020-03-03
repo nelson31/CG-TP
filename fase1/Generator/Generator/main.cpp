@@ -14,6 +14,8 @@
 */
 void drawPlane(FILE* fp, float size) {
 
+	/* Definição do número de vértices */
+	fprintf(fp, "6\n");
 
 	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, size/2);
 	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, -size/2);
@@ -29,6 +31,9 @@ void drawPlane(FILE* fp, float size) {
  * Desenho da caixa e escrita dos respetivos pontos no ficheiro
 */
 void drawBox(FILE* fp, float x, float y, float z) {
+
+	/* Definição do número de vértices */
+	fprintf(fp, "36\n");
 
 	//Base da caixa
 
@@ -110,6 +115,9 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 
 	float x, y, z;
 
+	/* Definição do número de vértices */
+	fprintf(fp, "%d\n", 3 * slices * stacks);
+
 	for (float angleB = -M_PI / 2; angleB < (2 * M_PI / 2); angleB += beta) {
 
 		// Desenhar os circulos de cima e de baixo
@@ -151,6 +159,9 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 
 	float x, y, z;
 
+	/* Definição do número de vértices */
+	fprintf(fp, "%d\n", 3 * slices * stacks);
+
 	for (float currentHeight = 0.0f; currentHeight <= height; currentHeight += reason) {
 
 		currentRadius = ((height - currentHeight) * bottomRadius) / height;
@@ -176,29 +187,6 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 		}
 	}
 }
-
-
-void draw() {
-
-	FILE* fp = fopen("sphere.3D", "w");
-
-	drawSphere(fp, 2, 10, 10);
-
-	FILE* fp1 = fopen("sphere.3D", "r");
-
-	char str[50];
-
-	int count = 0;
-
-	while (fgets(str, sizeof(str), fp1)) {
-		printf("%s", str);
-		count++;
-	}
-
-	printf("Numero de vertices: %d",count);
-
-}
-
 
 /**
  * Funcao principal do Generator
