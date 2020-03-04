@@ -95,3 +95,12 @@ Vertice nextV(ListVertices lv) {
 	else 
 		return NULL;
 }
+
+/**
+Função que atualiza o valor do pointer para zero
+*/
+int atualizaPointer(ListVertices lv) {
+
+	lv->pointer = 0;
+	return lv->pointer;
+}

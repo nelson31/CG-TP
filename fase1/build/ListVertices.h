@@ -29,4 +29,9 @@ fim da lista de vértices
 */
 Vertice nextV(ListVertices lv);
 
+/**
+Função que atualiza o valor do pointer para zero
+*/
+int atualizaPointer(ListVertices lv);
+
 #endif

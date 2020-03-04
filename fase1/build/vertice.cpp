@@ -32,7 +32,8 @@ que é passada por parâmetro
 */
 float getX(Vertice v) {
 
-	return v->x;
+	float x = v->x;
+	return x;
 }
 
 /**
@@ -42,7 +43,8 @@ que é passada por parâmetro
 */
 float getY(Vertice v) {
 
-	return v->y;
+	float y = v->y;
+	return y;
 }
 
 /**
@@ -52,7 +54,8 @@ que é passada por parâmetro
 */
 float getZ(Vertice v) {
 
-	return v->z;
+	float z = v->z;
+	return z;
 }
 
 /**

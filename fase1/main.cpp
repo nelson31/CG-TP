@@ -1,6 +1,7 @@
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+#include <stdlib.h>
 #include <GL/glut.h>
 #endif
 
@@ -11,7 +12,10 @@
 
 #include "vertice.h"
 #include "ListVertices.h"
+#include "tinyxml.h"
 
+
+const char* FILE_XML_NAME = "..\\Generator\\Generator\\infoXML.xml";
 
 // VARIAVEIS
 float varx = 0, vary = 0, varz = 0;
@@ -93,6 +97,51 @@ void drawScene() {
 	atualizaPointer(lv);
 }
 
+/**
+Funcao que carrega o nome do ficheiro que se pretende reproduzir!
+*/
+void loadFile(int type) {
+
+	TiXmlDocument doc;
+	char* filename = "";
+	printf("ola\n");
+	doc.LoadFile(FILE_XML_NAME);
+	printf("ola1\n");
+
+	TiXmlHandle docH(&doc);
+
+	printf("ola2\n");
+
+	TiXmlElement* element;
+
+	printf("ola3\n");
+
+	switch (type) {
+		case 1:
+			element = docH.FirstChildElement("scene").ChildElement(0).Element();
+			filename = strdup(element->Attribute("file"));
+			break;
+		case 2:
+			element = docH.FirstChildElement("scene").ChildElement(1).Element();
+			filename = strdup(element->Attribute("file"));
+			break;
+		case 3:
+			element = docH.FirstChildElement("scene").ChildElement(2).Element();
+			filename = strdup(element->Attribute("file"));
+			break;
+		case 4:
+			printf("ola4\n");
+			element = docH.FirstChildElement("scene").ChildElement(3).Element();
+			printf("ola5\n");
+			filename = strdup(element->Attribute("file")); 
+			printf("ola6\n");
+			break;
+		default:
+			break;
+	}
+	lv = carregaFile(filename);
+}
+
 void renderScene(void) {
 
 	// clear buffers
@@ -172,7 +221,11 @@ void processMouse(int button, int state, int x, int y) {
 
 int main(int argc, char **argv) {
 
-	lv = carregaFile("box.3D");
+	// type : 1 -> plane
+	//        2 -> box
+	//        3 -> sphere
+	//        4 -> cone
+	loadFile(4);
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
