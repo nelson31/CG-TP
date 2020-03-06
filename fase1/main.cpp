@@ -14,7 +14,7 @@
 #include "ListVertices.h"
 #include "tinyxml.h"
 
-
+/*Nome do Ficheiro XML*/
 const char* FILE_XML_NAME = "infoXML.xml";
 
 // VARIAVEIS GLOBAIS
@@ -34,8 +34,12 @@ int camera_mode = 1;
 Estrutura de dados que guarda os 
 vertices a serem desenhados
 */
-ListVertices lv;
+ListVertices* lv;
+/*Tamanho do array de ListVertices*/
+int size;
 
+/*Alterar os objetos a visualizar*/
+int pol = 0;
 
 void changeSize(int w, int h) {
 
@@ -84,24 +88,23 @@ void drawAxis() {
 }
 
 /**
-Função que desenha os triangulos das formas a partir da lista de vertices
+Função que desenha os triangulos das formas a partir das listas de vertices
 */
 void drawScene() {
 
 	Vertice v,v2,v3;
-	while ((v = nextV(lv)) != NULL) {
-		v2 = nextV(lv);
-		v3 = nextV(lv);
+	while ((v = nextV(lv[pol])) != NULL) {
+		v2 = nextV(lv[pol]);
+		v3 = nextV(lv[pol]);
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(getX(v),getY(v),getZ(v));
-		glVertex3f(getX(v2),getY(v2),getZ(v2));
-		glVertex3f(getX(v3),getY(v3),getZ(v3));
+		glVertex3f(getX(v), getY(v), getZ(v));
+		glVertex3f(getX(v2), getY(v2), getZ(v2));
+		glVertex3f(getX(v3), getY(v3), getZ(v3));
 		glEnd();
 	}
-
 	// Colocar o pointer novamente a 0
-	atualizaPointer(lv);
+	atualizaPointer(lv[pol]);
 }
 
 /**
@@ -110,7 +113,7 @@ void drawScene() {
  * se efetuar o parse do ficheiro xml para se retirar o nome do ficheiro que contem as coordenadas 
  * dos vários vértices que compoe a figura.
 */
-void loadFile(int type) {
+void loadFile() {
 
 	TiXmlDocument doc;
 	char* filename = "";
@@ -118,29 +121,28 @@ void loadFile(int type) {
 
 	TiXmlHandle docH(&doc);
 
+	TiXmlNode* ele=NULL;
+	
+	// Descobrir o numero de entradas no ficheiro XML com nomes de ficheiros
+	int i = 0;
+	while ((ele = doc.FirstChildElement("scene")->IterateChildren(ele)) != 0) {
+		i++;
+	}
+
+	size = i;
+
+	lv = (ListVertices*) malloc(i * sizeof(ListVertices));
+
 	TiXmlElement* element;
 
-	switch (type) {
-		case 1:
-			element = docH.FirstChildElement("scene").ChildElement(0).Element();
-			filename = strdup(element->Attribute("file"));
-			break;
-		case 2:
-			element = docH.FirstChildElement("scene").ChildElement(1).Element();
-			filename = strdup(element->Attribute("file"));
-			break;
-		case 3:
-			element = docH.FirstChildElement("scene").ChildElement(2).Element();
-			filename = strdup(element->Attribute("file"));
-			break;
-		case 4:
-			element = docH.FirstChildElement("scene").ChildElement(3).Element();
-			filename = strdup(element->Attribute("file")); 
-			break;
-		default:
-			break;
+	// Retirar os nomes do XML e carregar os ficheiros respetivos para as devidas estruturas de dados
+	for (int j = 0; j < i; j++) {
+		element = docH.FirstChildElement("scene").ChildElement(j).Element();
+
+		filename = strdup(element->Attribute("file"));
+
+		lv[j] = carregaFile(filename);
 	}
-	lv = carregaFile(filename);
 }
 
 void renderScene(void) {
@@ -190,6 +192,7 @@ void processKeys(unsigned char c, int xx, int yy) {
 
 	float norma, crossX, crossY, crossZ;
 
+	/*Somente válido na camera modo FPS*/
 	if (camera_mode == 2) {
 
 		switch (c)
@@ -231,6 +234,7 @@ void processKeys(unsigned char c, int xx, int yy) {
 		}
 	}
 
+	/*Válido para todas as cameras*/
 	switch (c) {
 	case 'r':
 		// Translaçao do objeto desenhado para a direita ao longo do eixo do x
@@ -255,6 +259,10 @@ void processKeys(unsigned char c, int xx, int yy) {
 	case 'n':
 		// Translaçao do objeto desenhado para dentro ao longo do eixo do z
 		varz -= 1.0f;
+		break;
+	case 'x':
+		// Mudar de objeto a desenhar
+		pol = ((pol+1) % size);
 		break;
 	default:
 		break;
@@ -294,14 +302,17 @@ void processSpecialKeys(int key, int xx, int yy) {
 		}
 		break;
 	case GLUT_KEY_PAGE_UP:
-		raio += 1;
-		break;
-	case GLUT_KEY_PAGE_DOWN:
+		// Fazer zoom in no modo Explorer Camera
 		raio -= 1;
 		if (raio < 0.1f)
 			raio = 0.1f;
 		break;
+	case GLUT_KEY_PAGE_DOWN:
+		// Fazer zoom out no modo Explorer Camera
+		raio += 1;
+		break;
 	case GLUT_KEY_F1:
+		// Mudar para o modo Explorer Camera
 		camera_mode = 1;
 		alfa = -alfa;
 		beta = -beta;
@@ -310,6 +321,7 @@ void processSpecialKeys(int key, int xx, int yy) {
 		pz = 5;
 		break;
 	case GLUT_KEY_F2:
+		// Mudar para o modo FPS Camera
 		camera_mode = 2;
 		alfa = -alfa;
 		beta = -beta;
@@ -324,11 +336,8 @@ void processSpecialKeys(int key, int xx, int yy) {
 
 int main(int argc, char **argv) {
 
-	// type : 1 -> plane
-	//        2 -> box
-	//        3 -> sphere
-	//        4 -> cone
-	loadFile(3);
+	// Carregar os ficheiros das primitivas a partir do xml 
+	loadFile();
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
