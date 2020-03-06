@@ -272,7 +272,6 @@ void writeXML(char type, const char* filename) {
 }
 
 
-
 /**
  * Funcao principal do Generator
 */

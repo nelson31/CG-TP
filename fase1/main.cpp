@@ -17,11 +17,17 @@
 
 const char* FILE_XML_NAME = "..\\Generator\\Generator\\infoXML.xml";
 
-// VARIAVEIS
+// VARIAVEIS GLOBAIS
+float px = 5, py = 5, pz = 5;
 float varx = 0, vary = 0, varz = 0;
-float angle = 0;
 
-int numVertices;
+// Camera Explorer
+float raio = 10, alfa = M_PI_4, beta = M_PI_4;
+
+// FPS CAMERA
+float dx, dy, dz;
+
+int camera_mode = 1;
 
 /**
 Estrutura de dados que guarda os 
@@ -85,7 +91,7 @@ void drawScene() {
 	while ((v = nextV(lv)) != NULL) {
 		v2 = nextV(lv);
 		v3 = nextV(lv);
-		glBegin(GL_TRIANGLES);
+		glBegin(GL_TRIANGLE_STRIP);
 		glColor3f(0.0f, 0.0f, 1.0f);
 		glVertex3f(getX(v),getY(v),getZ(v));
 		glVertex3f(getX(v2),getY(v2),getZ(v2));
@@ -104,17 +110,11 @@ void loadFile(int type) {
 
 	TiXmlDocument doc;
 	char* filename = "";
-	printf("ola\n");
 	doc.LoadFile(FILE_XML_NAME);
-	printf("ola1\n");
 
 	TiXmlHandle docH(&doc);
 
-	printf("ola2\n");
-
 	TiXmlElement* element;
-
-	printf("ola3\n");
 
 	switch (type) {
 		case 1:
@@ -130,11 +130,8 @@ void loadFile(int type) {
 			filename = strdup(element->Attribute("file"));
 			break;
 		case 4:
-			printf("ola4\n");
 			element = docH.FirstChildElement("scene").ChildElement(3).Element();
-			printf("ola5\n");
 			filename = strdup(element->Attribute("file")); 
-			printf("ola6\n");
 			break;
 		default:
 			break;
@@ -149,19 +146,27 @@ void renderScene(void) {
 
 	// set the camera
 	glLoadIdentity();
-	gluLookAt(10.0,10.0,10.0, 
-		      0.0,0.0,0.0,
-			  0.0f,1.0f,0.0f);
+	if (camera_mode == 1) {
+		// Explorer Mode Camera
+		gluLookAt(raio * cos(beta) * sin(alfa), raio * sin(beta), raio * cos(beta) * cos(alfa), // camera position
+			0.0, 0.0, 0.0,  // look at point
+			0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
+	} else {
+		// FPS Camera
+		dx = raio * cos(beta) * sin(alfa);
+		dy = raio * sin(beta);
+		dz = raio * cos(beta) * cos(alfa);
+		gluLookAt(px, py, pz,  // camera position
+			px + dx, py + dy, pz + dz,   // look at point
+			0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
+	}
 
-
-	// put the geometric transformations here
-
-	glTranslatef(varx, vary, varz);
-
-	// put drawing instructions here
+	//glTranslatef(varx, vary, varz);
 
 	//AXIS
 	drawAxis();
+
+	glTranslatef(varx, vary, varz);
 
 	//glRotatef(angle, 0.0f, 1.0f, 0.0f);
 
@@ -174,43 +179,125 @@ void renderScene(void) {
 
 void processKeys(unsigned char c, int xx, int yy) {
 
-// put code to process regular keys in here
+	// put code to process regular keys in here
 
-	
+	float speed = 0.3f;
+
+	float norma, crossX, crossY, crossZ;
+
+	if (camera_mode == 2) {
+
+		switch (c)
+		{
+		case 'w':
+			norma = sqrt(dx * dx + dy * dy + dz * dz);
+			px += speed * (dx / norma);
+			py += speed * (dy / norma);
+			pz += speed * (dz / norma);
+			break;
+		case 's':
+			norma = sqrt(dx * dx + dy * dy + dz * dz);
+			px -= speed * (dx / norma);
+			py -= speed * (dy / norma);
+			pz -= speed * (dz / norma);
+			break;
+		case 'a':
+			// Produto vetorial
+			crossX = dy * 0.0f - dz * 1.0f;
+			crossY = dz * 0.0f - dx * 0.0f;
+			crossZ = dx * 1.0f - dy * 0.0f;
+			norma = sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ);
+			px -= speed * (crossX / norma);
+			py -= speed * (crossY / norma);
+			pz -= speed * (crossZ / norma);
+			break;
+		case 'd':
+			// Produto vetorial
+			crossX = dy * 0.0f - dz * 1.0f;
+			crossY = dz * 0.0f - dx * 0.0f;
+			crossZ = dx * 1.0f - dy * 0.0f;
+			norma = sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ);
+			px += speed * (crossX / norma);
+			py += speed * (crossY / norma);
+			pz += speed * (crossZ / norma);
+			break;
+		case 'r':
+			// Translaçao do objeto desenhado para a direita ao longo do eixo do x
+			varx += 1.0f;
+			break;
+		case 'l':
+			// Translaçao do objeto desenhado para a esquerda ao longo do eixo do x
+			varx -= 1.0f;
+			break;
+		case 'c':
+			// Translaçao do objeto desenhado para cima ao longo do eixo do y
+			vary += 1.0f;
+			break;
+		case 'b':
+			// Translaçao do objeto desenhado para baixo ao longo do eixo do y
+			vary -= 1.0f;
+			break;
+		case 'm':
+			// Translaçao do objeto desenhado para fora ao longo do eixo do z
+			varz += 1.0f;
+			break;
+		case 'n':
+			// Translaçao do objeto desenhado para dentro ao longo do eixo do z
+			varz -= 1.0f;
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 
 void processSpecialKeys(int key, int xx, int yy) {
 
-// put code to process special keys in here
+	// put code to process special keys in here
 
-	switch (key) {
+	switch (key)
+	{
 	case GLUT_KEY_UP:
-		vary += 0.1;
+		beta += (float)0.1;
 		break;
 	case GLUT_KEY_DOWN:
-		vary -= 0.1;
+		beta -= (float)0.1;
 		break;
 	case GLUT_KEY_LEFT:
-		varx -= 0.1;
+		if (camera_mode == 1) {
+			alfa -= (float)0.1;
+		}
+		else {
+			alfa += (float)0.1;
+		}
 		break;
 	case GLUT_KEY_RIGHT:
-		varx += 0.1;
+		if (camera_mode == 1) {
+			alfa += (float)0.1;
+		}
+		else {
+			alfa -= (float)0.1;
+		}
 		break;
-	default:
+	case GLUT_KEY_PAGE_UP:
+		raio -= 1;
 		break;
-	}
-}
-
-
-void processMouse(int button, int state, int x, int y) {
-
-	switch (button) {
-	case GLUT_LEFT_BUTTON:
-		vary += 0.1;
+	case GLUT_KEY_PAGE_DOWN:
+		raio += 1;
 		break;
-	case GLUT_RIGHT_BUTTON:
-		vary -= 0.1;
+	case GLUT_KEY_F1:
+		camera_mode = 1;
+		alfa = -alfa;
+		beta = -beta;
+		px = 5;
+		py = 5;
+		pz = 5;
+		break;
+	case GLUT_KEY_F2:
+		camera_mode = 2;
+		alfa = -alfa;
+		beta = -beta;
 		break;
 	default:
 		break;
@@ -225,7 +312,7 @@ int main(int argc, char **argv) {
 	//        2 -> box
 	//        3 -> sphere
 	//        4 -> cone
-	loadFile(4);
+	loadFile(2);
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
@@ -242,7 +329,6 @@ int main(int argc, char **argv) {
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(processSpecialKeys);
-	glutMouseFunc(processMouse);
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
