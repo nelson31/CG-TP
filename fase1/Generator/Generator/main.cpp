@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "tinyxml.h"
-
 
 /**
  * Desenho do plano e escrita dos respetivos pontos no ficheiro
@@ -197,80 +195,6 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 	}
 }
 
-/**
-Atualização do ficheiro XML com o novo nome da ultima atualizacao
-*/
-void writeXML(char type, const char* filename) {
-
-	const char *plane, *box, *sphere, *cone;
-
-	TiXmlDocument doc;
-	doc.LoadFile("infoXML.xml");
-
-	if (doc.Error() && doc.ErrorId() == TiXmlBase::TIXML_ERROR_OPENING_FILE) {
-		printf("WARNING: File 'infoXML.xml' not found.\n");
-
-		plane = "";
-		box = "";
-		sphere = "";
-		cone = "";
-	} else {
-
-		TiXmlHandle docH(&doc);
-
-		TiXmlElement* element = docH.FirstChildElement("scene").ChildElement(0).Element();
-		plane = strdup(element->Attribute("file"));
-		TiXmlElement* element1 = docH.FirstChildElement("scene").ChildElement(1).Element();
-		box = strdup(element1->Attribute("file"));
-		TiXmlElement* element2 = docH.FirstChildElement("scene").ChildElement(2).Element();
-		sphere = strdup(element2->Attribute("file"));
-		TiXmlElement* element3 = docH.FirstChildElement("scene").ChildElement(3).Element();
-		cone = strdup(element3->Attribute("file"));
-	}
-
-	switch (type) {
-		case 'p':
-			plane = filename;
-			break;
-		case 'b':
-			box = filename;
-			break;
-		case 's':
-			sphere = filename;
-			break;
-		case 'c':
-			cone = filename;
-			break;
-		default:
-			break;
-	}
-
-	FILE* textfile = fopen("infoXML.xml", "w");
-	if (textfile)
-	{
-		fputs("<?xml version='1.0'?>", textfile);
-		fputs("<scene>", textfile);
-		char linha[100];
-		sprintf(linha, "<model file='%s' />", plane);
-		fputs(linha, textfile);
-		char linha1[100];
-		sprintf(linha1, "<model file='%s' />", box);
-		fputs(linha1, textfile);
-		char linha2[100];
-		sprintf(linha, "<model file='%s' />", sphere);
-		fputs(linha, textfile);
-		char linha3[100];
-		sprintf(linha, "<model file='%s' />", cone);
-		fputs(linha, textfile);
-		fputs("</scene>", textfile);
-		fclose(textfile);
-
-		doc.LoadFile("infoXML.xml");
-
-		doc.Print(stdout);
-	}
-}
-
 
 /**
  * Funcao principal do Generator
@@ -280,33 +204,27 @@ int main(int argc, const char* argv[]) {
 
 	if (argc < 2) printf("INSIRA O NUMERO CORRETO DE PARAMETROS!");
 	else {
-		// IMPORTANTE: VER AQUELA QUESTAO DO NUMERO DE VERTICES!!!!!!!!!!
-		// COMPLETAR
 		
 		FILE* fp;
 
 		switch ( argv[1][0] ) {
 
 			case 'p':
-				writeXML(argv[1][0], argv[3]);
 				fp = fopen(argv[3], "w");
 				drawPlane(fp,atof(argv[2]));
 				fclose(fp);
 				break;
 			case 'b':
-				writeXML(argv[1][0], argv[5]);
 				fp = fopen(argv[5], "w");
 				drawBox(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
 				break;
 			case 's':
-				writeXML(argv[1][0], argv[5]);
 				fp = fopen(argv[5], "w");
 				drawSphere(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
 				break;
 			case 'c':
-				writeXML(argv[1][0], argv[6]);
 				fp = fopen(argv[6], "w");
 				drawCone(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]), atof(argv[5]));
 				fclose(fp);
@@ -315,6 +233,5 @@ int main(int argc, const char* argv[]) {
 				printf("INSIRA OS PARAMETROS CORRETOS!");
 		}
 	}
-
 	return 0;
 }

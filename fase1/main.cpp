@@ -15,7 +15,7 @@
 #include "tinyxml.h"
 
 
-const char* FILE_XML_NAME = "..\\Generator\\Generator\\infoXML.xml";
+const char* FILE_XML_NAME = "infoXML.xml";
 
 // VARIAVEIS GLOBAIS
 float px = 5, py = 5, pz = 5;
@@ -27,6 +27,7 @@ float raio = 10, alfa = M_PI_4, beta = M_PI_4;
 // FPS CAMERA
 float dx, dy, dz;
 
+// F1 para a camera Explorer(1), F2 para a camera FPS(2)
 int camera_mode = 1;
 
 /**
@@ -91,7 +92,7 @@ void drawScene() {
 	while ((v = nextV(lv)) != NULL) {
 		v2 = nextV(lv);
 		v3 = nextV(lv);
-		glBegin(GL_TRIANGLE_STRIP);
+		glBegin(GL_TRIANGLES);
 		glColor3f(0.0f, 0.0f, 1.0f);
 		glVertex3f(getX(v),getY(v),getZ(v));
 		glVertex3f(getX(v2),getY(v2),getZ(v2));
@@ -104,7 +105,10 @@ void drawScene() {
 }
 
 /**
-Funcao que carrega o nome do ficheiro que se pretende reproduzir!
+ * Funcao que carrega o nome do ficheiro que se pretende reproduzir a partir do ficheiro XML 
+ * infoXML.xml. Para isso recorreu-se ao uso da biblioteca de funcoes C++ 'TinyXML' de modo a 
+ * se efetuar o parse do ficheiro xml para se retirar o nome do ficheiro que contem as coordenadas 
+ * dos vários vértices que compoe a figura.
 */
 void loadFile(int type) {
 
@@ -161,16 +165,17 @@ void renderScene(void) {
 			0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
 	}
 
-	//glTranslatef(varx, vary, varz);
-
 	//AXIS
 	drawAxis();
 
+	// Transformations
 	glTranslatef(varx, vary, varz);
 
-	//glRotatef(angle, 0.0f, 1.0f, 0.0f);
-
+	// Scene Design
 	drawScene();
+
+	// :)
+	glutWireTeapot(0.5);
 
 	// End of frame
 	glutSwapBuffers();
@@ -179,7 +184,7 @@ void renderScene(void) {
 
 void processKeys(unsigned char c, int xx, int yy) {
 
-	// put code to process regular keys in here
+	// Process regular keys
 
 	float speed = 0.3f;
 
@@ -221,70 +226,80 @@ void processKeys(unsigned char c, int xx, int yy) {
 			py += speed * (crossY / norma);
 			pz += speed * (crossZ / norma);
 			break;
-		case 'r':
-			// Translaçao do objeto desenhado para a direita ao longo do eixo do x
-			varx += 1.0f;
-			break;
-		case 'l':
-			// Translaçao do objeto desenhado para a esquerda ao longo do eixo do x
-			varx -= 1.0f;
-			break;
-		case 'c':
-			// Translaçao do objeto desenhado para cima ao longo do eixo do y
-			vary += 1.0f;
-			break;
-		case 'b':
-			// Translaçao do objeto desenhado para baixo ao longo do eixo do y
-			vary -= 1.0f;
-			break;
-		case 'm':
-			// Translaçao do objeto desenhado para fora ao longo do eixo do z
-			varz += 1.0f;
-			break;
-		case 'n':
-			// Translaçao do objeto desenhado para dentro ao longo do eixo do z
-			varz -= 1.0f;
-			break;
 		default:
 			break;
 		}
 	}
+
+	switch (c) {
+	case 'r':
+		// Translaçao do objeto desenhado para a direita ao longo do eixo do x
+		varx += 1.0f;
+		break;
+	case 'l':
+		// Translaçao do objeto desenhado para a esquerda ao longo do eixo do x
+		varx -= 1.0f;
+		break;
+	case 'c':
+		// Translaçao do objeto desenhado para cima ao longo do eixo do y
+		vary += 1.0f;
+		break;
+	case 'b':
+		// Translaçao do objeto desenhado para baixo ao longo do eixo do y
+		vary -= 1.0f;
+		break;
+	case 'm':
+		// Translaçao do objeto desenhado para fora ao longo do eixo do z
+		varz += 1.0f;
+		break;
+	case 'n':
+		// Translaçao do objeto desenhado para dentro ao longo do eixo do z
+		varz -= 1.0f;
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
 }
 
 
 void processSpecialKeys(int key, int xx, int yy) {
 
-	// put code to process special keys in here
+	// Process special keys
 
 	switch (key)
 	{
 	case GLUT_KEY_UP:
 		beta += (float)0.1;
+		if (beta > 1.5f)
+			beta = 1.5f;
 		break;
 	case GLUT_KEY_DOWN:
 		beta -= (float)0.1;
+		if (beta < -1.5f)
+			beta = -1.5f;
 		break;
 	case GLUT_KEY_LEFT:
 		if (camera_mode == 1) {
 			alfa -= (float)0.1;
-		}
-		else {
+		} else {
 			alfa += (float)0.1;
 		}
 		break;
 	case GLUT_KEY_RIGHT:
 		if (camera_mode == 1) {
 			alfa += (float)0.1;
-		}
-		else {
+		} else {
 			alfa -= (float)0.1;
 		}
 		break;
 	case GLUT_KEY_PAGE_UP:
-		raio -= 1;
+		raio += 1;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-		raio += 1;
+		raio -= 1;
+		if (raio < 0.1f)
+			raio = 0.1f;
 		break;
 	case GLUT_KEY_F1:
 		camera_mode = 1;
@@ -302,8 +317,9 @@ void processSpecialKeys(int key, int xx, int yy) {
 	default:
 		break;
 	}
-}
 
+	glutPostRedisplay();
+}
 
 
 int main(int argc, char **argv) {
@@ -312,7 +328,7 @@ int main(int argc, char **argv) {
 	//        2 -> box
 	//        3 -> sphere
 	//        4 -> cone
-	loadFile(2);
+	loadFile(3);
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
@@ -334,7 +350,6 @@ int main(int argc, char **argv) {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	
 // enter GLUT's main cycle
 	glutMainLoop();
 
