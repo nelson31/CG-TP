@@ -333,7 +333,10 @@ void processSpecialKeys(int key, int xx, int yy) {
 	glutPostRedisplay();
 }
 
-
+/* Cuidado que deve-se fazer o build novamente com o CMake 
+ * Deve-se buscar os ficheiros gerados ao programa "Generator"
+ * Deve-se atualizar o XML com o nome dos ficheiros acabados de gerar
+*/
 int main(int argc, char **argv) {
 
 	// Carregar os ficheiros das primitivas a partir do xml 
