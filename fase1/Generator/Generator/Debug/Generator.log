@@ -1,17 +1,29 @@
-﻿  ListVertices.cpp
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(46,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(47,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(48,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(42,1): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(208): message : see declaration of 'fopen'
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(46,1): error C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(440): message : see declaration of 'strtok'
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(47,1): error C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(440): message : see declaration of 'strtok'
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.cpp(48,1): error C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(440): message : see declaration of 'strtok'
-  TesteList.cpp
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\TesteList.cpp(5,43): error C2664: 'void carregaFile(char [])': cannot convert argument 1 from 'const char [10]' to 'char []'
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\TesteList.cpp(5,32): message : Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-C:\Users\Asus\Documents\Universidade - 3ºano\Universidade - 2ºsemestre - 3ºano\Computação Gráfica\Projeto\trunk\fase1\Generator\Generator\ListVertices.h(10,6): message : see declaration of 'carregaFile'
-  Generating Code...
+﻿  main.cpp
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(110,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(113,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(122,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(132,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(137,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(138,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(139,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(143,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(144,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(145,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(161,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(163,22): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(189,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(190,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(194,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(195,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(219,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(224,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(224,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(224,21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(229,54): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(229,39): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(229,24): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,67): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,52): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,37): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,22): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  Generator.vcxproj -> C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Debug\Generator.exe

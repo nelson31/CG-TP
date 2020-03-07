@@ -154,8 +154,10 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 */
 void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 
+	// Razao entre a altura e o numero de stacks 
 	float reason = (float)height / stacks;
 
+	// Angulo alfa entre cada slice
 	float alpha = 2 * M_PI / slices;
 
 	float currentRadius = bottomRadius;
@@ -167,8 +169,10 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 
 	for (int i =0; i<stacks; i++) {
 
+		// Raio do proximo circulo a ser feito
 		currentRadius = (float) ((stacks-i) * bottomRadius) / stacks;
 
+		// Proxima altura a que o circulo se encontra da base
 		y = reason*i;
 
 		for (int j = 0; j < slices; j++) {
@@ -207,6 +211,7 @@ int main(int argc, const char* argv[]) {
 		
 		FILE* fp;
 
+		/*Tipo de primitiva a gerar*/
 		switch ( argv[1][0] ) {
 
 			case 'p':
