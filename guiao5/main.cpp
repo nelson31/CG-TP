@@ -14,12 +14,14 @@
 float alfa = 0.0f, beta = 0.5f, radius = 100.0f;
 float camX, camY, camZ;
 
+// Guardar a ultimas posicoes do rato na tela
+int mouseXPos, mouseYPos;
+int isPressed = -1;
+
 // Número de arvores no ambiente
 const int N = 300;
-// Numero de bools de fora
-const int TF = 16;
-// Numero de bools de dentro
-const int TD = 8;
+// Numero de bools de fora e de dentro, respetivamente
+const int TF = 16, TD = 8;
 // Tamanho circulo centro
 const int tamCentro = 50;
 
@@ -29,11 +31,17 @@ float radiusF = 35.0f, radiusD = 15.0f;
 // Array com as coordenadas das arvores
 float* coords;
 
-// Variavel usada para rodar os teapots
+// Variaveis usadas para rodar os teapots
 float rodar = 0;
+int timebase=0;
 
-int timebase = 0;
+// Usado para mostrar os FPS
+int frame = 0, timefps = 0;
+float fps=0;
 
+/*
+ * Converter coordenadas polares em cartesianas
+ */
 void spherical2Cartesian() {
 
 	camX = radius * cos(beta) * sin(alfa);
@@ -41,19 +49,22 @@ void spherical2Cartesian() {
 	camZ = radius * cos(beta) * cos(alfa);
 }
 
-//void getFPS() {
-//	int time;
-//	frame++;
-//	time = glutGet(GLUT_ELAPSED_TIME);
-//	if (time - timebase > 1000) {
-//		fps = frame * 1000.0 / (time - timebase);
-//		timebase = time;
-//		frame = 0;
-//	}
-//	char string[80];
-//	sprintf(string, "FPS COUNTER: %f", fps);
-//	glutSetWindowTitle(string);
-//}
+/*
+ * Obter os FPS  
+ */
+void getFPS() {
+	int time;
+	frame++;
+	time = glutGet(GLUT_ELAPSED_TIME);
+	if (time - timefps > 1000) {
+		fps = (float) frame * 1000.0 / (time - timefps);
+		timefps = time;
+		frame = 0;
+	}
+	char string[80];
+	sprintf(string, "FPS COUNTER: %f", fps);
+	glutSetWindowTitle(string);
+}
 
 void changeSize(int w, int h) {
 
@@ -84,9 +95,7 @@ void changeSize(int w, int h) {
  * Usado para guardar as coordenadas das arvores 
 */
 void guardaCoordenadas() {
-
 	coords = (float*)malloc(N * 2 * sizeof(float));
-
 	int num = 0;
 	srand(time(NULL));
 
@@ -200,6 +209,10 @@ void renderScene(void) {
 		0.0, 0.0, 0.0,
 		0.0f, 1.0f, 0.0f);
 
+	// Get de FPS
+	getFPS();
+
+	// Desenho do plano
 	glColor3f(0.2f, 0.8f, 0.2f);
 	glBegin(GL_TRIANGLES);
 		glVertex3f(100.0f, 0, -100.0f);
@@ -216,15 +229,17 @@ void renderScene(void) {
 
 	// Desenhar os objetos que estao no centro do plano
 	desenhaTeapotsDentro();
-
 	desenhaTeapotsFora();
 
 	// Tourus
+	glPushMatrix();
+	glTranslatef(0.0f, 1.0f, 0.0f);
 	glColor3f(0.73f, 0.33f, 0.83f);
 	glutSolidTorus(2.0f, 4.0f, 10, 10);
+	glPopMatrix();
 
+	// Usado para rodar os teapots
 	int time = glutGet(GLUT_ELAPSED_TIME);
-
 	if (time - timebase > 50) {
 		rodar += 0.05f;
 		timebase = time;
@@ -276,6 +291,55 @@ void processSpecialKeys(int key, int xx, int yy) {
 
 }
 
+void OnMouseMove(int x, int y) {
+
+	if (isPressed == 1) {
+		alfa += (x - mouseXPos) * 0.01f;
+		beta += (y - mouseYPos) * 0.01f;
+		if (beta > 1.5f)
+			beta = 1.5f;
+		if (beta < -1.5f)
+			beta = -1.5f;
+		mouseXPos = x;
+		mouseYPos = y;
+		spherical2Cartesian();
+	}
+	else if (isPressed == 2) {
+		if (y < mouseYPos) {
+			radius -= 5.0f;
+			if (radius < 5.0f)
+				radius = 5.0f;
+		}
+		else if (y > mouseYPos) {
+			radius += 5.0f;
+		}
+		mouseXPos = x;
+		mouseYPos = y;
+		spherical2Cartesian();
+	}
+	glutPostRedisplay();
+}
+
+void mouse_pressed(int button, int state, int x, int y) {
+
+	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN)) {
+		mouseXPos = x;
+		mouseYPos = y;
+		isPressed = 1;
+	}
+	else if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_UP)) {
+		isPressed = 0;
+	}
+	else if ((button == GLUT_RIGHT_BUTTON) && (state == GLUT_DOWN)) {
+		mouseYPos = y;
+		isPressed = 2;
+	}
+	else if ((button == GLUT_RIGHT_BUTTON) && (state == GLUT_UP)) {
+		isPressed = 0;
+	}
+	glutPostRedisplay();
+}
+
 
 void printInfo() {
 
@@ -300,12 +364,14 @@ int main(int argc, char **argv) {
 // Required callback registry 
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
+	glutIdleFunc(renderScene);
+	glutPostRedisplay();
 	
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(processSpecialKeys);
-	glutIdleFunc(renderScene);
-	glutPostRedisplay();
+	glutMouseFunc(mouse_pressed);
+	glutMotionFunc(OnMouseMove);
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
