@@ -1,0 +1,29 @@
+﻿  main.cpp
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(110,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(113,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(122,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(132,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(137,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(138,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(139,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(143,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(144,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(145,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(161,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(163,22): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(189,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(190,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(194,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(195,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(219,22): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(224,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(224,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(224,21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(229,54): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(229,39): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(229,24): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,67): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,52): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,37): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Generator\main.cpp(234,22): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  Generator.vcxproj -> C:\Users\nelso\Desktop\Universidade\Computacao Grafica\Trabalho\CG-TP.git\trunk\fase1\Generator\Debug\Generator.exe
