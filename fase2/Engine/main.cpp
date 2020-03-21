@@ -1,70 +1,45 @@
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+#include <stdlib.h>
 #include <GL/glut.h>
 #endif
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
 
-float alfa = 0.0f, beta = 0.5f, radius = 100.0f;
-float camX, camY, camZ;
+#include "vertice.h"
+#include "ListVertices.h"
+#include "tinyxml.h"
 
-// Guardar a ultimas posicoes do rato na tela
-int mouseXPos, mouseYPos;
-int isPressed = -1;
+/*Nome do Ficheiro XML*/
+const char* FILE_XML_NAME = "infoXML.xml";
 
-// Número de arvores no ambiente
-const int N = 300;
-// Numero de bools de fora e de dentro, respetivamente
-const int TF = 16, TD = 8;
-// Tamanho circulo centro
-const int tamCentro = 50;
+// VARIAVEIS GLOBAIS
+float px = 5, py = 5, pz = 5;
+float varx = 0, vary = 0, varz = 0;
 
-// Usado para o bull de cha de fora e de dentro
-float radiusF = 35.0f, radiusD = 15.0f;
+// Camera Explorer
+float raio = 10, alfa = M_PI_4, beta = M_PI_4;
 
-// Array com as coordenadas das arvores
-float* coords;
+// FPS CAMERA
+float dx, dy, dz;
 
-// Variaveis usadas para rodar os teapots
-float rodar = 0;
-int timebase=0;
+// F1 para a camera Explorer(1), F2 para a camera FPS(2)
+int camera_mode = 1;
 
-// Usado para mostrar os FPS
-int frame = 0, timefps = 0;
-float fps=0;
+/**
+Estrutura de dados que guarda os 
+vertices a serem desenhados
+*/
+ListVertices* lv;
+/*Tamanho do array de ListVertices*/
+int size;
 
-/*
- * Converter coordenadas polares em cartesianas
- */
-void spherical2Cartesian() {
-
-	camX = radius * cos(beta) * sin(alfa);
-	camY = radius * sin(beta);
-	camZ = radius * cos(beta) * cos(alfa);
-}
-
-/*
- * Obter os FPS  
- */
-void getFPS() {
-	int time;
-	frame++;
-	time = glutGet(GLUT_ELAPSED_TIME);
-	if (time - timefps > 1000) {
-		fps = (float) frame * 1000.0 / (time - timefps);
-		timefps = time;
-		frame = 0;
-	}
-	char string[80];
-	sprintf(string, "FPS COUNTER: %f", fps);
-	glutSetWindowTitle(string);
-}
+/*Alterar os objetos a visualizar*/
+int pol = 0;
 
 void changeSize(int w, int h) {
 
@@ -91,110 +66,82 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-/*
- * Usado para guardar as coordenadas das arvores 
+/**
+Função usada para desenhar os eixos
 */
-void guardaCoordenadas() {
-	coords = (float*)malloc(N * 2 * sizeof(float));
-	int num = 0;
-	srand(time(NULL));
+void drawAxis() {
 
-	while (num < N*2)
-	{
-		float x = -100 + (rand()) / (static_cast <float> (RAND_MAX / (100 - (-100))));
-		//float x = (float)(rand() % 200) - 100;
-		float z = -100 + (rand()) / (static_cast <float> (RAND_MAX / (100 - (-100))));
-		//float z = (float)(rand() % 200) - 100;
-
-		printf("x: %f, z: %f\n", x, z);
-		
-		if ((x * x + z * z) > (tamCentro* tamCentro)) {
-			coords[num] = x;
-			coords[num + 1] = z;
-
-			num += 2;
-		}
-	}
+	glBegin(GL_LINES);
+	// X axis in red
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(100.0f, 0.0f, 0.0f);
+	// Y Axis in Green
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 100.0f, 0.0f);
+	// Z Axis in Blue
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 100.0f);
+	glEnd();
 }
 
-/*
- * Desenha as arvores a partir das coordenadas feitas previamente aleatorias
+/**
+Função que desenha os triangulos das formas a partir das listas de vertices
 */
-void desenhaArvores() {
-	int num = 0; int tam = N * 2;
+void drawScene() {
 
-	while (num < tam)
-	{
-		glPushMatrix();
-
-		glTranslatef(coords[num], 0, coords[num + 1]);
-
-		// Tronco
-		glPushMatrix();
-		glRotatef(-90, 1.0f, 0.0f, 0.0f);
-		glColor3f(0.59f, 0.29f, 0.0f);
-		glutSolidCone(0.5f, 3.0f, 10, 100);
-		glPopMatrix();
-
-		// Copa
-		glPushMatrix();
-		glTranslatef(0.0f, 2.0f, 0.0f);
-		glRotatef(-90, 1.0f, 0.0f, 0.0f);
-		glColor3f(0.13f, 0.55f, 0.13f);
-		glutSolidCone(2.0f, 6.0f, 10, 100);
-		glPopMatrix();
-
-		glPopMatrix();
-
-		num += 2;
-	}
-}
-
-/*
- * Desenho dos teapots de fora
-*/
-void desenhaTeapotsFora() {
-
-	float x, y = 1.5f, z;
-	float deg, angl;
-	float razao = (2 * M_PI) / TF;
-
-	// Bools de Fora
-	for (int i = 0; i < TF; i++) {
-		glPushMatrix();
-		angl = (float) i * razao + rodar;
-		float x = radiusF * sin(angl);
-		float z = radiusF * cos(angl);
-		deg = (float) ((180 * angl) / M_PI);
-		glTranslatef(x, y, z);
-		glRotatef(deg, 0.0f, 1.0f, 0.0f);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glutSolidTeapot(2.0f);
-		glPopMatrix();
-	}
-}
-
-/*
- * Desenho dos teapots de dentro
-*/
-void desenhaTeapotsDentro() {
-
-	float x, y = 1.5f, z;
-	float deg, angl;
-	float razao = (2 * M_PI) / TD;
-
-	// Bools de Dentro
-	for (int i = 0; i < TF; i++) {
-		glPushMatrix();
-		angl = (float) (i * razao) - rodar;
-		x = (float) radiusD * sin(angl);
-		z = (float) radiusD * cos(angl);
-		deg = (float) ((180 * angl) / M_PI) - 90;
-		glTranslatef(x, y, z);
-		glRotatef(deg, 0.0f, 1.0f, 0.0f);
+	Vertice v,v2,v3;
+	while ((v = nextV(lv[pol])) != NULL) {
+		v2 = nextV(lv[pol]);
+		v3 = nextV(lv[pol]);
+		glBegin(GL_TRIANGLES);
 		glColor3f(0.0f, 0.0f, 1.0f);
-		glutSolidTeapot(2.0f);
-		glPopMatrix();
+		glVertex3f(getX(v), getY(v), getZ(v));
+		glVertex3f(getX(v2), getY(v2), getZ(v2));
+		glVertex3f(getX(v3), getY(v3), getZ(v3));
+		glEnd();
+	}
+	// Colocar o pointer novamente a 0
+	atualizaPointer(lv[pol]);
+}
+
+/**
+ * Funcao que carrega o nome do ficheiro que se pretende reproduzir a partir do ficheiro XML 
+ * infoXML.xml. Para isso recorreu-se ao uso da biblioteca de funcoes C++ 'TinyXML' de modo a 
+ * se efetuar o parse do ficheiro xml para se retirar o nome do ficheiro que contem as coordenadas 
+ * dos vários vértices que compoe a figura.
+*/
+void loadFile() {
+
+	TiXmlDocument doc;
+	char* filename = "";
+	doc.LoadFile(FILE_XML_NAME);
+
+	TiXmlHandle docH(&doc);
+
+	TiXmlNode* ele=NULL;
+	
+	// Descobrir o numero de entradas no ficheiro XML com nomes de ficheiros
+	int i = 0;
+	while ((ele = doc.FirstChildElement("scene")->IterateChildren(ele)) != 0) {
+		i++;
+	}
+
+	size = i;
+
+	lv = (ListVertices*) malloc(i * sizeof(ListVertices));
+
+	TiXmlElement* element;
+
+	// Retirar os nomes do XML e carregar os ficheiros respetivos para as devidas estruturas de dados
+	for (int j = 0; j < i; j++) {
+		element = docH.FirstChildElement("scene").ChildElement(j).Element();
+
+		filename = strdup(element->Attribute("file"));
+
+		lv[j] = carregaFile(filename);
 	}
 }
 
@@ -205,45 +152,32 @@ void renderScene(void) {
 
 	// set the camera
 	glLoadIdentity();
-	gluLookAt(camX, camY, camZ,
-		0.0, 0.0, 0.0,
-		0.0f, 1.0f, 0.0f);
-
-	// Get de FPS
-	getFPS();
-
-	// Desenho do plano
-	glColor3f(0.2f, 0.8f, 0.2f);
-	glBegin(GL_TRIANGLES);
-		glVertex3f(100.0f, 0, -100.0f);
-		glVertex3f(-100.0f, 0, -100.0f);
-		glVertex3f(-100.0f, 0, 100.0f);
-
-		glVertex3f(100.0f, 0, -100.0f);
-		glVertex3f(-100.0f, 0, 100.0f);
-		glVertex3f(100.0f, 0, 100.0f);
-	glEnd();
-
-	// Desenhar as arvores 
-	desenhaArvores();
-
-	// Desenhar os objetos que estao no centro do plano
-	desenhaTeapotsDentro();
-	desenhaTeapotsFora();
-
-	// Tourus
-	glPushMatrix();
-	glTranslatef(0.0f, 1.0f, 0.0f);
-	glColor3f(0.73f, 0.33f, 0.83f);
-	glutSolidTorus(2.0f, 4.0f, 10, 10);
-	glPopMatrix();
-
-	// Usado para rodar os teapots
-	int time = glutGet(GLUT_ELAPSED_TIME);
-	if (time - timebase > 50) {
-		rodar += 0.05f;
-		timebase = time;
+	if (camera_mode == 1) {
+		// Explorer Mode Camera
+		gluLookAt(raio * cos(beta) * sin(alfa), raio * sin(beta), raio * cos(beta) * cos(alfa), // camera position
+			0.0, 0.0, 0.0,  // look at point
+			0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
+	} else {
+		// FPS Camera
+		dx = raio * cos(beta) * sin(alfa);
+		dy = raio * sin(beta);
+		dz = raio * cos(beta) * cos(alfa);
+		gluLookAt(px, py, pz,  // camera position
+			px + dx, py + dy, pz + dz,   // look at point
+			0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
 	}
+
+	//AXIS
+	drawAxis();
+
+	// Transformations
+	glTranslatef(varx, vary, varz);
+
+	// Scene Design
+	drawScene();
+
+	// :)
+	glutWireTeapot(0.5);
 
 	// End of frame
 	glutSwapBuffers();
@@ -252,115 +186,168 @@ void renderScene(void) {
 
 void processKeys(unsigned char c, int xx, int yy) {
 
-// put code to process regular keys in here
+	// Process regular keys
 
+	float speed = 0.3f;
+
+	float norma, crossX, crossY, crossZ;
+
+	/*Somente válido na camera modo FPS*/
+	if (camera_mode == 2) {
+
+		switch (c)
+		{
+		case 'w':
+			norma = sqrt(dx * dx + dy * dy + dz * dz);
+			px += speed * (dx / norma);
+			py += speed * (dy / norma);
+			pz += speed * (dz / norma);
+			break;
+		case 's':
+			norma = sqrt(dx * dx + dy * dy + dz * dz);
+			px -= speed * (dx / norma);
+			py -= speed * (dy / norma);
+			pz -= speed * (dz / norma);
+			break;
+		case 'a':
+			// Produto vetorial
+			crossX = dy * 0.0f - dz * 1.0f;
+			crossY = dz * 0.0f - dx * 0.0f;
+			crossZ = dx * 1.0f - dy * 0.0f;
+			norma = sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ);
+			px -= speed * (crossX / norma);
+			py -= speed * (crossY / norma);
+			pz -= speed * (crossZ / norma);
+			break;
+		case 'd':
+			// Produto vetorial
+			crossX = dy * 0.0f - dz * 1.0f;
+			crossY = dz * 0.0f - dx * 0.0f;
+			crossZ = dx * 1.0f - dy * 0.0f;
+			norma = sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ);
+			px += speed * (crossX / norma);
+			py += speed * (crossY / norma);
+			pz += speed * (crossZ / norma);
+			break;
+		default:
+			break;
+		}
+	}
+
+	/*Válido para todas as cameras*/
+	switch (c) {
+	case 'r':
+		// Translaçao do objeto desenhado para a direita ao longo do eixo do x
+		varx += 1.0f;
+		break;
+	case 'l':
+		// Translaçao do objeto desenhado para a esquerda ao longo do eixo do x
+		varx -= 1.0f;
+		break;
+	case 'c':
+		// Translaçao do objeto desenhado para cima ao longo do eixo do y
+		vary += 1.0f;
+		break;
+	case 'b':
+		// Translaçao do objeto desenhado para baixo ao longo do eixo do y
+		vary -= 1.0f;
+		break;
+	case 'm':
+		// Translaçao do objeto desenhado para fora ao longo do eixo do z
+		varz += 1.0f;
+		break;
+	case 'n':
+		// Translaçao do objeto desenhado para dentro ao longo do eixo do z
+		varz -= 1.0f;
+		break;
+	case 'x':
+		// Mudar de objeto a desenhar
+		pol = ((pol+1) % size);
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
 }
 
 
 void processSpecialKeys(int key, int xx, int yy) {
 
-	switch (key) {
+	// Process special keys
 
-	case GLUT_KEY_RIGHT:
-		alfa -= 0.1; break;
-
-	case GLUT_KEY_LEFT:
-		alfa += 0.1; break;
-
+	switch (key)
+	{
 	case GLUT_KEY_UP:
-		beta += 0.1f;
+		beta += (float)0.1;
 		if (beta > 1.5f)
 			beta = 1.5f;
 		break;
-
 	case GLUT_KEY_DOWN:
-		beta -= 0.1f;
+		beta -= (float)0.1;
 		if (beta < -1.5f)
 			beta = -1.5f;
 		break;
-
-	case GLUT_KEY_PAGE_DOWN: radius -= 1.0f;
-		if (radius < 1.0f)
-			radius = 1.0f;
+	case GLUT_KEY_LEFT:
+		if (camera_mode == 1) {
+			alfa -= (float)0.1;
+		} else {
+			alfa += (float)0.1;
+		}
 		break;
-
-	case GLUT_KEY_PAGE_UP: radius += 1.0f; break;
-	}
-	spherical2Cartesian();
-	glutPostRedisplay();
-
-}
-
-void OnMouseMove(int x, int y) {
-
-	if (isPressed == 1) {
-		alfa += (x - mouseXPos) * 0.01f;
-		beta += (y - mouseYPos) * 0.01f;
-		if (beta > 1.5f)
-			beta = 1.5f;
-		if (beta < -1.5f)
-			beta = -1.5f;
-		mouseXPos = x;
-		mouseYPos = y;
-		spherical2Cartesian();
-	}
-	else if (isPressed == 2) {
-		if (y < mouseYPos) {
-			radius -= 5.0f;
-			if (radius < 5.0f)
-				radius = 5.0f;
+	case GLUT_KEY_RIGHT:
+		if (camera_mode == 1) {
+			alfa += (float)0.1;
+		} else {
+			alfa -= (float)0.1;
 		}
-		else if (y > mouseYPos) {
-			radius += 5.0f;
-		}
-		mouseXPos = x;
-		mouseYPos = y;
-		spherical2Cartesian();
+		break;
+	case GLUT_KEY_PAGE_UP:
+		// Fazer zoom in no modo Explorer Camera
+		raio -= 1;
+		if (raio < 0.1f)
+			raio = 0.1f;
+		break;
+	case GLUT_KEY_PAGE_DOWN:
+		// Fazer zoom out no modo Explorer Camera
+		raio += 1;
+		break;
+	case GLUT_KEY_F1:
+		// Mudar para o modo Explorer Camera
+		camera_mode = 1;
+		alfa = -alfa;
+		beta = -beta;
+		px = 5;
+		py = 5;
+		pz = 5;
+		break;
+	case GLUT_KEY_F2:
+		// Mudar para o modo FPS Camera
+		camera_mode = 2;
+		alfa = -alfa;
+		beta = -beta;
+		break;
+	default:
+		break;
 	}
+
 	glutPostRedisplay();
 }
 
-void mouse_pressed(int button, int state, int x, int y) {
-
-	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN)) {
-		mouseXPos = x;
-		mouseYPos = y;
-		isPressed = 1;
-	}
-	else if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_UP)) {
-		isPressed = 0;
-	}
-	else if ((button == GLUT_RIGHT_BUTTON) && (state == GLUT_DOWN)) {
-		mouseYPos = y;
-		isPressed = 2;
-	}
-	else if ((button == GLUT_RIGHT_BUTTON) && (state == GLUT_UP)) {
-		isPressed = 0;
-	}
-	glutPostRedisplay();
-}
-
-
-void printInfo() {
-
-	printf("Vendor: %s\n", glGetString(GL_VENDOR));
-	printf("Renderer: %s\n", glGetString(GL_RENDERER));
-	printf("Version: %s\n", glGetString(GL_VERSION));
-
-	printf("\nUse Arrows to move the camera up/down and left/right\n");
-	printf("Home and End control the distance from the camera to the origin");
-}
-
-
+/* Cuidado que deve-se fazer o build novamente com o CMake 
+ * Deve-se buscar os ficheiros gerados ao programa "Generator"
+ * Deve-se atualizar o XML com o nome dos ficheiros acabados de gerar
+*/
 int main(int argc, char **argv) {
 
+	// Carregar os ficheiros das primitivas a partir do xml 
+	loadFile();
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
-	glutCreateWindow("CG@DI-UM");
-		
+	glutCreateWindow("CG@TP@Fase1");
+	
 // Required callback registry 
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
@@ -370,21 +357,13 @@ int main(int argc, char **argv) {
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(processSpecialKeys);
-	glutMouseFunc(mouse_pressed);
-	glutMotionFunc(OnMouseMove);
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-
-	spherical2Cartesian();
-
-	guardaCoordenadas();
-
-	printInfo();
+	glEnable(GL_CULL_FACE);
 
 // enter GLUT's main cycle
 	glutMainLoop();
-	
+
 	return 1;
 }
