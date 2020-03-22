@@ -21,7 +21,7 @@ int mouseXPos, mouseYPos;
 int isPressed = -1;
 
 // Número de arvores no ambiente
-const int N = 300;
+const int N = 700;
 // Numero de bools de fora e de dentro, respetivamente
 const int TF = 16, TD = 8;
 // Tamanho circulo centro
@@ -132,7 +132,7 @@ void desenhaArvores() {
 		glPushMatrix();
 		glRotatef(-90, 1.0f, 0.0f, 0.0f);
 		glColor3f(0.59f, 0.29f, 0.0f);
-		glutSolidCone(0.5f, 3.0f, 10, 100);
+		glutSolidCone(0.5f, 3.0f, 10, 10);
 		glPopMatrix();
 
 		// Copa
@@ -140,7 +140,7 @@ void desenhaArvores() {
 		glTranslatef(0.0f, 2.0f, 0.0f);
 		glRotatef(-90, 1.0f, 0.0f, 0.0f);
 		glColor3f(0.13f, 0.55f, 0.13f);
-		glutSolidCone(2.0f, 6.0f, 10, 100);
+		glutSolidCone(2.0f, 6.0f, 5, 5);
 		glPopMatrix();
 
 		glPopMatrix();
@@ -154,7 +154,7 @@ void desenhaArvores() {
 */
 void desenhaTeapotsFora() {
 
-	float x, y = 1.5f, z;
+	float x, z;
 	float deg, angl;
 	float razao = (2 * M_PI) / TF;
 
@@ -164,7 +164,7 @@ void desenhaTeapotsFora() {
 		float x = radiusF * sin(angl);
 		float z = radiusF * cos(angl);
 		deg = (float) ((180 * angl) / M_PI);
-		glTranslatef(x, y, z);
+		glTranslatef(x, 1.5f, z);
 		glRotatef(deg, 0.0f, 1.0f, 0.0f);
 		glColor3f(1.0f, 0.0f, 0.0f);
 		glutSolidTeapot(2.0f);
@@ -177,7 +177,7 @@ void desenhaTeapotsFora() {
 */
 void desenhaTeapotsDentro() {
 
-	float x, y = 1.5f, z;
+	float x, z;
 	float deg, angl;
 	float razao = (2 * M_PI) / TD;
 
@@ -187,7 +187,7 @@ void desenhaTeapotsDentro() {
 		x = (float) radiusD * sin(angl);
 		z = (float) radiusD * cos(angl);
 		deg = (float) ((180 * angl) / M_PI) - 90;
-		glTranslatef(x, y, z);
+		glTranslatef(x, 1.5f, z);
 		glRotatef(deg, 0.0f, 1.0f, 0.0f);
 		glColor3f(0.0f, 0.0f, 1.0f);
 		glutSolidTeapot(2.0f);
@@ -232,7 +232,7 @@ void renderScene(void) {
 	glPushMatrix();
 	glTranslatef(0.0f, 1.0f, 0.0f);
 	glColor3f(0.73f, 0.33f, 0.83f);
-	glutSolidTorus(1.5f, 4.0f, 20, 20);
+	glutSolidTorus(1.5f, 4.0f, 15, 15);
 	glPopMatrix();
 
 	// Usado para rodar os teapots
@@ -353,7 +353,7 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(renderScene);
-	glutPostRedisplay();
+	//glutPostRedisplay();
 	
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
