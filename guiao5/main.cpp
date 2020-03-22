@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <vector>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -10,6 +11,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+using std::vector;
 
 float alfa = 0.0f, beta = 0.5f, radius = 100.0f;
 float camX, camY, camZ;
@@ -29,7 +31,7 @@ const int tamCentro = 50;
 float radiusF = 35.0f, radiusD = 15.0f;
 
 // Array com as coordenadas das arvores
-float* coords;
+vector<float> coords;
 
 // Variaveis usadas para rodar os teapots
 float rodar = 0;
@@ -50,7 +52,7 @@ void spherical2Cartesian() {
 }
 
 /*
- * Obter os FPS  
+ * Obter os FPS, mostrando-os no titulo da janela
  */
 void getFPS() {
 	int time;
@@ -93,25 +95,21 @@ void changeSize(int w, int h) {
 
 /*
  * Usado para guardar as coordenadas das arvores 
+ * A geracao dos numeros aleatorios é feita com numeros reais, e nao inteiros
 */
 void guardaCoordenadas() {
-	coords = (float*)malloc(N * 2 * sizeof(float));
 	int num = 0;
 	srand(time(NULL));
 
 	while (num < N*2)
 	{
-		float x = -100 + (rand()) / (static_cast <float> (RAND_MAX / (100 - (-100))));
-		//float x = (float)(rand() % 200) - 100;
-		float z = -100 + (rand()) / (static_cast <float> (RAND_MAX / (100 - (-100))));
-		//float z = (float)(rand() % 200) - 100;
-
-		printf("x: %f, z: %f\n", x, z);
+		float x = -100 + (rand()) / (static_cast <float> (RAND_MAX / 200));
+		float z = -100 + (rand()) / (static_cast <float> (RAND_MAX / 200));
 		
-		if ((x * x + z * z) > (tamCentro* tamCentro)) {
-			coords[num] = x;
-			coords[num + 1] = z;
-
+		if ((x * x + z * z) > (tamCentro* tamCentro) && abs(x)<=100 && abs(z)<=100) {
+			printf("Coordenada da Arvore %d -> x: %f, z: %f\n", num/2, x, z);
+			coords.push_back(x);
+			coords.push_back(z);
 			num += 2;
 		}
 	}
@@ -119,6 +117,7 @@ void guardaCoordenadas() {
 
 /*
  * Desenha as arvores a partir das coordenadas feitas previamente aleatorias
+ * Mudando a variavel N, mudamos o numero de arvores no ambiente
 */
 void desenhaArvores() {
 	int num = 0; int tam = N * 2;
@@ -127,7 +126,7 @@ void desenhaArvores() {
 	{
 		glPushMatrix();
 
-		glTranslatef(coords[num], 0, coords[num + 1]);
+		glTranslatef(coords.at(num), 0, coords.at(num+1));
 
 		// Tronco
 		glPushMatrix();
@@ -159,7 +158,6 @@ void desenhaTeapotsFora() {
 	float deg, angl;
 	float razao = (2 * M_PI) / TF;
 
-	// Bools de Fora
 	for (int i = 0; i < TF; i++) {
 		glPushMatrix();
 		angl = (float) i * razao + rodar;
@@ -183,7 +181,6 @@ void desenhaTeapotsDentro() {
 	float deg, angl;
 	float razao = (2 * M_PI) / TD;
 
-	// Bools de Dentro
 	for (int i = 0; i < TF; i++) {
 		glPushMatrix();
 		angl = (float) (i * razao) - rodar;
@@ -231,11 +228,11 @@ void renderScene(void) {
 	desenhaTeapotsDentro();
 	desenhaTeapotsFora();
 
-	// Tourus
+	// Torus
 	glPushMatrix();
 	glTranslatef(0.0f, 1.0f, 0.0f);
 	glColor3f(0.73f, 0.33f, 0.83f);
-	glutSolidTorus(2.0f, 4.0f, 10, 10);
+	glutSolidTorus(1.5f, 4.0f, 20, 20);
 	glPopMatrix();
 
 	// Usado para rodar os teapots
@@ -244,7 +241,6 @@ void renderScene(void) {
 		rodar += 0.05f;
 		timebase = time;
 	}
-
 	// End of frame
 	glutSwapBuffers();
 }
@@ -288,7 +284,6 @@ void processSpecialKeys(int key, int xx, int yy) {
 	}
 	spherical2Cartesian();
 	glutPostRedisplay();
-
 }
 
 void OnMouseMove(int x, int y) {
@@ -305,14 +300,9 @@ void OnMouseMove(int x, int y) {
 		spherical2Cartesian();
 	}
 	else if (isPressed == 2) {
-		if (y < mouseYPos) {
-			radius -= 5.0f;
-			if (radius < 5.0f)
-				radius = 5.0f;
-		}
-		else if (y > mouseYPos) {
-			radius += 5.0f;
-		}
+		radius += (y - mouseYPos);
+		if (radius < 5.0f)
+			radius = 5.0f;
 		mouseXPos = x;
 		mouseYPos = y;
 		spherical2Cartesian();
@@ -340,7 +330,6 @@ void mouse_pressed(int button, int state, int x, int y) {
 	glutPostRedisplay();
 }
 
-
 void printInfo() {
 
 	printf("Vendor: %s\n", glGetString(GL_VENDOR));
@@ -350,7 +339,6 @@ void printInfo() {
 	printf("\nUse Arrows to move the camera up/down and left/right\n");
 	printf("Home and End control the distance from the camera to the origin");
 }
-
 
 int main(int argc, char **argv) {
 
@@ -379,6 +367,7 @@ int main(int argc, char **argv) {
 
 	spherical2Cartesian();
 
+	// Guardar as coordenadas das arvores
 	guardaCoordenadas();
 
 	printInfo();
