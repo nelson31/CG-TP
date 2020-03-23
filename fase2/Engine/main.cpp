@@ -10,8 +10,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "groupImpl.h"
+#include "ListGroups.h"
 #include "vertice.h"
-#include "ListVertices.h"
 #include "tinyxml.h"
 
 /*Nome do Ficheiro XML*/
@@ -31,12 +32,13 @@ float dx, dy, dz;
 int camera_mode = 1;
 
 /**
-Estrutura de dados que guarda os 
-vertices a serem desenhados
+Conjuntos de grupos a serem 
+desenhados
 */
-ListVertices* lv;
+ListGroups lg;
+
 /*Tamanho do array de ListVertices*/
-int size;
+int sizeT;
 
 /*Alterar os objetos a visualizar*/
 int pol = 0;
@@ -90,6 +92,7 @@ void drawAxis() {
 /**
 Função que desenha os triangulos das formas a partir das listas de vertices
 */
+/*
 void drawScene() {
 
 	Vertice v,v2,v3;
@@ -106,42 +109,176 @@ void drawScene() {
 	// Colocar o pointer novamente a 0
 	atualizaPointer(lv[pol]);
 }
+*/
+/**
+Função que adiciona um translate 
+ao grupo g
+*/
+void processaTranslate(Group g, char* tagName, float x, float y, float z) {
+
+	float param[3];
+	param[0] = x;
+	param[1] = y;
+	param[2] = z;
+	/* Adicionamos a operação ao grupo */
+	addOperacao(g, tagName, param);
+}
 
 /**
- * Funcao que carrega o nome do ficheiro que se pretende reproduzir a partir do ficheiro XML 
- * infoXML.xml. Para isso recorreu-se ao uso da biblioteca de funcoes C++ 'TinyXML' de modo a 
- * se efetuar o parse do ficheiro xml para se retirar o nome do ficheiro que contem as coordenadas 
+Função que adiciona um rotate 
+ao grupo g
+*/
+void processaRotate(Group g, char* tagName, float angle, float axisX, 
+	float axisY, float axisZ) {
+
+	float param[4];
+	param[0] = angle;
+	param[1] = axisX;
+	param[2] = axisY;
+	param[3] = axisZ;
+	/* Adicionamos a operação ao grupo */
+	addOperacao(g, tagName, param);
+}
+
+/**
+Método que adiciona um modelo ao grupo 
+ao qual é passado por parâmetro para 
+ser desenhado
+*/
+void processaModels(TiXmlElement* element, Group g) {
+	
+	char* filename;
+
+	int vertices;
+
+	float x, y, z;
+	
+	TiXmlNode* ele = NULL;
+
+	TiXmlElement* subelement;
+	/* Antes de mais vamos iterar */
+	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
+		subelement = ele->ToElement();
+		char* tagName = (char*)subelement->Value();
+		if (!strcmp(tagName, "file")) {
+			/* Vamos buscar o nome do ficheiro */
+			filename = (char*)subelement->Attribute("model");
+			/* File pointer que será utilzado
+			para ler dos ficheiros gerados
+			com as respetivas figuras */
+			FILE* fp = fopen(filename, "r");
+			/* Lemos o tamanho inicial */
+			fscanf(fp, "%d\n", &vertices);
+			/* Lemos os valores do ficheiro em questão e
+			adicionamos ao group em questão */
+			while (fscanf(fp, "%f %f %f\n", &x, &y, &z)) {
+				/* Adicionamos o vértice ao
+				respetivo grupo */
+				addVertice(g, x, y, x);
+			}
+			fclose(fp);
+		}
+	}
+}
+
+/**
+Método que tendo em conta 
+a tag toma uma ação
+*/
+void processaGroup(TiXmlElement* element) {
+
+	float angle=0, x=0, y=0, z=0;
+	/* Criamos um novo grupo */
+	Group g = newGroup();
+	char* tagName = (char*)element->Value(), *tagNameSubElem;
+	TiXmlNode* ele = NULL;
+	printf("<%s>\n", element->Value());
+	/* Retirar os nomes do XML e carregar os
+	ficheiros respetivos para as devidas
+	estruturas de dados */
+	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
+		/* Elemento sobre o qual estamos a iterar */
+		TiXmlElement* subelement = ele->ToElement();
+		printf("<%s>\n", subelement->Value());
+		/* Vamos buscar o nome da tag desse element */
+		tagNameSubElem = (char*)subelement->Value();
+		/* Se o filho for group chamamos 
+		a função recursivamente */
+		if(!strcmp(tagNameSubElem,"group"))
+			processaGroup(subelement);
+		/* Se não for group acrescentamos 
+		informação à lista de groups */
+		else {
+			switch (tagNameSubElem[0]) {
+
+				/* Estamos perante uma tag 
+				de translação */
+				case 't':
+					(subelement->Attribute("X") == NULL) ? x = 0 : x = atof(subelement->Attribute("X"));
+					(subelement->Attribute("Y") == NULL) ? y = 0 : y = atof(subelement->Attribute("Y"));
+					(subelement->Attribute("Z") == NULL) ? y = 0 : y = atof(subelement->Attribute("Z"));
+					processaTranslate(g, tagNameSubElem, x, y, z);
+					break;
+
+				/* Estamos perante uma tag 
+				de rotação */
+				case 'r':
+					(subelement->Attribute("angle") == NULL) ? x = 0 : x = atof(subelement->Attribute("angle"));
+					(subelement->Attribute("axisX") == NULL) ? x = 0 : x = atof(subelement->Attribute("axisX"));
+					(subelement->Attribute("axisY") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisY"));
+					(subelement->Attribute("axisZ") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisZ"));
+					processaRotate(g, tagName, angle, x, y, z);
+					break;
+
+				/* Estamos perante uma tag 
+				models */
+				case 'm':
+					processaModels(subelement, g);
+					break;
+
+				default:
+					break;
+
+			}
+			addGroup(lg, g);
+		}
+	}
+}
+
+
+/**
+ * Funcao que carrega o nome do ficheiro que se pretende reproduzir a partir do ficheiro XML
+ * infoXML.xml. Para isso recorreu-se ao uso da biblioteca de funcoes C++ 'TinyXML' de modo a
+ * se efetuar o parse do ficheiro xml para se retirar o nome do ficheiro que contem as coordenadas
  * dos vários vértices que compoe a figura.
 */
 void loadFile() {
 
+	/* Inicializamos a 
+	lista de groups */
+	lg = newListGroups();
+
 	TiXmlDocument doc;
-	char* filename = "";
+	/* Carregamos o ficheiro xml 
+	para a variável acima */
 	doc.LoadFile(FILE_XML_NAME);
 
 	TiXmlHandle docH(&doc);
+	/* Variável para iterar as 
+	tags do elemento */
+	TiXmlNode* ele = NULL;
 
-	TiXmlNode* ele=NULL;
-	
-	// Descobrir o numero de entradas no ficheiro XML com nomes de ficheiros
-	int i = 0;
-	while ((ele = doc.FirstChildElement("scene")->IterateChildren(ele)) != 0) {
-		i++;
-	}
+	/* Lemos o elemento scene */
+	TiXmlElement* element = doc.FirstChildElement("scene");
 
-	size = i;
-
-	lv = (ListVertices*) malloc(i * sizeof(ListVertices));
-
-	TiXmlElement* element;
-
-	// Retirar os nomes do XML e carregar os ficheiros respetivos para as devidas estruturas de dados
-	for (int j = 0; j < i; j++) {
-		element = docH.FirstChildElement("scene").ChildElement(j).Element();
-
-		filename = strdup(element->Attribute("file"));
-
-		lv[j] = carregaFile(filename);
+	ele = NULL;
+	/*
+	Retirar os nomes do XML e carregar os 
+	ficheiros respetivos para as devidas 
+	estruturas de dados
+	*/
+	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
+		processaGroup(ele->ToElement());
 	}
 }
 
@@ -174,7 +311,7 @@ void renderScene(void) {
 	glTranslatef(varx, vary, varz);
 
 	// Scene Design
-	drawScene();
+	//drawScene();
 
 	// :)
 	glutWireTeapot(0.5);
@@ -262,7 +399,7 @@ void processKeys(unsigned char c, int xx, int yy) {
 		break;
 	case 'x':
 		// Mudar de objeto a desenhar
-		pol = ((pol+1) % size);
+		pol = ((pol+1) % sizeT);
 		break;
 	default:
 		break;
@@ -339,8 +476,24 @@ void processSpecialKeys(int key, int xx, int yy) {
 */
 int main(int argc, char **argv) {
 
+	//lg = newListGroups();
 	// Carregar os ficheiros das primitivas a partir do xml 
-	loadFile();
+	//loadFile();
+	vector<float> v;
+	v.push_back(25);
+
+	Group g = newGroup();
+	float param[3];
+	param[0] = 0.0f;
+	param[1] = 2.0f;
+	param[2] = 0.0f;
+	addVertice(g, 0.0f, 0.0f, 0.0f);
+	//printf("Inserido\n");
+	//addVertice(g, 0, 2, 3);
+	addOperacao(g, "translate", param);
+
+	desenhaGroup(g);
+	/*
 // init GLUT and the window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
@@ -364,6 +517,6 @@ int main(int argc, char **argv) {
 
 // enter GLUT's main cycle
 	glutMainLoop();
-
-	return 1;
+	*/
+	return 0;
 }
