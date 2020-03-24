@@ -40,7 +40,7 @@ struct group {
 	operações do group em questão */
 	int numOps;
 	/* Lista de vértices */
-	vector<float> lv;
+	vector<float> *lv;
 	/* Variável que guarda o número de 
 	vértices inseridos no grupo */
 	int numVertices;
@@ -57,6 +57,7 @@ Group newGroup() {
 	novo->op = (Operacao*)malloc(sizeof(Operacao)*_MIN_OPS);
 	novo->sizeOp = _MIN_OPS;
 	novo->numOps = 0;
+	novo->lv = new vector<float>();
 	novo->numVertices = 0;
 
 	return novo;
@@ -123,9 +124,9 @@ ao group para também ser desenhado
 */
 void addVertice(Group g, float x, float y, float z) {
 
-	g->lv.push_back(x);
-	g->lv.push_back(y);
-	g->lv.push_back(z);
+	g->lv->push_back(x);
+	g->lv->push_back(y);
+	g->lv->push_back(z);
 	g->numVertices++;
 }
 
@@ -134,7 +135,7 @@ Método que retorna o vetor no qual se encontram
 representados os vértices a serem desenhados 
 pela aplicação
 */
-vector<float> getVectorV(Group g) {
+vector<float>* getVectorV(Group g) {
 
 	return g->lv;
 }
@@ -164,11 +165,11 @@ void desenhaGroup(Group g) {
 		}
 	}
 	int j = 0;
-	int size = (int)g->lv.size();
+	int size = (int)g->lv->size()/3;
 	printf("Vértices: {\n");
 	/* Imprimimos cada um dos vértices */
 	for (int i = 0; i < size; i++) {
-		printf("(%f, %f, %f)\n", g->lv[j++], g->lv[j++], g->lv[j++]);
+		printf("(%f, %f, %f)\n", g->lv->at(j++), g->lv->at(j++), g->lv->at(j++));
 	}
 	printf("}\n");
 }

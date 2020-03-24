@@ -36,7 +36,7 @@ Método que retorna o vetor no qual se encontram
 representados os vértices a serem desenhados
 pela aplicação
 */
-vector<float> getVectorV(Group g);
+vector<float>* getVectorV(Group g);
 
 /**
 Método que desenha um group
