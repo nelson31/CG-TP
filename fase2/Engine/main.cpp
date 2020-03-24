@@ -207,8 +207,10 @@ void processaGroup(TiXmlElement* element) {
 		tagNameSubElem = (char*)subelement->Value();
 		/* Se o filho for group chamamos 
 		a função recursivamente */
-		if(!strcmp(tagNameSubElem,"group"))
+		if (!strcmp(tagNameSubElem, "group")) {
+			/* Processamos o subgrupo */
 			processaGroup(subelement);
+		}
 		/* Se não for group acrescentamos 
 		informação à lista de groups */
 		else {
@@ -243,9 +245,12 @@ void processaGroup(TiXmlElement* element) {
 					break;
 
 			}
-			addGroup(lg, g);
 		}
 	}
+	/* Adicionamos o grupo atual à
+	lista para ser desenhado */
+	addGroup(lg, g);
+	printf("\t>> Group added successfully!\n");
 }
 
 
