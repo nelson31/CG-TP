@@ -40,7 +40,7 @@ struct group {
 	operações do group em questão */
 	int numOps;
 	/* Lista de vértices */
-	vector<float> *lv;
+	vector<float> lv;
 	/* Variável que guarda o número de 
 	vértices inseridos no grupo */
 	int numVertices;
@@ -164,7 +164,6 @@ void desenhaGroup(Group g) {
 			break;
 		}
 	}
-	int j = 0;
 	int size = (int)g->lv->size()/3;
 	printf("Vértices: {\n");
 	/* Imprimimos cada um dos vértices */
