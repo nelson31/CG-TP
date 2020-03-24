@@ -40,7 +40,7 @@ struct group {
 	operações do group em questão */
 	int numOps;
 	/* Lista de vértices */
-	vector<float> lv;
+	vector<float>* lv;
 	/* Variável que guarda o número de 
 	vértices inseridos no grupo */
 	int numVertices;
@@ -109,7 +109,7 @@ void addOperacao(Group g, char* operacao, float param[]) {
 	if (g->numOps == g->sizeOp) {
 		/* Disponibilizamos apenas 
 		espaço para esta operação */
-		g->op = (Operacao*)realloc(g->op, g->sizeOp + 1);
+		g->op = (Operacao*)realloc(g->op, (g->sizeOp + 1)*sizeof(Operacao));
 		/* Atualizamos o tamanho 
 		do array para mais uma unidade */
 		g->sizeOp++;
@@ -158,12 +158,13 @@ void desenhaGroup(Group g) {
 
 		case operacao::nome::ROTATE:
 			printf("rotate");
-			printf("translate ");
 			printf("(%f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
 				g->op[i]->parametros[2], g->op[i]->parametros[3]);
 			break;
 		}
 	}
+	printf("}\n");
+	int j = 0;
 	int size = (int)g->lv->size()/3;
 	printf("Vértices: {\n");
 	/* Imprimimos cada um dos vértices */

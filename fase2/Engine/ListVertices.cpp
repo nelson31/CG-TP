@@ -5,6 +5,12 @@
 #include "vertice.h"
 
 /**
+Definimos o número máximo 
+de vértices inicial
+*/
+#define _INITIAL_VERT 100
+
+/**
 Definição da estrutura de dados que 
 representará uma lista de vértices
 */
@@ -20,13 +26,13 @@ struct vertices {
 Função que permite criar uma nova estrutura 
 de dados do tipo lista de vértices
 */
-ListVertices newListVertices(int n) {
+ListVertices newListVertices() {
 
 	ListVertices novo = (ListVertices)malloc(sizeof(struct vertices));
 	novo->nVertices = 0;
 	novo->pointer = 0;
-	novo->size = n;
-	novo->lista = (Vertice*) malloc(sizeof(Vertice)*n);
+	novo->size = _INITIAL_VERT;
+	novo->lista = (Vertice*) malloc(sizeof(Vertice)*_INITIAL_VERT);
 	return novo;
 }
 
@@ -36,7 +42,14 @@ novo vértice à lista
 */
 void addVertice(ListVertices lv, float x, float y, float z) {
 
-	int i = 0;
+	/* Se o tamanho máximo tiver sido 
+	atingido realocamos memória */
+	if (lv->nVertices == lv->size) {
+		printf("Realocar: num=%d, size=%d, new size=%d\n", lv->nVertices, lv->size, lv->size*2);
+		lv->lista = (Vertice*)realloc(lv->lista, lv->size * 2 * sizeof(Vertice));
+		/* Atualizamos o espaço máximo */
+		lv->size *= 2;
+	}
 	Vertice v = newVertice(x, y, z);
 	lv->lista[lv->nVertices++] = v;
 }
@@ -57,7 +70,7 @@ ListVertices carregaFile(const char filename[]) {
 	int size = atoi(str);
 
 	printf("Tamanho lido: %d\n", size);
-	ListVertices lv = newListVertices(size);
+	ListVertices lv = newListVertices();
 	while (fgets(str, 50, fp)) {
 		str[strlen(str) - 1] = '\0';
 		float x = atof(strtok_s(str, " ", &next));

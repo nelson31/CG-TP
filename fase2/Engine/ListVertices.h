@@ -10,6 +10,18 @@ que implementa uma lista de vértices
 typedef struct vertices* ListVertices;
 
 /**
+Função que permite criar uma nova estrutura
+de dados do tipo lista de vértices
+*/
+ListVertices newListVertices();
+
+/**
+Função que permite adicionar um
+novo vértice à lista
+*/
+void addVertice(ListVertices lv, float x, float y, float z);
+
+/**
 Função que lê dum ficheiro um número
 predefinido de vértices
 */
