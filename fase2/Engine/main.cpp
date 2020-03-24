@@ -122,6 +122,7 @@ void processaTranslate(Group g, char* tagName, float x, float y, float z) {
 	param[2] = z;
 	/* Adicionamos a operação ao grupo */
 	addOperacao(g, tagName, param);
+	printf("%s added successfully to group\n", tagName);
 }
 
 /**
@@ -160,9 +161,10 @@ void processaModels(TiXmlElement* element, Group g) {
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
 		subelement = ele->ToElement();
 		char* tagName = (char*)subelement->Value();
-		if (!strcmp(tagName, "file")) {
+		if (!strcmp(tagName, "model")) {
 			/* Vamos buscar o nome do ficheiro */
-			filename = (char*)subelement->Attribute("model");
+			filename = (char*)subelement->Attribute("file");
+			printf("%s\n", filename);
 			/* File pointer que será utilzado
 			para ler dos ficheiros gerados
 			com as respetivas figuras */
@@ -171,12 +173,13 @@ void processaModels(TiXmlElement* element, Group g) {
 			fscanf(fp, "%d\n", &vertices);
 			/* Lemos os valores do ficheiro em questão e
 			adicionamos ao group em questão */
-			while (fscanf(fp, "%f %f %f\n", &x, &y, &z)) {
+			while (fscanf(fp, "%f %f %f\n", &x, &y, &z) != -1) {
 				/* Adicionamos o vértice ao
 				respetivo grupo */
 				addVertice(g, x, y, x);
 			}
 			fclose(fp);
+			printf("File %s charged successfully!\n", filename);
 		}
 	}
 }
@@ -476,23 +479,15 @@ void processSpecialKeys(int key, int xx, int yy) {
 */
 int main(int argc, char **argv) {
 
-	//lg = newListGroups();
+	lg = newListGroups();
 	// Carregar os ficheiros das primitivas a partir do xml 
-	//loadFile();
-	vector<float> v;
-	v.push_back(25);
+	//addVertice(g, 0, 0, 0);
+	//ListVertices lv = newListVertices();
 
-	Group g = newGroup();
-	float param[3];
-	param[0] = 0.0f;
-	param[1] = 2.0f;
-	param[2] = 0.0f;
-	addVertice(g, 0.0f, 0.0f, 0.0f);
-	//printf("Inserido\n");
-	//addVertice(g, 0, 2, 3);
-	addOperacao(g, "translate", param);
+	//for (int i = 0; i < 2000; i++)
+	//	addVertice(lv, 0, 0, 0);
 
-	desenhaGroup(g);
+	loadFile();
 	/*
 // init GLUT and the window
 	glutInit(&argc, argv);
