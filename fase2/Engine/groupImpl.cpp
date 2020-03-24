@@ -11,7 +11,7 @@ parâmetros de cada operação */
 #define _MIN_OPS 10
 
 /**
-Definição do tipo operaçaõ
+Definição do tipo operação
 */
 typedef struct operacao {
 
@@ -158,7 +158,7 @@ void desenhaGroup(Group g) {
 
 		case operacao::nome::ROTATE:
 			printf("rotate");
-			printf("(%f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
+			printf("(%f, %f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
 				g->op[i]->parametros[2], g->op[i]->parametros[3]);
 			break;
 		}
@@ -172,6 +172,63 @@ void desenhaGroup(Group g) {
 		printf("(%f, %f, %f)\n", g->lv->at(j++), g->lv->at(j++), g->lv->at(j++));
 	}
 	printf("}\n");
+}
+
+/**
+Método que permite obter os parâmetros de 
+uma operação dada a própria operação. name 
+é uma variável de output
+*/
+int* getParams(Operacao op, char* name) {
+
+	int nParam;
+	int* param;
+	switch (op->nome) {
+		case operacao::nome::TRANSLATE:
+			param = (int*)malloc(sizeof(int) * 3);
+			nParam = 3;
+			name = strdup("translate");
+			break;
+
+		case operacao::nome::ROTATE:
+			param = (int*)malloc(sizeof(int) * 4);
+			nParam = 4;
+			name = strdup("rotate");
+			break;
+
+		default:
+			break;
+	}
+	for (int i = 0; i < nParam; i++)
+		param[i] = op->parametros[i];
+	return param;
+}
+
+/**
+Método que permite obter um array com os 
+parâmetros de cada uma das operações. 
+Conseguimos distingir as operações 
+associadas ao vetor, visto que possuem 
+tamanhos diferentes.
+*/
+int** getParams(Group g, char** opNames) {
+
+	char* nome = NULL;
+	/* Alocamos espaço para colocar 
+	os nomes das operações */
+	opNames = (char**)malloc(sizeof(char*) * g->numOps);
+	/* Alocamos espeço para colocar os 
+	diferentes arrays */
+	int** ret = (int**)malloc(sizeof(int*) * g->numOps);
+	/* Vamos buscar os parâmetros de cada 
+	uma das operações */
+	for (int i = 0; i < g->numOps; i++) {
+		ret[i] = getParams(g->op[i],nome);
+		/* Adicionamos o nome ao array 
+		opNames de output */
+		opNames[i] = nome;
+	}
+	return ret;
 }
 
 /**

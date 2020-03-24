@@ -185,14 +185,36 @@ void processaModels(TiXmlElement* element, Group g) {
 }
 
 /**
+Método que permite adicionar as operações 
+especificadas nos arrays ao grupo 
+em questão
+*/
+void addOperacoes(Group g, char** opNames, float** params, int size) {
+
+	/* Para cada uma das operações, adicionámo-la ao group */
+	for (int i = 0; i < size; i++)
+		addOperacao(g, opNames[i], params[i]);
+}
+
+/**
 Método que tendo em conta 
 a tag toma uma ação
 */
-void processaGroup(TiXmlElement* element) {
+void processaGroup(TiXmlElement* element, char** opNames, float** params, int numOperacoes) {
 
+	/* Vamos buscar o numero de operações 
+	nos arrays opNames e params para o podermos 
+	atualizar~no contexto de cada chamada recursiva */
+	int atualNumOps = numOperacoes;
 	float angle=0, x=0, y=0, z=0;
 	/* Criamos um novo grupo */
 	Group g = newGroup();
+	/* Se tivermos operações provenientes
+	de um group pai adicionamos essas mesmas
+	operações ao grupo filho */
+	if (numOperacoes != 0) {
+		addOperacoes(g, opNames, params, numOperacoes);
+	}
 	char* tagName = (char*)element->Value(), *tagNameSubElem;
 	TiXmlNode* ele = NULL;
 	printf("<%s>\n", element->Value());
@@ -209,7 +231,7 @@ void processaGroup(TiXmlElement* element) {
 		a função recursivamente */
 		if (!strcmp(tagNameSubElem, "group")) {
 			/* Processamos o subgrupo */
-			processaGroup(subelement);
+			processaGroup(subelement, opNames, params, atualNumOps);
 		}
 		/* Se não for group acrescentamos 
 		informação à lista de groups */
@@ -219,20 +241,35 @@ void processaGroup(TiXmlElement* element) {
 				/* Estamos perante uma tag 
 				de translação */
 				case 't':
+					opNames = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
+					opNames[atualNumOps - 1] = strdup("translate");
+					params = (float**)realloc(params, sizeof(float*) * (atualNumOps));
 					(subelement->Attribute("X") == NULL) ? x = 0 : x = atof(subelement->Attribute("X"));
 					(subelement->Attribute("Y") == NULL) ? y = 0 : y = atof(subelement->Attribute("Y"));
-					(subelement->Attribute("Z") == NULL) ? y = 0 : y = atof(subelement->Attribute("Z"));
+					(subelement->Attribute("Z") == NULL) ? z = 0 : z = atof(subelement->Attribute("Z"));
+					params[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
+					params[atualNumOps - 1][0] = x;
+					params[atualNumOps - 1][1] = y;
+					params[atualNumOps - 1][2] = z;
 					processaTranslate(g, tagNameSubElem, x, y, z);
 					break;
 
 				/* Estamos perante uma tag 
 				de rotação */
 				case 'r':
-					(subelement->Attribute("angle") == NULL) ? x = 0 : x = atof(subelement->Attribute("angle"));
+					opNames = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
+					opNames[atualNumOps - 1] = strdup("rotate");
+					params = (float**)realloc(params, sizeof(float*) * (atualNumOps));
+					(subelement->Attribute("angle") == NULL) ? angle = 0 : angle = atof(subelement->Attribute("angle"));
 					(subelement->Attribute("axisX") == NULL) ? x = 0 : x = atof(subelement->Attribute("axisX"));
 					(subelement->Attribute("axisY") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisY"));
-					(subelement->Attribute("axisZ") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisZ"));
-					processaRotate(g, tagName, angle, x, y, z);
+					(subelement->Attribute("axisZ") == NULL) ? z = 0 : z = atof(subelement->Attribute("axisZ"));
+					params[atualNumOps - 1] = (float*)malloc(sizeof(float) * 4);
+					params[atualNumOps - 1][0] = angle;
+					params[atualNumOps - 1][1] = x;
+					params[atualNumOps - 1][2] = y;
+					params[atualNumOps - 1][3] = z;
+					processaRotate(g, tagNameSubElem, angle, x, y, z);
 					break;
 
 				/* Estamos perante uma tag 
@@ -278,7 +315,6 @@ void loadFile() {
 
 	/* Lemos o elemento scene */
 	TiXmlElement* element = doc.FirstChildElement("scene");
-
 	ele = NULL;
 	/*
 	Retirar os nomes do XML e carregar os 
@@ -286,7 +322,9 @@ void loadFile() {
 	estruturas de dados
 	*/
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
-		processaGroup(ele->ToElement());
+		char** opNames = (char**)malloc(1);
+		float** param = (float**)malloc(1);
+		processaGroup(ele->ToElement(),opNames,param,0);
 	}
 }
 
@@ -493,6 +531,8 @@ int main(int argc, char **argv) {
 	//	addVertice(lv, 0, 0, 0);
 
 	loadFile();
+
+	desenhaListGroups(lg);
 	/*
 // init GLUT and the window
 	glutInit(&argc, argv);

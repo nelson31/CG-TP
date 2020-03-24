@@ -22,4 +22,9 @@ a uma estrutura de dados do tipo ListGroups
 */
 void addGroup(ListGroups lg, Group g);
 
+/**
+Método que desenha uma ListGroups no ecrã
+*/
+void desenhaListGroups(ListGroups lg);
+
 #endif

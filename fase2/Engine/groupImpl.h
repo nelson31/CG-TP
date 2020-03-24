@@ -44,6 +44,18 @@ Método que desenha um group
 void desenhaGroup(Group g);
 
 /**
+Método que permite obter um array com os
+parâmetros de cada uma das operações.
+Conseguimos distingir as operações
+associadas ao vetor, visto que possuem
+tamanhos diferentes. É de notar que 
+opNames é um parâmetro de output de 
+onde saem os nomes das operações associados 
+aos parametros através dos INDICES.
+*/
+int** getParams(Group g, char** opNames);
+
+/**
 Método que liberta uma estrutura
 de dados do tipo Group
 */

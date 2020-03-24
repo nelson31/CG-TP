@@ -53,3 +53,14 @@ void addGroup(ListGroups lg, Group g) {
 	lg->groups[lg->numGroups++] = g;
 }
 
+/**
+Método que desenha uma ListGroups no ecrã
+*/
+void desenhaListGroups(ListGroups lg) {
+
+	for (int i = 0; i < lg->numGroups; i++) {
+		printf("<Group nº%d>\n");
+		desenhaGroup(lg->groups[i]);
+		printf("</Group nº%d>\n");
+	}
+}
