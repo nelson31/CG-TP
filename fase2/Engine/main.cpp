@@ -396,7 +396,7 @@ void prepareScene(){
 	prepareData();
 	/* Vamos buscar as transformações 
 	de cada group */
-	numOps = getOpsParams(lg, names, params);
+	numOps = getOpsParams(lg, &names, &params);
 }
 
 /**
@@ -404,10 +404,36 @@ Método que desenha a scene
 */
 void drawScene() {
 
-	/* Percorremos as transformações 
-	de cada group */
+	/* Percorremos todos 
+	os groups */
 	for (int i = 0; i < size; i++) {
+		/* Fazemos push da matriz 
+		de transformações */
+		glPushMatrix();
+		/* Percorremos as operações 
+		dentro de cada group */
+		for (int j = 0; j < numOps[i]; j++) {
+			switch (names[i][j][0]) {
+				/* Estamos perante um translate */
+				case 't':
+					glTranslatef(params[i][j][0], params[i][j][1], params[i][j][2]);
+					break;
 
+				case 'r':
+					glRotatef(params[i][j][0], params[i][j][1], params[i][j][2], params[i][j][3]);
+					break;
+
+				default :
+					break;
+			}
+		}
+		/* Desenhamos os respetivos vértices */
+		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+		glDrawArrays(GL_TRIANGLES, 0, numVerticess[i]);
+
+		/* Fazemos pop da matrix */
+		glPopMatrix();
 	}
 }
 
@@ -601,6 +627,8 @@ void processSpecialKeys(int key, int xx, int yy) {
 */
 int main(int argc, char **argv) {
 
+	names = (char***)malloc(sizeof(char**) * size);
+	params = (float***)malloc(sizeof(float**) * size);
 	lg = newListGroups();
 	// Carregar os ficheiros das primitivas a partir do xml 
 	//addVertice(g, 0, 0, 0);
@@ -643,8 +671,6 @@ int main(int argc, char **argv) {
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	prepareScene();
-
-	printf("Scene prepared\n");
 
 	for (int i = 0; i < size; i++)
 		printf("Número de operações do group n%d: %d\n", i + 1, numOps[i]);

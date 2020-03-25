@@ -100,22 +100,24 @@ transformações para cada group indexado
 pelo índice. É retornado um array os números 
 de operações por cada group
 */
-int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
+int* getOpsParams(ListGroups lg, char**** namesByGroup, float**** paramsByGroup) {
 
 	int* sizes = (int*)malloc(sizeof(int) * lg->numGroups);
-	char** opNames=NULL;
-	float** params=NULL;
-	/* Alocamos espaço para retornar */
-	paramsByGroup = (float***)malloc(sizeof(float**) * lg->numGroups);
-	namesByGroup = (char***)malloc(sizeof(char**) * lg->numGroups);
+	int numOps;
+	char** opNames;
+	float** params;
 	for (int i = 0; i < lg->numGroups; i++) {
-		/* Vamos buscar os parâmetros de todas 
+		/* Acedemos ao número de operações de cada group */
+		numOps = getNumOps(lg->groups[i]);
+		opNames = (char**)malloc(sizeof(char*) * numOps);
+		params = (float**)malloc(sizeof(float*) * numOps);
+		/* Vamos buscar os parâmetros de todas
 		as operações de cada group */
-		sizes[i] = getParams(lg->groups[i],opNames,params);
+		sizes[i] = getParams(lg->groups[i],&opNames,&params);
 		/* Adicionamos os parâmetros e os 
 		nomes aos arrays a retornar */
-		paramsByGroup[i] = params;
-		namesByGroup[i] = opNames;
+		*paramsByGroup[i] = params;
+		*namesByGroup[i] = opNames;
 	}
 	return sizes;
 }

@@ -188,7 +188,7 @@ Método que permite obter os parâmetros de
 uma operação dada a própria operação. name 
 é uma variável de output
 */
-float* getParamsOp(Operacao op, char* name) {
+float* getParamsOp(Operacao op, char* name[]) {
 
 	int nParam;
 	float* param;
@@ -196,13 +196,13 @@ float* getParamsOp(Operacao op, char* name) {
 		case operacao::nome::TRANSLATE:
 			param = (float*)malloc(sizeof(float) * 3);
 			nParam = 3;
-			name = strdup("translate");
+			strcpy(*name,"translate");
 			break;
 
 		case operacao::nome::ROTATE:
 			param = (float*)malloc(sizeof(float) * 4);
 			nParam = 4;
-			name = strdup("rotate");
+			strcpy(*name,"rotate");
 			break;
 
 		default:
@@ -220,23 +220,20 @@ Conseguimos distingir as operações
 associadas ao vetor, visto que possuem 
 tamanhos diferentes.
 */
-int getParams(Group g, char** opNames, float** params) {
+int getParams(Group g, char*** opNames, float*** params) {
 
-	char* nome = NULL;
-	/* Alocamos espaço para colocar 
-	os nomes das operações */
-	opNames = (char**)malloc(sizeof(char*) * g->numOps);
-	/* Alocamos espeço para colocar os 
-	diferentes arrays */
-	params = (float**)malloc(sizeof(float*) * g->numOps);
+	char* nome;
 	/* Vamos buscar os parâmetros de cada 
 	uma das operações */
 	int i;
 	for (i = 0; i < g->numOps; i++) {
-		params[i] = getParamsOp(g->op[i],nome);
+		nome = (char*)malloc(sizeof(char) * 20);
+		*params[i] = getParamsOp(g->op[i],&nome);
 		/* Adicionamos o nome ao array 
 		opNames de output */
-		opNames[i] = nome;
+		printf("%s\n", nome);
+		*opNames[i] = nome;
+		printf("%s\n", nome);
 	}
 	return i;
 }
@@ -253,4 +250,13 @@ void freeGroup(Group g) {
 	/* Libertamos o próprio 
 	grupo */
 	free(g);
+}
+
+/**
+Método que retorna o número de 
+operações de um grupo
+*/
+int getNumOps(Group g) {
+
+	return g->numOps;
 }

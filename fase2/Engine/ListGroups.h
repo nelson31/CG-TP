@@ -52,6 +52,6 @@ parâmetro de saida, no qual constam os
 nomes das operações de cada group dentro 
 da lista
 */
-int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup);
+int* getOpsParams(ListGroups lg, char**** namesByGroup, float**** paramsByGroup);
 
 #endif
