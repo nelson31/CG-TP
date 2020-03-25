@@ -187,7 +187,7 @@ Método que permite obter os parâmetros de
 uma operação dada a própria operação. name 
 é uma variável de output
 */
-float* getParamsOp(Operacao op, char* name[]) {
+float* getParamsOp(Operacao op, char** name) {
 
 	int nParam;
 	float* param;
@@ -221,18 +221,18 @@ tamanhos diferentes.
 */
 int getParams(Group g, char*** opNames, float*** params) {
 
+	float* recebe;
 	char* nome;
 	/* Vamos buscar os parâmetros de cada 
 	uma das operações */
 	int i;
 	for (i = 0; i < g->numOps; i++) {
 		nome = (char*)malloc(sizeof(char) * 20);
-		*params[i] = getParamsOp(g->op[i],&nome);
+		recebe = getParamsOp(g->op[i],&nome);
+		(*params)[i] = recebe;
 		/* Adicionamos o nome ao array 
 		opNames de output */
-		printf("%s\n", nome);
-		*opNames[i] = nome;
-		printf("%s\n", nome);
+		(*opNames)[i] = nome;
 	}
 	return i;
 }
