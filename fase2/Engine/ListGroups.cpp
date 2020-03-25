@@ -103,8 +103,8 @@ de operações por cada group
 int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
 
 	int* sizes = (int*)malloc(sizeof(int) * lg->numGroups);
-	char** opNames;
-	float** params;
+	char** opNames=NULL;
+	float** params=NULL;
 	/* Alocamos espaço para retornar */
 	paramsByGroup = (float***)malloc(sizeof(float**) * lg->numGroups);
 	namesByGroup = (char***)malloc(sizeof(char**) * lg->numGroups);
