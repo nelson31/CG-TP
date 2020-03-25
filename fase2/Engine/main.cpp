@@ -43,7 +43,7 @@ ListGroups lg;
 Variáveis usadas para desenhar o 
 conteudo da ListGroups
 */
-GLuint* vertices, * numVertices;
+GLuint* vertices, *numVerticess;
 
 /*Tamanho do array de ListVertices*/
 int sizeT;
