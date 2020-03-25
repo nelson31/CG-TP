@@ -3,6 +3,7 @@
 #else
 #include <stdlib.h>
 #include <GL/glut.h>
+#include <GL/glew.h>
 #endif
 
 #define _USE_MATH_DEFINES
@@ -343,12 +344,18 @@ a ListGroups em vigor
 void prepareData() {
 
 	int groups = numGroups(lg);
+	vertices = (GLuint*)malloc(sizeof(GLuint)*groups);
+	numVerticess = (GLuint*)malloc(sizeof(GLuint) * groups);
 	int* sizes=NULL;
 	/* Sizes é parâmetro de saida */
 	vector<float>** vec = getVectors(lg, sizes);
 	/* Criamos os vbo's */
 	for (int i = 0; i < groups; i++) {
+		glGenBuffers(i + 1, &vertices[i]);
 	}
+	/* Passamos os vetores para a memória gráfica */
+
+
 }
 
 void renderScene(void) {
