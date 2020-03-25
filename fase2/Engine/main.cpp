@@ -26,7 +26,7 @@ float px = 5, py = 5, pz = 5;
 float varx = 0, vary = 0, varz = 0;
 
 // Camera Explorer
-float raio = 10, alfa = M_PI_4, beta = M_PI_4;
+float raio = 20, alfa = M_PI_4, beta = M_PI_4;
 
 // FPS CAMERA
 float dx, dy, dz;
@@ -396,7 +396,13 @@ void prepareScene(){
 	prepareData();
 	/* Vamos buscar as transformações 
 	de cada group */
-	numOps = getOpsParams(lg, &names, &params);
+	numOps = getOpsParams(lg, names, params);
+
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < numOps[i]; j++) {
+			printf("[Grupo %d e operacao numero %d]: %s -> %f ; %f ; %f \n", i, j, names[i][j], params[i][j][0], params[i][j][1], params[i][j][2]);
+		}
+	}
 }
 
 /**
@@ -466,10 +472,7 @@ void renderScene(void) {
 	glTranslatef(varx, vary, varz);
 
 	// Scene Design
-	//drawScene();
-
-	// :)
-	glutWireTeapot(0.5);
+	drawScene();
 
 	// End of frame
 	glutSwapBuffers();
@@ -630,18 +633,10 @@ int main(int argc, char **argv) {
 	names = (char***)malloc(sizeof(char**) * size);
 	params = (float***)malloc(sizeof(float**) * size);
 	lg = newListGroups();
-	// Carregar os ficheiros das primitivas a partir do xml 
-	//addVertice(g, 0, 0, 0);
-	//ListVertices lv = newListVertices();
-
-	//for (int i = 0; i < 2000; i++)
-	//	addVertice(lv, 0, 0, 0);
 
 	loadFile();
 
 	size = numGroups(lg);
-
-	//desenhaListGroups(lg);
 
 // init GLUT and the window
 	glutInit(&argc, argv);
@@ -674,8 +669,6 @@ int main(int argc, char **argv) {
 
 	for (int i = 0; i < size; i++)
 		printf("Número de operações do group n%d: %d\n", i + 1, numOps[i]);
-
-	drawScene();
 
 // enter GLUT's main cycle
 	glutMainLoop();

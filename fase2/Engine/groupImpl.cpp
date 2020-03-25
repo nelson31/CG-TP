@@ -152,7 +152,6 @@ int numVertices(Group g) {
 /**
 Método que desenha um group
 */
-
 void desenhaGroup(Group g) {
 
 	printf("Operações: {\n");
@@ -260,3 +259,4 @@ int getNumOps(Group g) {
 
 	return g->numOps;
 }
+
