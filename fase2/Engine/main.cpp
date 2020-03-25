@@ -1,9 +1,9 @@
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+#include <GL/glew.h>
 #include <stdlib.h>
 #include <GL/glut.h>
-#include <GL/glew.h>
 #endif
 
 #define _USE_MATH_DEFINES
