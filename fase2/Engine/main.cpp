@@ -373,7 +373,7 @@ void prepareData() {
 	printf("Vou preparar os vbo's\n");
 	for (int i = 0; i < groups; i++) {
 		printf("Entrei\n");
-		glGenBuffers(1, &vertices[i]);
+		glGenBuffers(i+1, &vertices[i]);
 		printf("Saí\n");
 	}
 	printf("Vbo's preparados\n");
@@ -652,6 +652,8 @@ int main(int argc, char **argv) {
 
 	for (int i = 0; i < size; i++)
 		printf("Número de operações do group n%d: %d\n", i + 1, numOps[i]);
+
+	drawScene();
 
 // enter GLUT's main cycle
 	glutMainLoop();
