@@ -141,6 +141,15 @@ vector<float>* getVectorV(Group g) {
 }
 
 /**
+Método que retorna o número de vértices 
+incluidos num Group
+*/
+int numVertices(Group g) {
+
+	return g->numVertices;
+}
+
+/**
 Método que desenha um group
 */
 

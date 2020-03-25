@@ -39,6 +39,12 @@ pela aplicação
 vector<float>* getVectorV(Group g);
 
 /**
+Método que retorna o número de vértices
+incluidos num Group
+*/
+int numVertices(Group g);
+
+/**
 Método que desenha um group
 */
 void desenhaGroup(Group g);

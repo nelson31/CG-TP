@@ -54,6 +54,35 @@ void addGroup(ListGroups lg, Group g) {
 }
 
 /**
+Método que permite obter os diferentes vetores 
+de todos os grupos includos na ListGroups 
+enviada por parâmetro. Os respetivos tamanhos 
+são passados pelo parâmetro de saida designado 
+por sizes
+*/
+vector<float>** getVectors(ListGroups lg, int* sizes) {
+
+	vector<float>** ret = (vector<float>**)malloc(sizeof(vector<float>*) * lg->numGroups);
+	sizes = (int*)malloc(sizeof(int) * lg->numGroups);
+	/* Para cada group vamos buscar o respetivo vector */
+	for (int i = 0; i < lg->numGroups; i++) {
+		ret[i] = getVectorV(lg->groups[i]);
+		sizes[i] = numVertices(lg->groups[i]);
+	}
+	return ret;
+}
+
+/**
+Método que retorna o número de groups existentes 
+na estrutura de dados ListGroups que é passada 
+por parâmetro
+*/
+int numGroups(ListGroups lg) {
+
+	return lg->numGroups;
+}
+
+/**
 Método que desenha uma ListGroups no ecrã
 */
 void desenhaListGroups(ListGroups lg) {

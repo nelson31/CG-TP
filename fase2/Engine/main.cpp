@@ -15,6 +15,8 @@
 #include "vertice.h"
 #include "tinyxml.h"
 
+using std::vector;
+
 /*Nome do Ficheiro XML*/
 const char* FILE_XML_NAME = "infoXML.xml";
 
@@ -36,6 +38,12 @@ Conjuntos de grupos a serem
 desenhados
 */
 ListGroups lg;
+
+/**
+Variáveis usadas para desenhar o 
+conteudo da ListGroups
+*/
+GLuint* vertices, * numVertices;
 
 /*Tamanho do array de ListVertices*/
 int sizeT;
@@ -325,6 +333,21 @@ void loadFile() {
 		char** opNames = (char**)malloc(1);
 		float** param = (float**)malloc(1);
 		processaGroup(ele->ToElement(),opNames,param,0);
+	}
+}
+
+/**
+Método que desenha a cena tendo em conta 
+a ListGroups em vigor
+*/
+void prepareData() {
+
+	int groups = numGroups(lg);
+	int* sizes=NULL;
+	/* Sizes é parâmetro de saida */
+	vector<float>** vec = getVectors(lg, sizes);
+	/* Criamos os vbo's */
+	for (int i = 0; i < groups; i++) {
 	}
 }
 
