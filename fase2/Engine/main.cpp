@@ -204,7 +204,7 @@ void processaModels(TiXmlElement* element, Group g) {
 			while (fscanf(fp, "%f %f %f\n", &x, &y, &z) != -1) {
 				/* Adicionamos o vértice ao
 				respetivo grupo */
-				addVertice(g, x, y, x);
+				addVertice(g, x, y, z);
 			}
 			fclose(fp);
 			printf("File %s charged successfully!\n", filename);
@@ -370,12 +370,12 @@ void prepareData() {
 	/* Sizes é parâmetro de saida */
 	vector<float>** vec = getVectors(lg, sizes);
 	/* Criamos os vbo's */
-	printf("Vou preparar os vbo's\n");
 	glGenBuffers(groups, vertices);
-	printf("Vbo's preparados\n");
 	/* Passamos os vetores para 
 	a memória gráfica */
 	for (int i = 0; i < groups; i++) {
+		numVerticess[i] = (*vec[i]).size()/3;
+		printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
 		glBufferData(
 			GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
