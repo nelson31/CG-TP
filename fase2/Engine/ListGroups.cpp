@@ -93,3 +93,29 @@ void desenhaListGroups(ListGroups lg) {
 		printf("</Group nº%d>\n");
 	}
 }
+
+/**
+Método que permite obter as diferentes 
+transformações para cada group indexado 
+pelo índice. É retornado um array os números 
+de operações por cada group
+*/
+int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
+
+	int* sizes = (int*)malloc(sizeof(int) * lg->numGroups);
+	char** opNames;
+	float** params;
+	/* Alocamos espaço para retornar */
+	paramsByGroup = (float***)malloc(sizeof(float**) * lg->numGroups);
+	namesByGroup = (char***)malloc(sizeof(char**) * lg->numGroups);
+	for (int i = 0; i < lg->numGroups; i++) {
+		/* Vamos buscar os parâmetros de todas 
+		as operações de cada group */
+		sizes[i] = getParams(lg->groups[i],opNames,params);
+		/* Adicionamos os parâmetros e os 
+		nomes aos arrays a retornar */
+		paramsByGroup[i] = params;
+		namesByGroup[i] = opNames;
+	}
+	return sizes;
+}

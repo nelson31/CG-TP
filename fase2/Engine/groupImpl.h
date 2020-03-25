@@ -59,7 +59,7 @@ opNames é um parâmetro de output de
 onde saem os nomes das operações associados 
 aos parametros através dos INDICES.
 */
-int** getParams(Group g, char** opNames);
+int getParams(Group g, char** opNames, float** params);
 
 /**
 Método que liberta uma estrutura

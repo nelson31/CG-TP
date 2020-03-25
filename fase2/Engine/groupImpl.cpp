@@ -188,19 +188,19 @@ Método que permite obter os parâmetros de
 uma operação dada a própria operação. name 
 é uma variável de output
 */
-int* getParams(Operacao op, char* name) {
+float* getParamsOp(Operacao op, char* name) {
 
 	int nParam;
-	int* param;
+	float* param;
 	switch (op->nome) {
 		case operacao::nome::TRANSLATE:
-			param = (int*)malloc(sizeof(int) * 3);
+			param = (float*)malloc(sizeof(float) * 3);
 			nParam = 3;
 			name = strdup("translate");
 			break;
 
 		case operacao::nome::ROTATE:
-			param = (int*)malloc(sizeof(int) * 4);
+			param = (float*)malloc(sizeof(float) * 4);
 			nParam = 4;
 			name = strdup("rotate");
 			break;
@@ -220,7 +220,7 @@ Conseguimos distingir as operações
 associadas ao vetor, visto que possuem 
 tamanhos diferentes.
 */
-int** getParams(Group g, char** opNames) {
+int getParams(Group g, char** opNames, float** params) {
 
 	char* nome = NULL;
 	/* Alocamos espaço para colocar 
@@ -228,16 +228,17 @@ int** getParams(Group g, char** opNames) {
 	opNames = (char**)malloc(sizeof(char*) * g->numOps);
 	/* Alocamos espeço para colocar os 
 	diferentes arrays */
-	int** ret = (int**)malloc(sizeof(int*) * g->numOps);
+	params = (float**)malloc(sizeof(float*) * g->numOps);
 	/* Vamos buscar os parâmetros de cada 
 	uma das operações */
-	for (int i = 0; i < g->numOps; i++) {
-		ret[i] = getParams(g->op[i],nome);
+	int i;
+	for (i = 0; i < g->numOps; i++) {
+		params[i] = getParamsOp(g->op[i],nome);
 		/* Adicionamos o nome ao array 
 		opNames de output */
 		opNames[i] = nome;
 	}
-	return ret;
+	return i;
 }
 
 /**

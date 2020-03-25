@@ -44,4 +44,14 @@ Método que desenha uma ListGroups no ecrã
 */
 void desenhaListGroups(ListGroups lg);
 
+/**
+Método que permite obter as diferentes
+transformações para cada group indexado
+pelo índice. Notar que namesByGroup é um 
+parâmetro de saida, no qual constam os 
+nomes das operações de cada group dentro 
+da lista
+*/
+int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup);
+
 #endif

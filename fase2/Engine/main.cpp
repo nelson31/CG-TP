@@ -41,13 +41,32 @@ desenhados
 ListGroups lg;
 
 /**
+Variável que nos diz o número de groups 
+existente na variável ListGroups
+*/
+int size;
+
+/**
+Array que guarda o número de operações
+de cada group indexado pelo índice 
+tendo em conta o vbo indicado
+*/
+int* numOps;
+
+/**
 Variáveis usadas para desenhar o 
 conteudo da ListGroups
 */
 GLuint* vertices, *numVerticess;
 
-/*Tamanho do array de ListVertices*/
-int sizeT;
+/**
+Variáveis para ir buscar as
+transformações de todos os groups
+na ListGroups
+*/
+float*** params;
+char*** names;
+
 
 /*Alterar os objetos a visualizar*/
 int pol = 0;
@@ -339,7 +358,8 @@ void loadFile() {
 
 /**
 Método que desenha a cena tendo em conta 
-a ListGroups em vigor
+a ListGroups em vigor. É de notar que para 
+cada grupo é preparado um vbo diferente
 */
 void prepareData() {
 
@@ -350,12 +370,49 @@ void prepareData() {
 	/* Sizes é parâmetro de saida */
 	vector<float>** vec = getVectors(lg, sizes);
 	/* Criamos os vbo's */
+	printf("Vou preparar os vbo's\n");
 	for (int i = 0; i < groups; i++) {
-		glGenBuffers(i + 1, &vertices[i]);
+		printf("Entrei\n");
+		glGenBuffers(1, &vertices[i]);
+		printf("Saí\n");
 	}
-	/* Passamos os vetores para a memória gráfica */
+	printf("Vbo's preparados\n");
+	/* Passamos os vetores para 
+	a memória gráfica */
+	for (int i = 0; i < groups; i++) {
+		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
+		glBufferData(
+			GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
+			sizeof(float)*(*vec[i]).size(), // tamanho do vector em bytes
+			(*vec[i]).data(), // os dados do array associado ao vector
+			GL_STATIC_DRAW); // indicativo da utilização (estático e para desenho)
+	}
+}
 
+/**
+Método que desenha o conteudo pedido, 
+inicializando previamente os vbo's
+*/
+void prepareScene(){
 
+	/* Preparamos os vbo's 
+	para serem desenhados */
+	prepareData();
+	/* Vamos buscar as transformações 
+	de cada group */
+	numOps = getOpsParams(lg, names, params);
+}
+
+/**
+Método que desenha a scene
+*/
+void drawScene() {
+
+	/* Percorremos as transformações 
+	de cada group */
+	for (int i = 0; i < size; i++) {
+
+	}
 }
 
 void renderScene(void) {
@@ -473,10 +530,6 @@ void processKeys(unsigned char c, int xx, int yy) {
 		// Translaçao do objeto desenhado para dentro ao longo do eixo do z
 		varz -= 1.0f;
 		break;
-	case 'x':
-		// Mudar de objeto a desenhar
-		pol = ((pol+1) % sizeT);
-		break;
 	default:
 		break;
 	}
@@ -562,10 +615,17 @@ int main(int argc, char **argv) {
 
 	loadFile();
 
-	desenhaListGroups(lg);
-	/*
+	size = numGroups(lg);
+
+	//desenhaListGroups(lg);
+
 // init GLUT and the window
 	glutInit(&argc, argv);
+
+#ifndef __APPLE__
+	glewInit();
+#endif
+
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
@@ -584,9 +644,16 @@ int main(int argc, char **argv) {
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	prepareScene();
+
+	printf("Scene prepared\n");
+
+	for (int i = 0; i < size; i++)
+		printf("Número de operações do group n%d: %d\n", i + 1, numOps[i]);
 
 // enter GLUT's main cycle
 	glutMainLoop();
-	*/
 	return 0;
 }
