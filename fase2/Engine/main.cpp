@@ -371,11 +371,7 @@ void prepareData() {
 	vector<float>** vec = getVectors(lg, sizes);
 	/* Criamos os vbo's */
 	printf("Vou preparar os vbo's\n");
-	for (int i = 0; i < groups; i++) {
-		printf("Entrei\n");
-		glGenBuffers(i+1, &vertices[i]);
-		printf("Saí\n");
-	}
+	glGenBuffers(groups, vertices);
 	printf("Vbo's preparados\n");
 	/* Passamos os vetores para 
 	a memória gráfica */
@@ -622,10 +618,6 @@ int main(int argc, char **argv) {
 // init GLUT and the window
 	glutInit(&argc, argv);
 
-#ifndef __APPLE__
-	glewInit();
-#endif
-
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
@@ -640,6 +632,10 @@ int main(int argc, char **argv) {
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(processSpecialKeys);
+
+#ifndef __APPLE__
+	glewInit();
+#endif
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
