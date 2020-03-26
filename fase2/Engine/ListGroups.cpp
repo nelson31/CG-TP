@@ -109,7 +109,6 @@ int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
 	for (int i = 0; i < lg->numGroups; i++) {
 		/* Acedemos ao número de operações de cada group */
 		numOps = getNumOps(lg->groups[i]);
-		printf("Este grupo tem %d opsx\n", numOps);
 		if (numOps > 0) {
 			opNames = (char**)malloc(sizeof(char*) * numOps);
 			params = (float**)malloc(sizeof(float*) * numOps);
@@ -120,6 +119,9 @@ int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
 			nomes aos arrays a retornar */
 			paramsByGroup[i] = params;
 			namesByGroup[i] = opNames;
+		}
+		else {
+			sizes[i] = 0;
 		}
 	}
 	return sizes;

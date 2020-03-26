@@ -19,14 +19,14 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "infoXML.xml";
+const char* FILE_XML_NAME = "input.xml";
 
 // VARIAVEIS GLOBAIS
 float px = 5, py = 5, pz = 5;
 float varx = 0, vary = 0, varz = 0;
 
 // Camera Explorer
-float raio = 20, alfa = M_PI_4, beta = M_PI_4;
+float raio = 1000, alfa = M_PI_4, beta = M_PI_4;
 
 // FPS CAMERA
 float dx, dy, dz;
@@ -90,7 +90,7 @@ void changeSize(int w, int h) {
     glViewport(0, 0, w, h);
 
 	// Set perspective
-	gluPerspective(45.0f ,ratio, 1.0f ,1000.0f);
+	gluPerspective(45.0f ,ratio, 1.0f ,2000.0f);
 
 	// return to the model view matrix mode
 	glMatrixMode(GL_MODELVIEW);
@@ -375,7 +375,7 @@ void prepareData() {
 	a memória gráfica */
 	for (int i = 0; i < groups; i++) {
 		numVerticess[i] = (*vec[i]).size()/3;
-		printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
+		//printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
 		glBufferData(
 			GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
@@ -415,7 +415,7 @@ void drawScene() {
 	for (int i = 0; i < size; i++) {
 		/* Fazemos push da matriz 
 		de transformações */
-		glPushMatrix();
+		if(numOps[i]>0) glPushMatrix();
 		/* Percorremos as operações 
 		dentro de cada group */
 		for (int j = 0; j < numOps[i]; j++) {
@@ -439,7 +439,7 @@ void drawScene() {
 		glDrawArrays(GL_TRIANGLES, 0, numVerticess[i]);
 
 		/* Fazemos pop da matrix */
-		glPopMatrix();
+		if (numOps[i] > 0) glPopMatrix();
 	}
 }
 
@@ -645,6 +645,10 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
 	glutCreateWindow("CG@TP@Fase1");
+
+#ifndef __APPLE__
+	glewInit();
+#endif
 	
 // Required callback registry 
 	glutDisplayFunc(renderScene);
@@ -656,10 +660,6 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(processSpecialKeys);
 
-#ifndef __APPLE__
-	glewInit();
-#endif
-
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -667,10 +667,7 @@ int main(int argc, char **argv) {
 
 	prepareScene();
 
-	for (int i = 0; i < size; i++)
-		printf("Número de operações do group n%d: %d\n", i + 1, numOps[i]);
-
 // enter GLUT's main cycle
 	glutMainLoop();
-	return 0;
+	return 1;
 }

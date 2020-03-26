@@ -33,7 +33,7 @@ struct group {
 	/* Conjunto de operações 
 	a serem realizadas */
 	Operacao* op;
-	/* Tamanho atual do array 
+	/* Tamanho atual do array
 	de operações */
 	int sizeOp;
 	/* Variável que guarda o número de 
@@ -221,20 +221,18 @@ tamanhos diferentes.
 */
 int getParams(Group g, char*** opNames, float*** params) {
 
-	float* recebe;
 	char* nome;
 	/* Vamos buscar os parâmetros de cada 
 	uma das operações */
 	int i;
 	for (i = 0; i < g->numOps; i++) {
 		nome = (char*)malloc(sizeof(char) * 20);
-		recebe = getParamsOp(g->op[i],&nome);
-		(*params)[i] = recebe;
+		(*params)[i] = getParamsOp(g->op[i],&nome);
 		/* Adicionamos o nome ao array 
 		opNames de output */
 		(*opNames)[i] = nome;
 	}
-	return i;
+	return g->numOps;
 }
 
 /**
