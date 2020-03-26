@@ -149,8 +149,7 @@ void processaTranslate(Group g, char* tagName, float x, float y, float z) {
 	param[1] = y;
 	param[2] = z;
 	/* Adicionamos a operação ao grupo */
-	addOperacao(g, tagName, param);
-	printf("%s added successfully to group\n", tagName);
+	addOperacao(g, tagName, (float*)param);
 }
 
 /**
@@ -166,7 +165,7 @@ void processaRotate(Group g, char* tagName, float angle, float axisX,
 	param[2] = axisY;
 	param[3] = axisZ;
 	/* Adicionamos a operação ao grupo */
-	addOperacao(g, tagName, param);
+	addOperacao(g, tagName, (float*)param);
 }
 
 /**
@@ -230,6 +229,8 @@ a tag toma uma ação
 */
 void processaGroup(TiXmlElement* element, char** opNames, float** params, int numOperacoes) {
 
+	char** auxc;
+	float** auxf;
 	/* Vamos buscar o numero de operações 
 	nos arrays opNames e params para o podermos 
 	atualizar~no contexto de cada chamada recursiva */
@@ -240,7 +241,7 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 	/* Se tivermos operações provenientes
 	de um group pai adicionamos essas mesmas
 	operações ao grupo filho */
-	if (numOperacoes != 0) {
+	if (numOperacoes > 0) {
 		addOperacoes(g, opNames, params, numOperacoes);
 	}
 	char* tagName = (char*)element->Value(), *tagNameSubElem;
@@ -269,9 +270,11 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 				/* Estamos perante uma tag 
 				de translação */
 				case 't':
-					opNames = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
+					auxc = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
+					opNames = auxc;
 					opNames[atualNumOps - 1] = strdup("translate");
-					params = (float**)realloc(params, sizeof(float*) * (atualNumOps));
+					auxf = (float**)realloc(params, sizeof(float*) * (atualNumOps));
+					params = auxf;
 					(subelement->Attribute("X") == NULL) ? x = 0 : x = atof(subelement->Attribute("X"));
 					(subelement->Attribute("Y") == NULL) ? y = 0 : y = atof(subelement->Attribute("Y"));
 					(subelement->Attribute("Z") == NULL) ? z = 0 : z = atof(subelement->Attribute("Z"));
@@ -285,9 +288,11 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 				/* Estamos perante uma tag 
 				de rotação */
 				case 'r':
-					opNames = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
+					auxc = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
+					opNames = auxc;
 					opNames[atualNumOps - 1] = strdup("rotate");
-					params = (float**)realloc(params, sizeof(float*) * (atualNumOps));
+					auxf = (float**)realloc(params, sizeof(float*) * (atualNumOps));
+					params = auxf;
 					(subelement->Attribute("angle") == NULL) ? angle = 0 : angle = atof(subelement->Attribute("angle"));
 					(subelement->Attribute("axisX") == NULL) ? x = 0 : x = atof(subelement->Attribute("axisX"));
 					(subelement->Attribute("axisY") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisY"));
@@ -350,8 +355,8 @@ void loadFile() {
 	estruturas de dados
 	*/
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
-		char** opNames = (char**)malloc(1);
-		float** param = (float**)malloc(1);
+		char** opNames = (char**)malloc(sizeof(char*));
+		float** param = (float**)malloc(sizeof(char*));
 		processaGroup(ele->ToElement(),opNames,param,0);
 	}
 }
@@ -366,21 +371,22 @@ void prepareData() {
 	int groups = numGroups(lg);
 	vertices = (GLuint*)malloc(sizeof(GLuint)*groups);
 	numVerticess = (GLuint*)malloc(sizeof(GLuint) * groups);
-	int* sizes=NULL;
+	int* sizes=(int*)malloc(sizeof(int)*groups);
 	/* Sizes é parâmetro de saida */
-	vector<float>** vec = getVectors(lg, sizes);
+	vector<float>** vec = getVectors(lg, &sizes);
 	/* Criamos os vbo's */
 	glGenBuffers(groups, vertices);
 	/* Passamos os vetores para 
 	a memória gráfica */
 	for (int i = 0; i < groups; i++) {
-		numVerticess[i] = (*vec[i]).size()/3;
+		printf("Nº de vértices do group %d\n", i);
+		numVerticess[i] = sizes[i];
 		//printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
 		glBufferData(
 			GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
-			sizeof(float)*(*vec[i]).size(), // tamanho do vector em bytes
-			(*vec[i]).data(), // os dados do array associado ao vector
+			sizeof(float)*(*(vec[i])).size(), // tamanho do vector em bytes
+			(*(vec[i])).data(), // os dados do array associado ao vector
 			GL_STATIC_DRAW); // indicativo da utilização (estático e para desenho)
 	}
 }
@@ -394,15 +400,17 @@ void prepareScene(){
 	/* Preparamos os vbo's 
 	para serem desenhados */
 	prepareData();
+	names = (char***)malloc(sizeof(char**) * size);
+	params = (float***)malloc(sizeof(float**) * size);
 	/* Vamos buscar as transformações 
 	de cada group */
-	numOps = getOpsParams(lg, names, params);
-
+	numOps = getOpsParams(lg, &names, &params);
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < numOps[i]; j++) {
 			printf("[Grupo %d e operacao numero %d]: %s -> %f ; %f ; %f \n", i, j, names[i][j], params[i][j][0], params[i][j][1], params[i][j][2]);
 		}
 	}
+	printf("Preparation Done\n");
 }
 
 /**
@@ -630,11 +638,14 @@ void processSpecialKeys(int key, int xx, int yy) {
 */
 int main(int argc, char **argv) {
 
-	names = (char***)malloc(sizeof(char**) * size);
-	params = (float***)malloc(sizeof(float**) * size);
 	lg = newListGroups();
 
 	loadFile();
+
+	printOpsLG(lg);
+
+	printf("File is loaded\n");
+	//printf("File loaded successfully");
 
 	size = numGroups(lg);
 
@@ -665,9 +676,14 @@ int main(int argc, char **argv) {
 	glEnable(GL_CULL_FACE);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
+// Prepare the scene to draw
 	prepareScene();
+
+	//printf("I'm out of prepareScene()\n");
 
 // enter GLUT's main cycle
 	glutMainLoop();
-	return 1;
+
+	printf("I'll return\n");
+	return 0;
 }

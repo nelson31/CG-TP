@@ -30,7 +30,7 @@ enviada por parâmetro. Os respetivos tamanhos
 são passados pelo parâmetro de saida designado
 por sizes
 */
-vector<float>** getVectors(ListGroups lg, int* sizes);
+vector<float>** getVectors(ListGroups lg, int** sizes);
 
 /**
 Método que retorna o número de groups existentes
@@ -52,6 +52,8 @@ parâmetro de saida, no qual constam os
 nomes das operações de cada group dentro 
 da lista
 */
-int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup);
+int* getOpsParams(ListGroups lg, char**** namesByGroup, float**** paramsByGroup);
+
+void printOpsLG(ListGroups lg);
 
 #endif

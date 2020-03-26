@@ -23,7 +23,7 @@ Método que dado o nome da operação
 e os seus parâmetros adiciona essa
 operação ao grupo
 */
-void addOperacao(Group g, char* operacao, float param[]);
+void addOperacao(Group g, char* operacao, float* param);
 
 /**
 Função que permite adicionar um vértices
@@ -72,5 +72,7 @@ Método que retorna o número de
 operações de um grupo
 */
 int getNumOps(Group g);
+
+void printGroupOps(Group g);
 
 #endif

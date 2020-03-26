@@ -102,14 +102,15 @@ Método que dado o nome da operação
 e os seus parâmetros adiciona essa 
 operação ao grupo
 */
-void addOperacao(Group g, char* operacao, float param[]) {
+void addOperacao(Group g, char* operacao, float* param) {
 
 	/* Se o tamanho máximo tiver sido 
 	atingido realocamos espaço */
 	if (g->numOps == g->sizeOp) {
 		/* Disponibilizamos apenas 
 		espaço para esta operação */
-		g->op = (Operacao*)realloc(g->op, (g->sizeOp + 1)*sizeof(Operacao));
+		Operacao *aux = (Operacao*)realloc(g->op, (g->sizeOp + 1) * sizeof(Operacao));
+		g->op = aux;
 		/* Atualizamos o tamanho 
 		do array para mais uma unidade */
 		g->sizeOp++;
@@ -180,6 +181,34 @@ void desenhaGroup(Group g) {
 		printf("(%f, %f, %f)\n", g->lv->at(j++), g->lv->at(j++), g->lv->at(j++));
 	}
 	printf("}\n");
+}
+
+/**
+Método que printa uma operação 
+para o ecrã
+*/
+void printOp(Operacao op) {
+
+	switch (op->nome) {
+
+		case operacao::nome::TRANSLATE:
+			printf("[Operacao] translate; ");
+			printf("Params:(%f, %f, %f)\n", op->parametros[0], op->parametros[1], op->parametros[2]);
+			break;
+
+		case operacao::nome::ROTATE:
+			printf("[Operacao] rotate; ");
+			printf("Params:(%f, %f, %f, %f)\n", op->parametros[0], op->parametros[1], op->parametros[2],op->parametros[3]);
+			break;
+	}
+}
+
+void printGroupOps(Group g) {
+
+	printf("<group>{\n");
+	for (int i = 0; i < g->numOps; i++)
+		printOp(g->op[i]);
+	printf("}</group>\n");
 }
 
 /**

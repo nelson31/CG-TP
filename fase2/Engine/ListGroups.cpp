@@ -30,8 +30,8 @@ ListGroups newListGroups() {
 	ListGroups ret = (ListGroups)malloc(sizeof(struct listgroup));
 
 	ret->numGroups = 0;
-	ret->size = 0;
-	ret->groups = (Group*)malloc(ret->size=_INITIAL_SIZE);
+	ret->size = _INITIAL_SIZE;
+	ret->groups = (Group*)malloc(ret->size*sizeof(Group));
 
 	return ret;
 }
@@ -46,7 +46,8 @@ void addGroup(ListGroups lg, Group g) {
 	atingido realocamos espaço */
 	if (lg->size == lg->numGroups) {
 		/* Realocamos para o dobro do espaço */
-		lg->groups = (Group*)realloc(lg->groups, lg->size * 2);
+		Group* aux = (Group*)realloc(lg->groups, lg->size * 2 * sizeof(Group));
+		lg->groups = aux;
 		lg->size *= 2;
 	}
 	/* Adicionamos o novo group ao array */
@@ -60,14 +61,13 @@ enviada por parâmetro. Os respetivos tamanhos
 são passados pelo parâmetro de saida designado 
 por sizes
 */
-vector<float>** getVectors(ListGroups lg, int* sizes) {
+vector<float>** getVectors(ListGroups lg, int** sizes) {
 
 	vector<float>** ret = (vector<float>**)malloc(sizeof(vector<float>*) * lg->numGroups);
-	sizes = (int*)malloc(sizeof(int) * lg->numGroups);
 	/* Para cada group vamos buscar o respetivo vector */
 	for (int i = 0; i < lg->numGroups; i++) {
 		ret[i] = getVectorV(lg->groups[i]);
-		sizes[i] = numVertices(lg->groups[i]);
+		(*sizes)[i] = numVertices(lg->groups[i]);
 	}
 	return ret;
 }
@@ -100,7 +100,7 @@ transformações para cada group indexado
 pelo índice. É retornado um array os números 
 de operações por cada group
 */
-int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
+int* getOpsParams(ListGroups lg, char**** namesByGroup, float**** paramsByGroup) {
 
 	int* sizes = (int*)malloc(sizeof(int) * lg->numGroups);
 	int numOps;
@@ -117,8 +117,8 @@ int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
 			sizes[i] = getParams(lg->groups[i], &opNames, &params);
 			/* Adicionamos os parâmetros e os
 			nomes aos arrays a retornar */
-			paramsByGroup[i] = params;
-			namesByGroup[i] = opNames;
+			(*paramsByGroup)[i] = params;
+			(*namesByGroup)[i] = opNames;
 		}
 		else {
 			sizes[i] = 0;
@@ -133,4 +133,11 @@ int* getOpsParams(ListGroups lg, char*** namesByGroup, float*** paramsByGroup) {
 Group getGroup(ListGroups lg, int i) {
 	Group g = lg->groups[i];
 	return g;
+}
+
+
+void printOpsLG(ListGroups lg) {
+
+	for (int i = 0; i < lg->numGroups; i++)
+		printGroupOps(lg->groups[i]);
 }
