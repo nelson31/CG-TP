@@ -19,7 +19,7 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "input.xml";
+const char* FILE_XML_NAME = "infoXML.xml";
 
 // VARIAVEIS GLOBAIS
 float px = 5, py = 5, pz = 5;
@@ -305,6 +305,24 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					processaRotate(g, tagNameSubElem, angle, x, y, z);
 					break;
 
+				/* Estamos perante uma tag
+				de color */
+				case 'c':
+					auxc = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
+					opNames = auxc;
+					opNames[atualNumOps - 1] = strdup("color");
+					auxf = (float**)realloc(params, sizeof(float*) * (atualNumOps));
+					params = auxf;
+					(subelement->Attribute("R") == NULL) ? x = 0 : x = atof(subelement->Attribute("R"));
+					(subelement->Attribute("G") == NULL) ? y = 0 : y = atof(subelement->Attribute("G"));
+					(subelement->Attribute("B") == NULL) ? z = 0 : z = atof(subelement->Attribute("B"));
+					params[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
+					params[atualNumOps - 1][0] = x;
+					params[atualNumOps - 1][1] = y;
+					params[atualNumOps - 1][2] = z;
+					processaTranslate(g, tagNameSubElem, x, y, z);
+					break;
+
 				/* Estamos perante uma tag 
 				models */
 				case 'm':
@@ -435,6 +453,10 @@ void drawScene() {
 
 				case 'r':
 					glRotatef(params[i][j][0], params[i][j][1], params[i][j][2], params[i][j][3]);
+					break;
+
+				case 'c':
+					glColor3f(params[i][j][0], params[i][j][1], params[i][j][2]);
 					break;
 
 				default :

@@ -18,7 +18,8 @@ typedef struct operacao {
 	/* Nome da operação */
 	enum nome {
 		TRANSLATE = 0,
-		ROTATE = 1
+		ROTATE = 1,
+		COLOR = 2
 	} nome;
 	/* Parâmetros associados 
 	à operação */
@@ -83,9 +84,16 @@ Operacao newOperacao(char* name, float param[]) {
 
 		case 'r':
 			ret->nome = operacao::nome::ROTATE;
-			/* Se estamos perante uma translação
+			/* Se estamos perante uma rotação
 			temos 4 parâmetros */
 			numParam = 4;
+			break;
+
+		case 'c':
+			ret->nome = operacao::nome::COLOR;
+			/* Se estamos perante uma color
+			temos 3 parâmetros */
+			numParam = 3;
 			break;
 
 		default:
@@ -170,6 +178,12 @@ void desenhaGroup(Group g) {
 			printf("(%f, %f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
 				g->op[i]->parametros[2], g->op[i]->parametros[3]);
 			break;
+		
+		case operacao::nome::COLOR:
+			printf("color");
+			printf("(%f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
+				g->op[i]->parametros[2]);
+			break;
 		}
 	}
 	printf("}\n");
@@ -199,6 +213,11 @@ void printOp(Operacao op) {
 		case operacao::nome::ROTATE:
 			printf("[Operacao] rotate; ");
 			printf("Params:(%f, %f, %f, %f)\n", op->parametros[0], op->parametros[1], op->parametros[2],op->parametros[3]);
+			break;
+
+		case operacao::nome::COLOR:
+			printf("[Operacao] color; ");
+			printf("Params:(%f, %f, %f)\n", op->parametros[0], op->parametros[1], op->parametros[2]);
 			break;
 	}
 }
@@ -231,6 +250,12 @@ float* getParamsOp(Operacao op, char** name) {
 			param = (float*)malloc(sizeof(float) * 4);
 			nParam = 4;
 			strcpy(*name,"rotate");
+			break;
+
+		case operacao::nome::COLOR:
+			param = (float*)malloc(sizeof(float) * 3);
+			nParam = 3;
+			strcpy(*name,"color");
 			break;
 
 		default:
