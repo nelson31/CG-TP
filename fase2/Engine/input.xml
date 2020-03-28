@@ -46,6 +46,13 @@
 				<model file="marteLua1.3d" />
 			</models>
 		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=0 Y=5 Z=0 />
+			<models>
+				<model file="marteLua2.3d" />
+			</models>
+		</group>
 	</group>
 	<group>
 		<color R=0.59 G=0.29 B=0 />
@@ -58,6 +65,27 @@
 			<translate X=58 Y=3 Z=30 />
 			<models>
 				<model file="jupiterLua1.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-58 Y=8 Z=25 />
+			<models>
+				<model file="jupiterLua2.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=52 Y=25 Z=0 />
+			<models>
+				<model file="jupiterLua3.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-54 Y=50 Z=15 />
+			<models>
+				<model file="jupiterLua4.3d" />
 			</models>
 		</group>
 	</group>
@@ -74,6 +102,34 @@
 				<model file="saturnoLua1.3d" />
 			</models>
 		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-58 Y=8 Z=25 />
+			<models>
+				<model file="saturnoLua2.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=52 Y=25 Z=0 />
+			<models>
+				<model file="saturnoLua3.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-54 Y=50 Z=15 />
+			<models>
+				<model file="saturnoLua4.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-54 Y=30 Z=30 />
+			<models>
+				<model file="saturnoLua5.3d" />
+			</models>
+		</group>
 	</group>
 	<group>
 		<color R=0.13 G=0.55 B=0.13 />
@@ -86,6 +142,20 @@
 			<translate X=22 Y=3 Z=19 />
 			<models>
 				<model file="uranoLua1.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-22 Y=8 Z=18 />
+			<models>
+				<model file="uranoLua2.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=22 Y=10 Z=0 />
+			<models>
+				<model file="uranoLua3.3d" />
 			</models>
 		</group>
 	</group>
