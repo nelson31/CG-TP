@@ -25,6 +25,13 @@
 		<models>
 			<model file="terra.3d" />
 		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=7 Y=4 Z=0 />
+			<models>
+				<model file="terraLua.3d" />
+			</models>
+		</group>
 	</group>
 	<group>
 		<color R=0.55 G=0 B=0 />
@@ -32,6 +39,13 @@
 		<models>
 			<model file="marte.3d" />
 		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=5 Y=2 Z=0 />
+			<models>
+				<model file="marteLua1.3d" />
+			</models>
+		</group>
 	</group>
 	<group>
 		<color R=0.59 G=0.29 B=0 />
@@ -39,6 +53,13 @@
 		<models>
 			<model file="jupiter.3d" />
 		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=58 Y=3 Z=30 />
+			<models>
+				<model file="jupiterLua1.3d" />
+			</models>
+		</group>
 	</group>
 	<group>
 		<color R=0.82 G=0.71 B=0.55 />
@@ -46,6 +67,13 @@
 		<models>
 			<model file="saturno.3d" />
 		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=58 Y=3 Z=30 />
+			<models>
+				<model file="saturnoLua1.3d" />
+			</models>
+		</group>
 	</group>
 	<group>
 		<color R=0.13 G=0.55 B=0.13 />
@@ -53,6 +81,13 @@
 		<models>
 			<model file="urano.3d" />
 		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=22 Y=3 Z=19 />
+			<models>
+				<model file="uranoLua1.3d" />
+			</models>
+		</group>
 	</group>
 	<group>
 		<color R=0.68 G=0.85 B=0.9 />
@@ -60,5 +95,12 @@
 		<models>
 			<model file="neptuno.3d" />
 		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=19 Y=5 Z=10 />
+			<models>
+				<model file="neptunoLua.3d" />
+			</models>
+		</group>
 	</group>
 </scene>
