@@ -362,9 +362,8 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 	/* Adicionamos o grupo atual à
 	lista para ser desenhado */
 	addGroup(lg, g);
-	printf("\t>> Group added successfully!\n");
+	//printf("\t>> Group added successfully!\n");
 	free(localParams);
-	printf(">> Fiz free\n");
 }
 
 
@@ -421,7 +420,7 @@ void prepareData() {
 	/* Passamos os vetores para 
 	a memória gráfica */
 	for (int i = 0; i < groups; i++) {
-		printf("Nº de vértices do group %d\n", i);
+		//printf("Nº de vértices do group %d\n", i);
 		numVerticess[i] = sizes[i];
 		//printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
