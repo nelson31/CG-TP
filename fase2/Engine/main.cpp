@@ -19,7 +19,7 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "infoXML.xml";
+const char* FILE_XML_NAME = "SistemaSolar.xml";
 
 // VARIAVEIS GLOBAIS
 float px = 5, py = 5, pz = 5;
