@@ -191,7 +191,7 @@ void processaModels(TiXmlElement* element, Group g) {
 		if (!strcmp(tagName, "model")) {
 			/* Vamos buscar o nome do ficheiro */
 			filename = (char*)subelement->Attribute("file");
-			printf("%s\n", filename);
+			//printf("%s\n", filename);
 			/* File pointer que será utilzado
 			para ler dos ficheiros gerados
 			com as respetivas figuras */
@@ -229,6 +229,30 @@ a tag toma uma ação
 */
 void processaGroup(TiXmlElement* element, char** opNames, float** params, int numOperacoes) {
 
+	float** localParams = (float**)malloc(sizeof(float*) * numOperacoes);
+	char** localOpNames = (char**)malloc(sizeof(char*) * numOperacoes);
+	for (int i = 0; i < numOperacoes; i++) {
+		localOpNames[i] = strdup(opNames[i]);
+		int numParams = 0;
+		switch (opNames[i][0]) {
+
+			case 't':
+				numParams = 3;
+				break;
+			case 'c':
+				numParams = 3;
+				break;
+			case 'r':
+				numParams = 4;
+				break;
+			default:
+				break;
+		}
+		localParams[i] = (float*)malloc(sizeof(float)*numParams);
+		for (int j = 0; j < numParams; j++) {
+			localParams[i] = params[i];
+		}
+	}
 	char** auxc;
 	float** auxf;
 	/* Vamos buscar o numero de operações 
@@ -242,25 +266,25 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 	de um group pai adicionamos essas mesmas
 	operações ao grupo filho */
 	if (numOperacoes > 0) {
-		addOperacoes(g, opNames, params, numOperacoes);
+		addOperacoes(g, localOpNames, localParams, numOperacoes);
 	}
 	char* tagName = (char*)element->Value(), *tagNameSubElem;
 	TiXmlNode* ele = NULL;
-	printf("<%s>\n", element->Value());
+	//printf("<%s>\n", element->Value());
 	/* Retirar os nomes do XML e carregar os
 	ficheiros respetivos para as devidas
 	estruturas de dados */
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
 		/* Elemento sobre o qual estamos a iterar */
 		TiXmlElement* subelement = ele->ToElement();
-		printf("<%s>\n", subelement->Value());
+		//printf("<%s>\n", subelement->Value());
 		/* Vamos buscar o nome da tag desse element */
 		tagNameSubElem = (char*)subelement->Value();
 		/* Se o filho for group chamamos 
 		a função recursivamente */
 		if (!strcmp(tagNameSubElem, "group")) {
 			/* Processamos o subgrupo */
-			processaGroup(subelement, opNames, params, atualNumOps);
+			processaGroup(subelement, localOpNames, localParams, atualNumOps);
 		}
 		/* Se não for group acrescentamos 
 		informação à lista de groups */
@@ -270,56 +294,56 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 				/* Estamos perante uma tag 
 				de translação */
 				case 't':
-					auxc = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
-					opNames = auxc;
-					opNames[atualNumOps - 1] = strdup("translate");
-					auxf = (float**)realloc(params, sizeof(float*) * (atualNumOps));
-					params = auxf;
+					auxc = (char**)realloc(localOpNames, sizeof(char*) * (++atualNumOps));
+					localOpNames = auxc;
+					localOpNames[atualNumOps - 1] = strdup("translate");
+					auxf = (float**)realloc(localParams, sizeof(float*) * (atualNumOps));
+					localParams = auxf;
 					(subelement->Attribute("X") == NULL) ? x = 0 : x = atof(subelement->Attribute("X"));
 					(subelement->Attribute("Y") == NULL) ? y = 0 : y = atof(subelement->Attribute("Y"));
 					(subelement->Attribute("Z") == NULL) ? z = 0 : z = atof(subelement->Attribute("Z"));
-					params[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
-					params[atualNumOps - 1][0] = x;
-					params[atualNumOps - 1][1] = y;
-					params[atualNumOps - 1][2] = z;
+					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
+					localParams[atualNumOps - 1][0] = x;
+					localParams[atualNumOps - 1][1] = y;
+					localParams[atualNumOps - 1][2] = z;
 					processaTranslate(g, tagNameSubElem, x, y, z);
 					break;
 
 				/* Estamos perante uma tag 
 				de rotação */
 				case 'r':
-					auxc = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
-					opNames = auxc;
-					opNames[atualNumOps - 1] = strdup("rotate");
-					auxf = (float**)realloc(params, sizeof(float*) * (atualNumOps));
-					params = auxf;
+					auxc = (char**)realloc(localOpNames, sizeof(char*) * (++atualNumOps));
+					localOpNames = auxc;
+					localOpNames[atualNumOps - 1] = strdup("rotate");
+					auxf = (float**)realloc(localParams, sizeof(float*) * (atualNumOps));
+					localParams = auxf;
 					(subelement->Attribute("angle") == NULL) ? angle = 0 : angle = atof(subelement->Attribute("angle"));
 					(subelement->Attribute("axisX") == NULL) ? x = 0 : x = atof(subelement->Attribute("axisX"));
 					(subelement->Attribute("axisY") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisY"));
 					(subelement->Attribute("axisZ") == NULL) ? z = 0 : z = atof(subelement->Attribute("axisZ"));
-					params[atualNumOps - 1] = (float*)malloc(sizeof(float) * 4);
-					params[atualNumOps - 1][0] = angle;
-					params[atualNumOps - 1][1] = x;
-					params[atualNumOps - 1][2] = y;
-					params[atualNumOps - 1][3] = z;
+					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 4);
+					localParams[atualNumOps - 1][0] = angle;
+					localParams[atualNumOps - 1][1] = x;
+					localParams[atualNumOps - 1][2] = y;
+					localParams[atualNumOps - 1][3] = z;
 					processaRotate(g, tagNameSubElem, angle, x, y, z);
 					break;
 
 				/* Estamos perante uma tag
 				de color */
 				case 'c':
-					auxc = (char**)realloc(opNames, sizeof(char*) * (++atualNumOps));
-					opNames = auxc;
-					opNames[atualNumOps - 1] = strdup("color");
-					auxf = (float**)realloc(params, sizeof(float*) * (atualNumOps));
-					params = auxf;
+					auxc = (char**)realloc(localOpNames, sizeof(char*) * (++atualNumOps));
+					localOpNames = auxc;
+					localOpNames[atualNumOps - 1] = strdup("color");
+					auxf = (float**)realloc(localParams, sizeof(float*) * (atualNumOps));
+					localParams = auxf;
 					(subelement->Attribute("R") == NULL) ? x = 0 : x = atof(subelement->Attribute("R"));
 					(subelement->Attribute("G") == NULL) ? y = 0 : y = atof(subelement->Attribute("G"));
 					(subelement->Attribute("B") == NULL) ? z = 0 : z = atof(subelement->Attribute("B"));
-					params[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
-					params[atualNumOps - 1][0] = x;
-					params[atualNumOps - 1][1] = y;
-					params[atualNumOps - 1][2] = z;
+					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
+					localParams[atualNumOps - 1][0] = x;
+					localParams[atualNumOps - 1][1] = y;
+					localParams[atualNumOps - 1][2] = z;
 					processaTranslate(g, tagNameSubElem, x, y, z);
 					break;
 
@@ -339,6 +363,8 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 	lista para ser desenhado */
 	addGroup(lg, g);
 	printf("\t>> Group added successfully!\n");
+	free(localParams);
+	printf(">> Fiz free\n");
 }
 
 
@@ -373,9 +399,7 @@ void loadFile() {
 	estruturas de dados
 	*/
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
-		char** opNames = (char**)malloc(sizeof(char*));
-		float** param = (float**)malloc(sizeof(char*));
-		processaGroup(ele->ToElement(),opNames,param,0);
+		processaGroup(ele->ToElement(),NULL,NULL,0);
 	}
 }
 
@@ -660,13 +684,9 @@ void processSpecialKeys(int key, int xx, int yy) {
 */
 int main(int argc, char **argv) {
 
-	lg = newListGroups();
-
 	loadFile();
 
 	printOpsLG(lg);
-
-	printf("File is loaded\n");
 	//printf("File loaded successfully");
 
 	size = numGroups(lg);
