@@ -22,10 +22,10 @@ using std::vector;
 const char* FILE_XML_NAME = "SistemaSolar.xml";
 
 // VARIAVEIS GLOBAIS
-float varx = -1000, vary = 220, varz = 0;
+float varx = -1000, vary = 250, varz = 0;
 
 // Camera 
-float raio = 1000, alfa = -90, beta = 30;
+float raio = 1000, alfa = -90, beta = 20;
 
 // Ultimo x e y lidos do ecra
 int lastX, lastY;
@@ -161,7 +161,6 @@ void processaModels(TiXmlElement* element, Group g) {
 				/* Adicionamos o vértice ao
 				respetivo grupo */
 				addVertice(g, x, y, z);
-				addVertice(g, y, x, z);
 			}
 			fclose(fp);
 			printf("File %s charged successfully!\n", filename);
