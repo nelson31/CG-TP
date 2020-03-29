@@ -96,6 +96,12 @@
 			<model file='saturno.3d' />
 		</models>
 		<group>
+			<color R='0.93' G='0.91' B='0.67' />
+			<models>
+				<model file='saturnoAnel.3d' />
+			</models>
+		</group>
+		<group>
 			<color R='0.5' G='0.5' B='0.5' />
 			<translate X='58' Y='3' Z='30' />
 			<models>
