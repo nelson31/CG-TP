@@ -161,6 +161,7 @@ void processaModels(TiXmlElement* element, Group g) {
 				/* Adicionamos o vértice ao
 				respetivo grupo */
 				addVertice(g, x, y, z);
+				addVertice(g, y, x, z);
 			}
 			fclose(fp);
 			printf("File %s charged successfully!\n", filename);
