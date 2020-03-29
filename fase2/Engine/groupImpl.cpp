@@ -68,7 +68,7 @@ Group newGroup() {
 Função que retorna uma nova estrutura 
 de dados do tipo operação 
 */
-Operacao newOperacao(char* name, float param[]) {
+Operacao newOperacao(char* name, float* param) {
 
 	int numParam = 0;
 	/* Alocamos espaço para a operação */
