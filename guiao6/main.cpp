@@ -16,7 +16,7 @@
 
 using std::vector;
 
-float camX = 00, camY = 30, camZ = 40;
+float camX = 0, camY = 30, camZ = 40;
 int startX, startY, tracking = 0;
 
 int alpha = 0, beta = 45, r = 50;
@@ -171,7 +171,7 @@ void processMouseMotion(int xx, int yy) {
 
 /**
  * Funcao que converte o valor dos vértices que se encontra inicialmente entre 0-255
- * para a escala de 0-30
+ * para a escala de 0-60
  * Os parametros x e z representam a posicao na matriz de valores dos pixeis, pelo que 
  * corresponde a um vértice no nosso modelo(deve ainda se converter estes valores matriciais
  * para valores correspondentes no array linear)
@@ -181,8 +181,8 @@ float scaleVertexValues(int x, int z) {
 	/*Posicao do vértice pretendido no buffer imageData*/
 	int posicao=imageHeight*z+x;
 
-	/*Converter a altura do vértice para a escala 0-30*/
-	float y = (float) ((int) imageData[posicao]) * 30 / 255;
+	/*Converter a altura do vértice para a escala 0-60*/
+	float y = (float) ((int) imageData[posicao]) * 60 / 255;
 
 	//printf("ImageData[%d] : %u\n",posicao,imageData[posicao]);
 	//printf("Altura: %f\n", y);
@@ -211,12 +211,12 @@ void buildTerrain() {
 
 	for (int i = 0; i < imageWidth-1; i++) {
 		for (int j = 0; j < imageHeight; j++) {
-			y = scaleVertexValues(i,j);
+			y = scaleVertexValues(j,i);
 			// Vertice de cima
 			vertexB.push_back(x);
 			vertexB.push_back(y);
 			vertexB.push_back(z);
-			y = scaleVertexValues(i+1, j);
+			y = scaleVertexValues(j, i+1);
 			// Vertice de baixo
 			vertexB.push_back(x);
 			vertexB.push_back(y);
@@ -255,8 +255,6 @@ void init() {
 
     ilInit();
 
-// 	Load the height map "terreno.jpg"
-
 	unsigned int t;
 	ilGenImages(1, &t);
 	ilBindImage(t);
@@ -265,10 +263,6 @@ void init() {
 	// convert the image to single channel per pixel
 	// with values ranging between 0 and 255
 	ilConvertImage(IL_LUMINANCE, IL_UNSIGNED_BYTE);
-	// important: check tw and th values
-	// both should be equal to 256
-	// if not there was an error loading the image
-	// most likely the image could not be found
 	imageWidth = ilGetInteger(IL_IMAGE_WIDTH);
 	printf("[ImageWidth] -> %d", imageWidth);
 	imageHeight = ilGetInteger(IL_IMAGE_HEIGHT);
