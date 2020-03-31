@@ -84,6 +84,7 @@ void renderScene(void) {
 		      0.0,0.0,0.0,
 			  0.0f,1.0f,0.0f);
 
+	/*Funcao que desenha o terreno*/
 	drawTerrain();
 
 	// just so that it renders something before the terrain is built
@@ -201,14 +202,12 @@ void buildTerrain() {
 
 	// array for vertices
 	vector<float> vertexB;
-
 	// Coordenadas iniciais 
 	float initialValue = -((float)(imageHeight - 1) / 2);
-	//printf("InitialValue: %f\n", initialValue);
 	float x = initialValue, z = -((float)(imageWidth - 1) / 2);
 	/*Coordenada y(ou altura) do vértice*/
 	float y = 0;
-
+	/*Preenchimento do array com os valores das coordenadas dos vertices da grelha*/
 	for (int i = 0; i < imageWidth-1; i++) {
 		for (int j = 0; j < imageHeight; j++) {
 			y = scaleVertexValues(j,i);
@@ -234,18 +233,15 @@ void buildTerrain() {
 	//}
 
 	// criar o VBO
-
 	glGenBuffers(1, buffers);
 
 	// copiar o vector para a memória gráfica
-
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
 	glBufferData(
 		GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
 		sizeof(float) * vertexB.size(), // tamanho do vector em bytes
 		vertexB.data(), // os dados do array associado ao vector
 		GL_STATIC_DRAW); // indicativo da utilização (estático e para desenho)
-
 }
 
 /**
@@ -253,6 +249,11 @@ void buildTerrain() {
 */
 void init() {
 
+#ifndef __APPLE__
+	glewInit();
+#endif
+
+	/*Inicializacao do componente de loading da imagem*/
     ilInit();
 
 	unsigned int t;
@@ -300,10 +301,7 @@ int main(int argc, char **argv) {
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
 
-#ifndef __APPLE__
-	glewInit();
-#endif
-
+	/*Inicializacao dos componentes*/
 	init();	
 
 // enter GLUT's main cycle
