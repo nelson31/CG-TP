@@ -291,7 +291,7 @@ void drawTeapots() {
 		glPopMatrix();
 	}
 
-	glutTimerFunc(10, atualizaPosTeapots, 0);
+	//glutTimerFunc(10, atualizaPosTeapots, 0);
 }
 
 /**
@@ -468,6 +468,12 @@ void renderScene(void) {
 	drawTeapots();
 
 	drawTorus();
+
+	/* 
+	Atualizamos a posição dos 
+	teapots a cada 10ms
+	*/
+	glutTimerFunc(10, atualizaPosTeapots, 0);
 
 	/* 
 	Se a tecla 'w' ou 's' estiverem
