@@ -456,13 +456,11 @@ void renderScene(void) {
 				0.0f, 1.0f, 0.0f);
 			break;
 	}
-	glPushMatrix();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	drawTerrain();
 
-	glPopMatrix();
-
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	drawAllTrees();
 
 	drawTeapots();
