@@ -30,7 +30,7 @@ altura do relevo do terreno
 #define __SCALE 0.5
 
 /**
-Definição de constantes que simbolizam 
+Definição de constantes que simbolizam
 os 2 tipos de camaras para inspecionar 
 o ambiente
 */
@@ -245,7 +245,7 @@ void drawAllTrees() {
 Função que atualiza o posicionamento dos teapots 
 para estes apresentarem movimento
 */
-void atualizaPos(int value) {
+void atualizaPosTeapots(int value) {
 
 	ang += 0.013f;
 }
@@ -291,7 +291,7 @@ void drawTeapots() {
 		glPopMatrix();
 	}
 
-	glutTimerFunc(10, atualizaPos, 0);
+	glutTimerFunc(10, atualizaPosTeapots, 0);
 }
 
 /**
@@ -365,8 +365,27 @@ para a frente e para trás
 */
 void computeMove() {
 
-	px += deltaPos * sin(alphaa * M_PI / 180.0f);
-	pz += deltaPos * cos(alphaa * M_PI / 180.0f);
+	float limiteInfX = - (imageWidth / 2.0f) + 0.5f, 
+		limiteSupX = imageWidth / 2.0f - 0.5f,
+		limiteInfZ = - (imageHeight / 2.0f) + 0.5f,
+		limiteSupZ = imageHeight / 2.0f - 0.5f;
+	float nextX, nextZ;
+	nextX = px + deltaPos * sin(alphaa * M_PI / 180.0f);
+	nextZ = pz + deltaPos * cos(alphaa * M_PI / 180.0f);
+	/* Linhas que fazem com que não seja 
+	possível abandonar o cenário */
+	if (nextX > limiteSupX)
+		px = limiteSupX;
+	else if (nextX < limiteInfX)
+		px = limiteInfX;
+	else px = nextX;
+
+	if (nextZ > limiteSupZ)
+		pz = limiteSupZ;
+	else if (nextZ < limiteInfZ)
+		pz = limiteInfZ;
+	else pz = nextZ;
+
 	py = hf(px, pz) + eyeHeight;
 	looky = py;
 }
@@ -377,8 +396,27 @@ para a esquerda e para a direita
 */
 void computeMoveLeftRight() {
 
-	px += deltaLeftRight * sin((alphaa + 90) * M_PI / 180.0f);
-	pz += deltaLeftRight * cos((alphaa + 90) * M_PI / 180.0f);
+	float limiteInfX = -(imageWidth / 2.0f) + 0.5f,
+		limiteSupX = imageWidth / 2.0f - 0.5f,
+		limiteInfZ = -(imageHeight / 2.0f) + 0.5f,
+		limiteSupZ = imageHeight / 2.0f - 0.5f;
+	float nextX, nextZ;
+	nextX = px + deltaLeftRight * sin((alphaa + 90) * M_PI / 180.0f);
+	nextZ = pz + deltaLeftRight * cos((alphaa + 90) * M_PI / 180.0f);
+	/* Linhas que fazem com que não seja
+	possível abandonar o cenário */
+	if (nextX > limiteSupX)
+		px = limiteSupX;
+	else if (nextX < limiteInfX)
+		px = limiteInfX;
+	else px = nextX;
+
+	if (nextZ > limiteSupZ)
+		pz = limiteSupZ;
+	else if (nextZ < limiteInfZ)
+		pz = limiteInfZ;
+	else pz = nextZ;
+
 	py = hf(px, pz) + eyeHeight;
 	looky = py;
 }
@@ -569,7 +607,7 @@ void init() {
 			v[i]->push_back(y);
 			v[i]->push_back(z);
 
-			y = (float)imageData[(i + 1) * imageWidth + j] * 0.5;
+			y = (float)imageData[(i + 1) * imageWidth + j] * __SCALE;
 			/* Segundo vértice */
 			v[i]->push_back(x);
 			v[i]->push_back(y);
