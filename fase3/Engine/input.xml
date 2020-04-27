@@ -1,0 +1,176 @@
+<scene>
+	<group>
+		<color R=1 G=0.3 B=0 />
+		<models>
+			<model file="sol.3d" />
+		</models>
+	</group>
+	<group>
+		<color R=1 G=0 B=0 />
+		<translate X=0 Y=0 Z=165.13 />
+		<models>
+			<model file="mercurio.3d" />
+		</models>
+	</group>
+	<group>
+		<color R=1 G=0.85 B=0 />
+		<translate X=0 Y=0 Z=178.62 />
+		<models>
+			<model file="venus.3d" />
+		</models>
+	</group>
+	<group>
+		<color R=0 G=0 B=1 />
+		<translate X=0 Y=0 Z=195.3 />
+		<models>
+			<model file="terra.3d" />
+		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=7 Y=4 Z=0 />
+			<models>
+				<model file="terraLua.3d" />
+			</models>
+		</group>
+	</group>
+	<group>
+		<color R=0.55 G=0 B=0 />
+		<translate X=0 Y=0 Z=210.26 />
+		<models>
+			<model file="marte.3d" />
+		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=5 Y=2 Z=0 />
+			<models>
+				<model file="marteLua1.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=0 Y=5 Z=0 />
+			<models>
+				<model file="marteLua2.3d" />
+			</models>
+		</group>
+	</group>
+	<group>
+		<color R=0.59 G=0.29 B=0 />
+		<translate X=0 Y=0 Z=277.2 />
+		<models>
+			<model file="jupiter.3d" />
+		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=58 Y=3 Z=30 />
+			<models>
+				<model file="jupiterLua1.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-58 Y=8 Z=25 />
+			<models>
+				<model file="jupiterLua2.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=52 Y=25 Z=0 />
+			<models>
+				<model file="jupiterLua3.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-54 Y=50 Z=15 />
+			<models>
+				<model file="jupiterLua4.3d" />
+			</models>
+		</group>
+	</group>
+	<group>
+		<color R=0.82 G=0.71 B=0.55 />
+		<translate X=0 Y=0 Z=430.54 />
+		<models>
+			<model file="saturno.3d" />
+		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=58 Y=3 Z=30 />
+			<models>
+				<model file="saturnoLua1.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-58 Y=8 Z=25 />
+			<models>
+				<model file="saturnoLua2.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=52 Y=25 Z=0 />
+			<models>
+				<model file="saturnoLua3.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-54 Y=50 Z=15 />
+			<models>
+				<model file="saturnoLua4.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-54 Y=30 Z=30 />
+			<models>
+				<model file="saturnoLua5.3d" />
+			</models>
+		</group>
+	</group>
+	<group>
+		<color R=0.13 G=0.55 B=0.13 />
+		<translate X=0 Y=0 Z=550.84 />
+		<models>
+			<model file="urano.3d" />
+		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=22 Y=3 Z=19 />
+			<models>
+				<model file="uranoLua1.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=-22 Y=8 Z=18 />
+			<models>
+				<model file="uranoLua2.3d" />
+			</models>
+		</group>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=22 Y=10 Z=0 />
+			<models>
+				<model file="uranoLua3.3d" />
+			</models>
+		</group>
+	</group>
+	<group>
+		<color R=0.68 G=0.85 B=0.9 />
+		<translate X=0 Y=0 Z=650.9 />
+		<models>
+			<model file="neptuno.3d" />
+		</models>
+		<group>
+			<color R=0.5 G=0.5 B=0.5 />
+			<translate X=19 Y=5 Z=10 />
+			<models>
+				<model file="neptunoLua.3d" />
+			</models>
+		</group>
+	</group>
+</scene>
