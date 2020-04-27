@@ -3,20 +3,8 @@
 #include "groupImpl.h"
 #include "ListVertices.h"
 
-/* Máximo do tamanho do array
-parâmetros de cada operação */
-#define _MAX_PARAM_TRANSLATE 4
-#define _MAX_PARAM_ROTATE 5
-#define _PARAM_COLOR 3
-
 /* Numero de operações */
 #define _MIN_OPS 10
-
-/* Definição dos 2 tipos de 
-rotação (estática/dinâmica)*/
-#define _STATIC 100
-
-#define _DYNAMIC 101
 
 /**
 Definição dos tres tipos de operação
@@ -262,6 +250,30 @@ void addOperacao(Group g, char* operacao, float* param) {
 }
 
 /**
+Função que permite adicionar uma nova operação 
+do tipo translação dinâmica. É necessário um 
+método diferente para este tipo de operaçã0, visto 
+que existem os pontos que formam a curva de catmoll-rom
+*/
+void addDynamicTranslation(Group g, char* operacao, float* param, ListVertices catmull_rom_points) {
+
+	/* Se o tamanho máximo tiver sido
+	atingido realocamos espaço */
+	if (g->numOps == g->sizeOp) {
+		/* Disponibilizamos apenas
+		espaço para esta operação */
+		Operacao* aux = (Operacao*)realloc(g->op, (g->sizeOp + 1) * sizeof(Operacao));
+		g->op = aux;
+		/* Atualizamos o tamanho
+		do array para mais uma unidade */
+		g->sizeOp++;
+	}
+	g->op[g->numOps] = newOperacao(operacao, param);
+	g->op[g->numOps]->operacao->t->points = catmull_rom_points;
+	g->numOps++;
+}
+
+/**
 Função que permite adicionar um vértices 
 ao group para também ser desenhado
 */
@@ -384,6 +396,19 @@ float* getParamsOp(Operacao op, char** name) {
 		}
 	}
 	return param;
+}
+
+/**
+Método que retorna a lista de vértices que compõem 
+a curva de catmoll-rom associada a uma operação 
+de translate dinâmica. É de notar que caso a 
+função seja aplicada a qualquer outra operação retorna NULL
+*/
+ListVertices getPoints(Operacao op) {
+
+	if (op->type == TRANSLATE && (op->operacao->t->parametros[3] != -1))
+		return getPointsTranslate(op->operacao->t);
+	return NULL;
 }
 
 /**

@@ -117,3 +117,13 @@ int atualizaPointer(ListVertices lv) {
 	lv->pointer = 0;
 	return lv->pointer;
 }
+
+/**
+Função que retorna o número de vértices que 
+existe na estrutura de dados do tipo ListVertices 
+que é passada como parâmetro da função
+*/
+int numVertices(ListVertices lv) {
+
+	return lv->nVertices;
+}

@@ -6,6 +6,17 @@
 #include <vector>
 using std::vector;
 
+/* Máximo do tamanho do array
+parâmetros de cada operação */
+#define _MAX_PARAM_TRANSLATE 4
+#define _MAX_PARAM_ROTATE 5
+#define _PARAM_COLOR 3
+
+/* Definição dos 2 tipos de
+rotação (estática/dinâmica)*/
+#define _STATIC 100
+#define _DYNAMIC 101
+
 /**
 Definição de um tipo que guarda 
 a informação acerca de um grupo
@@ -24,6 +35,14 @@ e os seus parâmetros adiciona essa
 operação ao grupo
 */
 void addOperacao(Group g, char* operacao, float* param);
+
+/**
+Função que permite adicionar uma nova operação
+do tipo translação dinâmica. É necessário um
+método diferente para este tipo de operaçã0, visto
+que existem os pontos que formam a curva de catmoll-rom
+*/
+void addDynamicTranslation(Group g, char* operacao, float* param, ListVertices catmull_rom_points);
 
 /**
 Função que permite adicionar um vértices

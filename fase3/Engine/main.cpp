@@ -97,31 +97,54 @@ void sphericalToCartesian() {
 }
 
 /**
+Função que dado um elemento de um ficheiro xml
+do tipo dynamic translate retorna uma lista vértices
+com todos os pontos associados à catmoll-rom curve
+associados a esse pontos
+*/
+ListVertices getPoints(TiXmlElement* element) {
+
+	ListVertices lv = newListVertices();
+	TiXmlNode* ele = NULL;
+	TiXmlElement* subelement;
+	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
+		subelement = ele->ToElement();
+		addVertice(lv, atof(subelement->Attribute("X")), atof(subelement->Attribute("Y")), atof(subelement->Attribute("Z")));
+	}
+	return lv;
+}
+
+/**
 Função que adiciona um translate 
 ao grupo g
 */
-void processaTranslate(Group g, char* tagName, float x, float y, float z) {
+void processaTranslate(Group g, char* tagName, float x, float y, float z, float time, TiXmlElement* element) {
 
-	float param[3];
+	float param[_MAX_PARAM_TRANSLATE];
 	param[0] = x;
 	param[1] = y;
 	param[2] = z;
+	param[3] = time;
+	if (time > 0)
+		addDynamicTranslation(g, tagName, param, getPoints(element));
 	/* Adicionamos a operação ao grupo */
-	addOperacao(g, tagName, (float*)param);
+	else
+		addOperacao(g, tagName, (float*)param);
 }
 
 /**
 Função que adiciona um rotate 
 ao grupo g
 */
-void processaRotate(Group g, char* tagName, float angle, float axisX, 
-	float axisY, float axisZ) {
+void processaRotate(Group g, char* tagName, float attrib, float axisX, 
+	float axisY, float axisZ, float type) {
 
-	float param[4];
-	param[0] = angle;
+	float param[5];
+	param[0] = attrib;
 	param[1] = axisX;
 	param[2] = axisY;
 	param[3] = axisZ;
+	param[4] = type;
 	/* Adicionamos a operação ao grupo */
 	addOperacao(g, tagName, (float*)param);
 }
@@ -216,7 +239,7 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 	nos arrays opNames e params para o podermos 
 	atualizar no contexto de cada chamada recursiva */
 	int atualNumOps = numOperacoes;
-	float angle=0, x=0, y=0, z=0;
+	float angle=0, x=0, y=0, z=0, time = 0;
 	/* Criamos um novo grupo */
 	Group g = newGroup();
 	/* Se tivermos operações provenientes
@@ -259,11 +282,13 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					(subelement->Attribute("X") == NULL) ? x = 0 : x = atof(subelement->Attribute("X"));
 					(subelement->Attribute("Y") == NULL) ? y = 0 : y = atof(subelement->Attribute("Y"));
 					(subelement->Attribute("Z") == NULL) ? z = 0 : z = atof(subelement->Attribute("Z"));
-					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
+					(subelement->Attribute("time") == NULL) ? time = -1 : time = atof(subelement->Attribute("time"));
+					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 4);
 					localParams[atualNumOps - 1][0] = x;
 					localParams[atualNumOps - 1][1] = y;
 					localParams[atualNumOps - 1][2] = z;
-					processaTranslate(g, tagNameSubElem, x, y, z);
+					localParams[atualNumOps - 1][3] = time;
+					processaTranslate(g, tagNameSubElem, x, y, z, time, subelement);
 					break;
 
 				/* Estamos perante uma tag 
@@ -274,16 +299,24 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					localOpNames[atualNumOps - 1] = strdup("rotate");
 					auxf = (float**)realloc(localParams, sizeof(float*) * (atualNumOps));
 					localParams = auxf;
-					(subelement->Attribute("angle") == NULL) ? angle = 0 : angle = atof(subelement->Attribute("angle"));
+					(subelement->Attribute("angle") == NULL) ? angle = -1 : angle = atof(subelement->Attribute("angle"));
 					(subelement->Attribute("axisX") == NULL) ? x = 0 : x = atof(subelement->Attribute("axisX"));
 					(subelement->Attribute("axisY") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisY"));
 					(subelement->Attribute("axisZ") == NULL) ? z = 0 : z = atof(subelement->Attribute("axisZ"));
-					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 4);
-					localParams[atualNumOps - 1][0] = angle;
+					(subelement->Attribute("time") == NULL) ? time = -1 : z = atof(subelement->Attribute("time"));
+					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 5);
+					if (angle > 0) {
+						localParams[atualNumOps - 1][0] = angle;
+						localParams[atualNumOps - 1][4] = _STATIC;
+					}
+					else{
+						localParams[atualNumOps - 1][0] = time;
+						localParams[atualNumOps - 1][4] = _DYNAMIC;
+					}
 					localParams[atualNumOps - 1][1] = x;
 					localParams[atualNumOps - 1][2] = y;
 					localParams[atualNumOps - 1][3] = z;
-					processaRotate(g, tagNameSubElem, angle, x, y, z);
+					processaRotate(g, tagNameSubElem, angle, x, y, z, localParams[atualNumOps-1][4]);
 					break;
 
 				/* Estamos perante uma tag
@@ -301,7 +334,7 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					localParams[atualNumOps - 1][0] = x;
 					localParams[atualNumOps - 1][1] = y;
 					localParams[atualNumOps - 1][2] = z;
-					processaTranslate(g, tagNameSubElem, x, y, z);
+					processaTranslate(g, tagNameSubElem, x, y, z, -1, NULL);
 					break;
 
 				/* Estamos perante uma tag 

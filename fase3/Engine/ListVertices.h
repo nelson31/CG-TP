@@ -46,4 +46,11 @@ Função que atualiza o valor do pointer para zero
 */
 int atualizaPointer(ListVertices lv);
 
+/**
+Função que retorna o número de vértices que
+existe na estrutura de dados do tipo ListVertices
+que é passada como parâmetro da função
+*/
+int numVertices(ListVertices lv);
+
 #endif
