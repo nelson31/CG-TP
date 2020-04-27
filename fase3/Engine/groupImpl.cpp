@@ -5,25 +5,82 @@
 
 /* Máximo do tamanho do array
 parâmetros de cada operação */
-#define _MAX_PARAM 4
+#define _MAX_PARAM_TRANSLATE 4
+#define _MAX_PARAM_ROTATE 5
+#define _PARAM_COLOR 3
 
 /* Numero de operações */
 #define _MIN_OPS 10
 
+/* Definição dos 2 tipos de 
+rotação (estática/dinâmica)*/
+#define _STATIC 100
+
+#define _DYNAMIC 101
+
+/**
+Definição dos tres tipos de operação
+*/
+#define TRANSLATE 0
+#define ROTATE 1
+#define COLOR 3
+
+/**
+Definição de ums estrutura de dados
+que guarda uma operação de translate
+*/
+typedef struct translate {
+
+	/* Array que guarda os parâmetros
+	da translação */
+	float parametros[_MAX_PARAM_TRANSLATE];
+	/* Variável que guarda os pontos que
+	formam a curva de cattmol-rom */
+	ListVertices points;
+} *Translate;
+
+/**
+Definição de uma estrutura de dados
+que guarda uma operação de rotate
+*/
+typedef struct rotate {
+
+	/* Array que guarda os parâmetros
+	da rotação */
+	float parametros[_MAX_PARAM_ROTATE];
+} *Rotate;
+
+/**
+Definição de uma estrutura de dados 
+que guarda uma operação de color
+*/
+typedef struct color {
+
+	/* Array que guarda os parâmetros
+	da rotação */
+	float parametros[3];
+} *Color;
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 Definição do tipo operação
 */
-typedef struct operacao {
+typedef union operacao {
 
-	/* Nome da operação */
-	enum nome {
-		TRANSLATE = 0,
-		ROTATE = 1,
-		COLOR = 2
-	} nome;
-	/* Parâmetros associados 
-	à operação */
-	float parametros[_MAX_PARAM];
+	Translate t;
+	Rotate r;
+	Color c;
+} *OperacaoParam;
+
+/**
+Estrutura de dados que 
+representa uma operação
+*/
+typedef struct operation {
+
+	OperacaoParam operacao;
+	int type;
 } *Operacao;
 
 /**
@@ -46,6 +103,77 @@ struct group {
 	vértices inseridos no grupo */
 	int numVertices;
 };
+
+/**
+Função que cria uma nova estrutura 
+de dados do tipo Translate
+*/
+Translate newTranslate(float* params, int numParams) {
+
+	Translate t = (Translate)malloc(sizeof(struct translate));
+	/* Se apenas existirem 3 parâmetros estamos 
+	perante uma translação estática -> o parametro 
+	time fica inválido (negativo)*/
+	if (numParams <= 3) {
+		/* Não existem points */
+		t->parametros[3] = -1;
+		t->points = NULL;
+	}
+	else {
+		t->points = newListVertices();
+	}
+	for (int i = 0; i < numParams; i++)
+		t->parametros[i] = params[i];
+	return t;
+}
+
+/**
+Função que cria uma nova estrutura 
+de dados do tipo rotate, tendo em conta 
+o tipo de translação que é fornecido 
+como parâmetro da função
+*/
+Rotate newRotate(float* params) {
+
+	Rotate r = (Rotate)malloc(sizeof(struct rotate));
+	for (int i = 0; i < _MAX_PARAM_ROTATE; i++)
+		r->parametros[i] = params[i];
+	return r;
+}
+
+/**
+Função que cria uma nova estrutura de 
+dados do tipo color
+*/
+Color newColor(float* params) {
+
+	Color c = (Color)malloc(sizeof(struct color));
+	for (int i = 0; i < 3; i++)
+		c->parametros[i] = params[i];
+	return c;
+}
+
+/**
+Função que permite adicionar um ponto para 
+definição da curva de cattmol-rom
+*/
+void addPointTranslate(Translate t, float x, float y, float z) {
+
+	addVertice(t->points, x, y, z);
+}
+
+/**
+Função que retorna o conjunto dos 
+pontos que fazem parte do percurso que 
+constitui a curva de catmoll-rom. Retorna 
+NULL caso tenhamos uma translação estática
+*/
+ListVertices getPointsTranslate(Translate t) {
+
+	if (t->points == NULL)
+		return NULL;
+	return t->points;
+}
 
 /**
 Função que permite obter uma nova 
@@ -72,25 +200,27 @@ Operacao newOperacao(char* name, float* param) {
 
 	int numParam = 0;
 	/* Alocamos espaço para a operação */
-	Operacao ret = (Operacao) malloc(sizeof(struct operacao));
+	Operacao ret = (Operacao)malloc(sizeof(struct operation));
+	ret->operacao = (OperacaoParam)malloc(sizeof(union operacao));
 	switch (name[0]) {
 		
 		case 't':
-			ret->nome = operacao::nome::TRANSLATE;
-			/* Se estamos perante uma translação 
-			temos 3 parâmetros */
-			numParam = 3;
-			break;
-
-		case 'r':
-			ret->nome = operacao::nome::ROTATE;
-			/* Se estamos perante uma rotação
-			temos 4 parâmetros */
+			ret->type = TRANSLATE;
+			ret->operacao->t = newTranslate(param, _MAX_PARAM_TRANSLATE);
 			numParam = 4;
 			break;
 
+		case 'r':
+			ret->type = ROTATE;
+			ret->operacao->r = newRotate(param);
+			/* Se estamos perante uma rotação
+			temos 4 parâmetros */
+			numParam = 5;
+			break;
+
 		case 'c':
-			ret->nome = operacao::nome::COLOR;
+			ret->type = COLOR;
+			ret->operacao->c = newColor(param);
 			/* Se estamos perante uma color
 			temos 3 parâmetros */
 			numParam = 3;
@@ -100,7 +230,11 @@ Operacao newOperacao(char* name, float* param) {
 			break;
 	}
 	for (int i = 0; i < numParam; i++) {
-		ret->parametros[i] = param[i];
+		switch (ret->type) {
+			case TRANSLATE: ret->operacao->t->parametros[i] = param[i]; break;
+			case ROTATE: ret->operacao->r->parametros[i] = param[i]; break;
+			case COLOR: ret->operacao->c->parametros[i] = param[i]; break;
+		}
 	}
 	return ret;
 }
@@ -159,32 +293,38 @@ int numVertices(Group g) {
 }
 
 /**
+Método que printa uma operação
+para o ecrã
+*/
+void printOp(Operacao op) {
+
+	switch (op->type) {
+
+	case TRANSLATE:
+		printf("[Operacao] translate; ");
+		printf("Params:(%f, %f, %f)\n", op->operacao->t->parametros[0], op->operacao->t->parametros[1], op->operacao->t->parametros[2]);
+		break;
+
+	case ROTATE:
+		printf("[Operacao] rotate; ");
+		printf("Params:(%f, %f, %f, %f)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3]);
+		break;
+
+	case COLOR:
+		printf("[Operacao] color; ");
+		printf("Params:(%f, %f, %f)\n", op->operacao->c->parametros[0], op->operacao->c->parametros[1], op->operacao->c->parametros[2]);
+		break;
+	}
+}
+
+/**
 Método que desenha um group
 */
 void desenhaGroup(Group g) {
 
 	printf("Operações: {\n");
 	for (int i = 0; i < g->numOps; i++) {
-		switch (g->op[i]->nome) {
-
-		case operacao::nome::TRANSLATE:
-			printf("translate ");
-			printf("(%f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
-				g->op[i]->parametros[2]);
-			break;
-
-		case operacao::nome::ROTATE:
-			printf("rotate");
-			printf("(%f, %f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
-				g->op[i]->parametros[2], g->op[i]->parametros[3]);
-			break;
-		
-		case operacao::nome::COLOR:
-			printf("color");
-			printf("(%f, %f, %f)\n", g->op[i]->parametros[0], g->op[i]->parametros[1],
-				g->op[i]->parametros[2]);
-			break;
-		}
+		printOp(g->op[i]);
 	}
 	printf("}\n");
 	int j = 0;
@@ -195,31 +335,6 @@ void desenhaGroup(Group g) {
 		printf("(%f, %f, %f)\n", g->lv->at(j++), g->lv->at(j++), g->lv->at(j++));
 	}
 	printf("}\n");
-}
-
-/**
-Método que printa uma operação 
-para o ecrã
-*/
-void printOp(Operacao op) {
-
-	switch (op->nome) {
-
-		case operacao::nome::TRANSLATE:
-			printf("[Operacao] translate; ");
-			printf("Params:(%f, %f, %f)\n", op->parametros[0], op->parametros[1], op->parametros[2]);
-			break;
-
-		case operacao::nome::ROTATE:
-			printf("[Operacao] rotate; ");
-			printf("Params:(%f, %f, %f, %f)\n", op->parametros[0], op->parametros[1], op->parametros[2],op->parametros[3]);
-			break;
-
-		case operacao::nome::COLOR:
-			printf("[Operacao] color; ");
-			printf("Params:(%f, %f, %f)\n", op->parametros[0], op->parametros[1], op->parametros[2]);
-			break;
-	}
 }
 
 void printGroupOps(Group g) {
@@ -239,30 +354,35 @@ float* getParamsOp(Operacao op, char** name) {
 
 	int nParam;
 	float* param;
-	switch (op->nome) {
-		case operacao::nome::TRANSLATE:
+	switch (op->type) {
+		case TRANSLATE:
 			param = (float*)malloc(sizeof(float) * 3);
-			nParam = 3;
+			nParam = _MAX_PARAM_TRANSLATE;
 			strcpy(*name,"translate");
 			break;
 
-		case operacao::nome::ROTATE:
+		case ROTATE:
 			param = (float*)malloc(sizeof(float) * 4);
-			nParam = 4;
+			nParam = _MAX_PARAM_ROTATE;
 			strcpy(*name,"rotate");
 			break;
 
-		case operacao::nome::COLOR:
+		case COLOR:
 			param = (float*)malloc(sizeof(float) * 3);
-			nParam = 3;
+			nParam = _PARAM_COLOR;
 			strcpy(*name,"color");
 			break;
 
 		default:
 			break;
 	}
-	for (int i = 0; i < nParam; i++)
-		param[i] = op->parametros[i];
+	for (int i = 0; i < nParam; i++) {
+		switch (op->type) {
+			case TRANSLATE: param[i] = op->operacao->t->parametros[i]; break;
+			case ROTATE: param[i] = op->operacao->r->parametros[i]; break;
+			case COLOR: param[i] = op->operacao->c->parametros[i]; break;
+		}
+	}
 	return param;
 }
 
