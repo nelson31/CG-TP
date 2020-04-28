@@ -81,6 +81,13 @@ aos parametros através dos INDICES.
 int getParams(Group g, char*** opNames, float*** params);
 
 /**
+Função que retorna um array com o conjuntos
+dos vértices correspondente à operação com o
+mesmo índice no group
+*/
+ListVertices* getGroupPoints(Group g);
+
+/**
 Método que liberta uma estrutura
 de dados do tipo Group
 */

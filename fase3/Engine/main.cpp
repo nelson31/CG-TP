@@ -63,6 +63,13 @@ na ListGroups
 float*** params;
 char*** names;
 
+/**
+Variável que guarda o conjunto de pontos 
+de cada operação caso ela se trata de 
+uma translação dinâmica
+*/
+float*** points;
+
 
 void changeSize(int w, int h) {
 
@@ -303,7 +310,7 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					(subelement->Attribute("axisX") == NULL) ? x = 0 : x = atof(subelement->Attribute("axisX"));
 					(subelement->Attribute("axisY") == NULL) ? y = 0 : y = atof(subelement->Attribute("axisY"));
 					(subelement->Attribute("axisZ") == NULL) ? z = 0 : z = atof(subelement->Attribute("axisZ"));
-					(subelement->Attribute("time") == NULL) ? time = -1 : z = atof(subelement->Attribute("time"));
+					(subelement->Attribute("time") == NULL) ? time = -1 : time = atof(subelement->Attribute("time"));
 					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 5);
 					if (angle > 0) {
 						localParams[atualNumOps - 1][0] = angle;
@@ -316,7 +323,7 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					localParams[atualNumOps - 1][1] = x;
 					localParams[atualNumOps - 1][2] = y;
 					localParams[atualNumOps - 1][3] = z;
-					processaRotate(g, tagNameSubElem, angle, x, y, z, localParams[atualNumOps-1][4]);
+					processaRotate(g, tagNameSubElem, localParams[atualNumOps-1][0], x, y, z, localParams[atualNumOps-1][4]);
 					break;
 
 				/* Estamos perante uma tag
@@ -595,6 +602,6 @@ int main(int argc, char **argv) {
 // enter GLUT's main cycle
 	glutMainLoop();
 
-	printf("I'll return\n");
+	//printf("I'll return\n");
 	return 0;
 }

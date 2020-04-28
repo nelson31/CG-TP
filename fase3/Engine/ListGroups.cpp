@@ -135,6 +135,22 @@ Group getGroup(ListGroups lg, int i) {
 	return g;
 }
 
+/**
+Método que retorna o conjunto de todos os 
+points das operações translação dinamica 
+dentro de cada group
+*/
+ListVertices** getCatmollPoints(ListGroups lg) {
+
+	ListVertices** lv = (ListVertices**)malloc(sizeof(ListVertices*) * lg->numGroups);
+	ListVertices* list;
+	for (int i = 0; i < lg->numGroups; i++) {
+		list = getGroupPoints(lg->groups[i]);
+		lv[i] = list;
+	}
+	return lv;
+}
+
 
 void printOpsLG(ListGroups lg) {
 

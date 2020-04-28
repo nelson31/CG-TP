@@ -310,16 +310,20 @@ para o ecrã
 */
 void printOp(Operacao op) {
 
+	int type;
 	switch (op->type) {
 
 	case TRANSLATE:
 		printf("[Operacao] translate; ");
-		printf("Params:(%f, %f, %f)\n", op->operacao->t->parametros[0], op->operacao->t->parametros[1], op->operacao->t->parametros[2]);
+		printf("Params:(%f, %f, %f, time=%f)\n", op->operacao->t->parametros[0], op->operacao->t->parametros[1], op->operacao->t->parametros[2], op->operacao->t->parametros[3]);
 		break;
 
 	case ROTATE:
 		printf("[Operacao] rotate; ");
-		printf("Params:(%f, %f, %f, %f)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3]);
+		type = op->operacao->r->parametros[4];
+		type == _DYNAMIC ?
+			printf("Params:(%f, %f, %f, %f, %s)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3], "Dynamic") :
+			printf("Params:(%f, %f, %f, %f, %s)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3], "Static");
 		break;
 
 	case COLOR:
@@ -368,13 +372,13 @@ float* getParamsOp(Operacao op, char** name) {
 	float* param;
 	switch (op->type) {
 		case TRANSLATE:
-			param = (float*)malloc(sizeof(float) * 3);
+			param = (float*)malloc(sizeof(float) * 4);
 			nParam = _MAX_PARAM_TRANSLATE;
 			strcpy(*name,"translate");
 			break;
 
 		case ROTATE:
-			param = (float*)malloc(sizeof(float) * 4);
+			param = (float*)malloc(sizeof(float) * 5);
 			nParam = _MAX_PARAM_ROTATE;
 			strcpy(*name,"rotate");
 			break;
@@ -432,6 +436,22 @@ int getParams(Group g, char*** opNames, float*** params) {
 		(*opNames)[i] = nome;
 	}
 	return g->numOps;
+}
+
+/**
+Função que retorna um array com o conjuntos 
+dos vértices correspondente à operação com o 
+mesmo índice no group
+*/
+ListVertices* getGroupPoints(Group g) {
+
+	ListVertices* lv = (ListVertices*)malloc(sizeof(ListVertices)*g->numOps);
+	ListVertices list;
+	for (int i = 0; i < g->numOps; i++) {
+		list = getPoints(g->op[i]);
+		list == NULL ? lv[i] = NULL : lv[i] = list;
+	}
+	return lv;
 }
 
 /**

@@ -54,6 +54,13 @@ da lista
 */
 int* getOpsParams(ListGroups lg, char**** namesByGroup, float**** paramsByGroup);
 
+/**
+Método que retorna o conjunto de todos os
+points das operações translação dinamica
+dentro de cada group
+*/
+ListVertices** getCatmollPoints(ListGroups lg);
+
 void printOpsLG(ListGroups lg);
 
 #endif
