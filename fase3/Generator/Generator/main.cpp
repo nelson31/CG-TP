@@ -5,6 +5,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -263,6 +264,97 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 	}
 }
 
+/*
+ * Funcao usada para ler do ficheiro recebido como parâmetro que contém 
+ * os patches de Bezier
+*/
+int readPatches(const char* filename) {
+
+	// Variáveis (Ver quais terao ou nao de ser globais)
+	int numP = -1; // numero de patches
+	int numCP = -1; // numero de control points
+	int valor;
+	float x, y, z;
+
+	// Abrir o ficheiro com os patches
+	FILE* fp = fopen(filename, "r");
+
+	/* Lemos o numero de patches existentes no ficheiro */
+	fscanf(fp, "%d", &numP);
+
+	if (numP < 1) return -1;
+
+	// Matriz que vai guardar os indices dos vários patches respetivos aos control points
+	int** indicesP = (int**) malloc(numP*sizeof(int*));
+	for (int i = 0; i < numP; i++) {
+		indicesP[i] = (int*)malloc(500 * sizeof(int));
+		for (int j = 0; j < 500; j++) {
+			indicesP[i][j] = -1;
+		}
+	}
+
+	/* Lemos os valores dos indices dos respetivos patches de Bezier */
+	for (int i = 0; (i<numP && (fscanf(fp, "\n%d", &valor) > 0));i++) {
+		indicesP[i][0] = valor;
+		for (int j = 1; (fscanf(fp, ", %d", &valor) > 0); j++){
+			indicesP[i][j] = valor;
+		}
+		//fscanf(fp, "\n");
+	}
+
+	/* Lemos o numero de control points existentes no ficheiro */
+	fscanf(fp, "\n%d\n", &numCP);
+
+	/* Ler todos os control points */
+	float** controlPoints = (float**)malloc(numCP * sizeof(float*));
+
+	for (int i = 0; (i < numCP && (fscanf(fp, "%f, %f, %f\n", &x,&y,&z) > 0)); i++) {
+		controlPoints[i] = (float*)malloc(3*sizeof(float));
+		controlPoints[i][0] = x;
+		controlPoints[i][1] = y;
+		controlPoints[i][2] = z;
+	}
+
+	fclose(fp);
+	printf("File %s charged successfully with %d patches!\n", filename, numP);
+
+	/*for (i = 0; i < numP; i++) {
+		printf("Novo Patch\n");
+		for (j = 0; indicesP[i][j] > -1; j++) {
+			printf("%d\n",indicesP[i][j]);
+		}
+	}*/
+
+	/*printf("Numero de CP: %d\n",numCP);
+	for (int j = 0; j<numCP; j++) {
+		printf("%f, %f, %f\n", controlPoints[j][0], controlPoints[j][1], controlPoints[j][2]);
+	}*/
+
+	return 0;
+}
+
+/*
+ * Devolve um inteiro que distingue o tipo de ação a tomar, mediante o parametro 
+ * passado como argumento
+*/
+int drawtype(const char* arg) {
+
+	int type = -1;
+	if (!strcmp(arg, strdup("plane"))) {
+		type = 1;
+	} else if (!strcmp(arg, strdup("box"))) {
+		type = 2;
+	} else if (!strcmp(arg, strdup("sphere"))) {
+		type = 3;
+	} else if (!strcmp(arg, strdup("cone"))) {
+		type = 4;
+	} else if (!strcmp(arg, strdup("crown"))) {
+		type = 5;
+	} else if (!strcmp(arg, strdup("bezier"))) {
+		type = 6;
+	}
+	return type;
+}
 
 /**
  * Funcao principal do Generator
@@ -275,33 +367,38 @@ int main(int argc, const char* argv[]) {
 		
 		FILE* fp;
 
-		/*Tipo de primitiva a gerar*/
-		switch ( argv[1][0] ) {
+		int type = drawtype(argv[1]);
 
-			case 'p':
+		/*Tipo de primitiva a gerar*/
+		switch ( type ) {
+
+			case 1:
 				fp = fopen(argv[3], "w");
 				drawPlane(fp,atof(argv[2]));
 				fclose(fp);
 				break;
-			case 'b':
+			case 2:
 				fp = fopen(argv[5], "w");
 				drawBox(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
 				break;
-			case 's':
+			case 3:
 				fp = fopen(argv[5], "w");
 				drawSphere(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
 				break;
-			case 'c':
+			case 4:
 				fp = fopen(argv[6], "w");
 				drawCone(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]), atof(argv[5]));
 				fclose(fp);
 				break;
-			case 'a':
+			case 5:
 				fp = fopen(argv[5], "w");
 				drawCrown(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
+				break;
+			case 6:
+				readPatches(argv[2]);
 				break;
 			default:
 				printf("INSIRA OS PARAMETROS CORRETOS!");
