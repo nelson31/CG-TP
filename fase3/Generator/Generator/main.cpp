@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define NUM_POINTS_PATCH 16
+#define NUM_COORDENADAS 3
+
 // Variáveis globais só necessária para os Bezier Patches
 int numP = -1; // numero de patches
 int numCP = -1; // numero de control points
@@ -276,6 +279,61 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 }
 
 /*
+ * Desenho do objeto que estava presente no ficheiro de patch
+ * e escrita dos respetivos pontos no ficheiro de saída passado por parâmetro
+*/
+void drawObjectBP(FILE* fp, int tesselevel) {
+
+	// Numero de Vertices = numPatches * tesselationlevel^2 * 3Vertices * 2triangulos
+	int numVertices = numP * tesselevel * tesselevel * 3 * 2;
+	float x, y, z;
+	/* Definição do número de vértices */
+	fprintf(fp, "%d\n", numVertices);
+
+	/* Desenhamos os triângulos que constituem um quadrado a partir dos vertíces do objectVertices*/
+	for (int i = 0; i < numP; i++) {
+		int numoldV = i * tesselevel * tesselevel;
+		// Variacao do u
+		for (int j = 0; j < tesselevel - 1; j++) {
+			// Variacao do v
+			for (int k = 0; k < tesselevel - 1; k++) {
+				// Vértices do primeiro triangulo do quadrado respetivo
+				x = objectVertices[numoldV + j * tesselevel + k][0];
+				y = objectVertices[numoldV + j * tesselevel + k][1];
+				z = objectVertices[numoldV + j * tesselevel + k][2];
+				fprintf(fp, "%f %f %f\n", x, y, z);
+
+				x = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][0];
+				y = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][1];
+				z = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][2];
+				fprintf(fp, "%f %f %f\n", x, y, z);
+
+				x = objectVertices[numoldV + j * tesselevel + (k + 1)][0];
+				y = objectVertices[numoldV + j * tesselevel + (k + 1)][1];
+				z = objectVertices[numoldV + j * tesselevel + (k + 1)][2];
+				fprintf(fp, "%f %f %f\n", x, y, z);
+
+				// Vértices do segundo triangulo do quadrado respetivo
+				x = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][0];
+				y = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][1];
+				z = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][2];
+				fprintf(fp, "%f %f %f\n", x, y, z);
+
+				x = objectVertices[numoldV + j * tesselevel + k][0];
+				y = objectVertices[numoldV + j * tesselevel + k][1];
+				z = objectVertices[numoldV + j * tesselevel + k][2];
+				fprintf(fp, "%f %f %f\n", x, y, z);
+
+				x = objectVertices[numoldV + (j + 1) * tesselevel + k][0];
+				y = objectVertices[numoldV + (j + 1) * tesselevel + k][1];
+				z = objectVertices[numoldV + (j + 1) * tesselevel + k][2];
+				fprintf(fp, "%f %f %f\n", x, y, z);
+			}
+		}
+	}
+}
+
+/*
  * Usado para mulltiplicar uma matriz por um vetor
 */
 void multMatrixVector(float* m, float* v, float* res) {
@@ -292,14 +350,10 @@ void multMatrixVector(float* m, float* v, float* res) {
  * Funcao usada para a partir do numero de patch, devolver os seus pontos de controlo
 */
 float** getCPsbyPatch(int o) {
-
-	int num;
 	
-	for (num = 0; indicesP[o][num] != -1; num++);
-	
-	float** patchCPs = (float**)malloc(num * sizeof(float*));
-	for (int i = 0; i < num; i++) {
-		patchCPs[i] = (float*)malloc(3 * sizeof(float));
+	float** patchCPs = (float**)malloc(NUM_POINTS_PATCH * sizeof(float*));
+	for (int i = 0; i < NUM_POINTS_PATCH; i++) {
+		patchCPs[i] = (float*)malloc(NUM_COORDENADAS * sizeof(float));
 		patchCPs[i][0] = controlPoints[indicesP[o][i]][0];
 		patchCPs[i][1] = controlPoints[indicesP[o][i]][1];
 		patchCPs[i][2] = controlPoints[indicesP[o][i]][2];
@@ -311,11 +365,9 @@ float** getCPsbyPatch(int o) {
 /*
  * Funcao que determina a posicao de um vértice dado um conjunto de control points de um patch,
  * o parâmetro u e o v
- * Usou-se a fórmula de cálculo matricial para os Patches de Bezier
+ * Usou-se a fórmula de cálculo matricial para os Patches de Bezier(p(u,v) = u x M x P x MT x v)
 */
-float* getPosition(float** patchCPs, float u, float v) {
-	
-	float* pos = (float*)malloc(sizeof(float) * 3);
+void getPosition(int indice, float** patchCPs, float u, float v) {
 
 	// Matriz de Bezier (nao esquecer que M = Mtransposto)
 	float m[4][4] = { {-1.0f,  3.0f, -3.0f,  1.0f},
@@ -325,12 +377,12 @@ float* getPosition(float** patchCPs, float u, float v) {
     };
 	// Matriz usada para guardar as coordenadas x, y ou z dos control points
 	float p[4][4];
-	// Usados para irem guardandos os respetivoos vetores
+	// Usados para irem guardando os vetores resultantes dos cálculos 
 	float vetor1[4];
 	float vetor2[4];
 
-	/* Para cada coordenada x,y e z */
-	for (int i = 0; i < 3; i++) {
+	/* Para cada coordenada x,y e z do ponto */
+	for (int i = 0; i < NUM_COORDENADAS; i++) {
 
 		/* Construimos a matriz p com as respetivas coordenadas x,y ou z */
 		for (int j = 0; j < 4; j++) {
@@ -339,7 +391,8 @@ float* getPosition(float** patchCPs, float u, float v) {
 			}
 		}
 
-		vetor1[0] = powf(v, 3); vetor1[0] = powf(v, 2); vetor1[0] = v; vetor1[0] = 1.0f;
+		// Cálculo das componentes do vetor v
+		vetor1[0] = pow((double)v, (double)3); vetor1[1] = pow((double)v, (double)2); vetor1[2] = v; vetor1[3] = 1.0f;
 
 		/* Calculamos o resultado da multiplicação de Mtrans por vetor v */
 		multMatrixVector((float*)m, vetor1, vetor2);
@@ -351,37 +404,35 @@ float* getPosition(float** patchCPs, float u, float v) {
 		multMatrixVector((float*)m, vetor1, vetor2);
 
 		/* Calculamos o resultado da multiplicaçao do vetor u pelo vetor da mult anterior*/
-
 		/* Calcular agora p(u,v) = u * (vetor resultado anterior) */
-		pos[i] = 0;
+		objectVertices[indice][i] = 0;
 
 		for (int j = 0; j < 4; j++) {
-			pos[i] += (float)powf(u, 3 - j) * vetor2[j];
+			objectVertices[indice][i] += (float)pow((double)u, (double)3 - j) * vetor2[j];
 		}
-
 	}
-
-	return pos;
 }
 
 /*
- * Funcao usada para construir a grelha a partir dos patches de Bezier
+ * Funcao usada para calcular os vértices dado o tesselation level
+ * a partir dos control points que foram lidos do ficheiro dos patches
 */
-void drawBezierPatches(int tesselevel) {
+void calculateObjVertexs(int tesselevel) {
 
-	objectVertices = (float**) malloc(sizeof(float*)*numP * tesselevel * tesselevel);
+	objectVertices = (float**) malloc(sizeof(float*) * numP * tesselevel * tesselevel);
 	for (int i = 0; i < (numP * tesselevel * tesselevel); i++) {
-		objectVertices[i] = (float*) malloc(sizeof(float) * 3);
+		objectVertices[i] = (float*) malloc(sizeof(float) * NUM_COORDENADAS);
 	}
 
 	// Descobrir todos os vértices necessários para se desenhar os triângulos
 	for (int i = 0; i < numP; i++) {
 		float** patchCPs = getCPsbyPatch(i);
+
 		for (int j = 0; j < tesselevel; j++) {
-			float u = 1.0 * j / (tesselevel - 1);
+			float u = (float)((float) 1.0 * j) / (tesselevel - 1);
 			for (int k = 0; k < tesselevel; k++) {
-				float v = 1.0 * k / (tesselevel - 1);
-				objectVertices[i * tesselevel * tesselevel + j * tesselevel + k] = getPosition(patchCPs, u, v);
+				float v = (float)((float)1.0 * k) / (tesselevel - 1);
+				getPosition(i*tesselevel*tesselevel+j*tesselevel+k, patchCPs, u, v);
 			}
 		}
 	}
@@ -406,20 +457,14 @@ int readPatches(const char* filename) {
 
 	// Matriz que vai guardar os indices dos vários patches respetivos aos control points
 	indicesP = (int**) malloc(numP*sizeof(int*));
-	for (int i = 0; i < numP; i++) {
-		indicesP[i] = (int*)malloc(500 * sizeof(int));
-		for (int j = 0; j < 500; j++) {
-			indicesP[i][j] = -1;
-		}
-	}
 
 	/* Lemos os valores dos indices dos respetivos patches de Bezier */
 	for (int i = 0; (i<numP && (fscanf(fp, "\n%d", &valor) > 0));i++) {
+		indicesP[i] = (int*)malloc(NUM_POINTS_PATCH * sizeof(int));
 		indicesP[i][0] = valor;
 		for (int j = 1; (fscanf(fp, ", %d", &valor) > 0); j++){
 			indicesP[i][j] = valor;
 		}
-		//fscanf(fp, "\n");
 	}
 
 	/* Lemos o numero de control points existentes no ficheiro */
@@ -428,8 +473,8 @@ int readPatches(const char* filename) {
 	/* Ler todos os control points */
 	controlPoints = (float**)malloc(numCP * sizeof(float*));
 
-	for (int i = 0; (i < numCP && (fscanf(fp, "%f, %f, %f\n", &x,&y,&z) > 0)); i++) {
-		controlPoints[i] = (float*)malloc(3*sizeof(float));
+	for (int i = 0; (i < numCP && (fscanf(fp, " %f, %f, %f\n", &x,&y,&z) > 0)); i++) {
+		controlPoints[i] = (float*)malloc(NUM_COORDENADAS*sizeof(float));
 		controlPoints[i][0] = x;
 		controlPoints[i][1] = y;
 		controlPoints[i][2] = z;
@@ -437,18 +482,6 @@ int readPatches(const char* filename) {
 
 	fclose(fp);
 	printf("File %s charged successfully with %d patches!\n", filename, numP);
-
-	/*for (int i = 0; i < numP; i++) {
-		printf("Novo Patch\n");
-		for (int j = 0; indicesP[i][j] > -1; j++) {
-			printf("%d\n",indicesP[i][j]);
-		}
-	}*/
-
-	/*printf("Numero de CP: %d\n",numCP);
-	for (int j = 0; j<numCP; j++) {
-		printf("%f, %f, %f\n", controlPoints[j][0], controlPoints[j][1], controlPoints[j][2]);
-	}*/
 
 	return 0;
 }
@@ -479,47 +512,56 @@ int drawtype(const char* arg) {
 /**
  * Funcao principal do Generator
 */
-
 int main(int argc, const char* argv[]) {
 
-	if (argc < 2) printf("INSIRA O NUMERO CORRETO DE PARAMETROS!");
+	if (argc < 3) printf("INSIRA O NUMERO CORRETO DE PARAMETROS!");
 	else {
-		
+		// Apontador para o ficheiro de output a escrever 
 		FILE* fp;
 
+		// Obter o tipo de ação a tomar
 		int type = drawtype(argv[1]);
 
 		/*Tipo de primitiva a gerar*/
 		switch ( type ) {
 
 			case 1:
+				// plane <size> <output.3d>
 				fp = fopen(argv[3], "w");
 				drawPlane(fp,atof(argv[2]));
 				fclose(fp);
 				break;
 			case 2:
+				// box <x> <y> <z> <output.3d>
 				fp = fopen(argv[5], "w");
 				drawBox(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
 				break;
 			case 3:
+				// sphere <Radius> <slices> <stacks> <output.3d>
 				fp = fopen(argv[5], "w");
 				drawSphere(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
 				break;
 			case 4:
+				// cone <bottomRadius> <height> <slices> <stacks> <output.3d>
 				fp = fopen(argv[6], "w");
 				drawCone(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]), atof(argv[5]));
 				fclose(fp);
 				break;
 			case 5:
+				// crown <raioI> <raioS> <slices> <output.3d>
 				fp = fopen(argv[5], "w");
 				drawCrown(fp, atof(argv[2]), atof(argv[3]), atof(argv[4]));
 				fclose(fp);
 				break;
 			case 6:
+				// bezier <name.patch> <tesselationlevel> <output.3d>
+				fp = fopen(argv[4],"w");
 				readPatches(argv[2]);
-				drawBezierPatches(atoi(argv[3]));
+				calculateObjVertexs(atoi(argv[3]));
+				drawObjectBP(fp, atoi(argv[3]));
+				fclose(fp);
 				break;
 			default:
 				printf("INSIRA OS PARAMETROS CORRETOS!");
@@ -527,3 +569,4 @@ int main(int argc, const char* argv[]) {
 	}
 	return 0;
 }
+
