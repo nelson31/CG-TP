@@ -105,10 +105,6 @@ Translate newTranslate(float* params, int numParams) {
 	if (numParams <= 3) {
 		/* Não existem points */
 		t->parametros[3] = -1;
-		t->points = NULL;
-	}
-	else {
-		t->points = newListVertices();
 	}
 	for (int i = 0; i < numParams; i++)
 		t->parametros[i] = params[i];
@@ -181,6 +177,41 @@ Group newGroup() {
 }
 
 /**
+Método que printa uma operação
+para o ecrã
+*/
+void printOp(Operacao op) {
+
+	float type;
+	switch (op->type) {
+
+	case TRANSLATE:
+		printf("[Operacao] translate; ");
+		printf("Params:(%f, %f, %f, time=%f)\n", op->operacao->t->parametros[0], op->operacao->t->parametros[1], op->operacao->t->parametros[2], op->operacao->t->parametros[3]);
+		if (op->operacao->t->parametros[3] > 0) {
+			printf("\tCatmoll-Room points: {\n");
+			printList(op->operacao->t->points);
+			printf("}\n");
+		}
+		break;
+
+	case ROTATE:
+		printf("[Operacao] rotate; ");
+		type = op->operacao->r->parametros[4];
+		printf("%f\n", type);
+		type == _DYNAMIC ?
+			printf("Params:(%f, %f, %f, %f, %s)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3], "Dynamic") :
+			printf("Params:(%f, %f, %f, %f, %s)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3], "Static");
+		break;
+
+	case COLOR:
+		printf("[Operacao] color; ");
+		printf("Params:(%f, %f, %f)\n", op->operacao->c->parametros[0], op->operacao->c->parametros[1], op->operacao->c->parametros[2]);
+		break;
+	}
+}
+
+/**
 Função que retorna uma nova estrutura 
 de dados do tipo operação 
 */
@@ -202,7 +233,7 @@ Operacao newOperacao(char* name, float* param) {
 			ret->type = ROTATE;
 			ret->operacao->r = newRotate(param);
 			/* Se estamos perante uma rotação
-			temos 4 parâmetros */
+			temos 5 parâmetros */
 			numParam = 5;
 			break;
 
@@ -216,13 +247,6 @@ Operacao newOperacao(char* name, float* param) {
 
 		default:
 			break;
-	}
-	for (int i = 0; i < numParam; i++) {
-		switch (ret->type) {
-			case TRANSLATE: ret->operacao->t->parametros[i] = param[i]; break;
-			case ROTATE: ret->operacao->r->parametros[i] = param[i]; break;
-			case COLOR: ret->operacao->c->parametros[i] = param[i]; break;
-		}
 	}
 	return ret;
 }
@@ -247,6 +271,11 @@ void addOperacao(Group g, char* operacao, float* param) {
 	}
 	/* Colocamos a nova operação */
 	g->op[g->numOps++] = newOperacao(operacao, param);
+	//printOp(g->op[g->numOps - 1]);
+	/* Se estamos perante uma translação estática colocamos os points a null */
+	if (g->op[g->numOps-1]->type == TRANSLATE) {
+		g->op[g->numOps-1]->operacao->t->points = NULL;
+	}
 }
 
 /**
@@ -271,6 +300,7 @@ void addDynamicTranslation(Group g, char* operacao, float* param, ListVertices c
 	g->op[g->numOps] = newOperacao(operacao, param);
 	g->op[g->numOps]->operacao->t->points = catmull_rom_points;
 	g->numOps++;
+	//printOp(g->op[g->numOps - 1]);
 }
 
 /**
@@ -305,35 +335,6 @@ int numVertices(Group g) {
 }
 
 /**
-Método que printa uma operação
-para o ecrã
-*/
-void printOp(Operacao op) {
-
-	int type;
-	switch (op->type) {
-
-	case TRANSLATE:
-		printf("[Operacao] translate; ");
-		printf("Params:(%f, %f, %f, time=%f)\n", op->operacao->t->parametros[0], op->operacao->t->parametros[1], op->operacao->t->parametros[2], op->operacao->t->parametros[3]);
-		break;
-
-	case ROTATE:
-		printf("[Operacao] rotate; ");
-		type = op->operacao->r->parametros[4];
-		type == _DYNAMIC ?
-			printf("Params:(%f, %f, %f, %f, %s)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3], "Dynamic") :
-			printf("Params:(%f, %f, %f, %f, %s)\n", op->operacao->r->parametros[0], op->operacao->r->parametros[1], op->operacao->r->parametros[2], op->operacao->r->parametros[3], "Static");
-		break;
-
-	case COLOR:
-		printf("[Operacao] color; ");
-		printf("Params:(%f, %f, %f)\n", op->operacao->c->parametros[0], op->operacao->c->parametros[1], op->operacao->c->parametros[2]);
-		break;
-	}
-}
-
-/**
 Método que desenha um group
 */
 void desenhaGroup(Group g) {
@@ -355,10 +356,10 @@ void desenhaGroup(Group g) {
 
 void printGroupOps(Group g) {
 
-	printf("<group>{\n");
+	printf("\n<group>{\n");
 	for (int i = 0; i < g->numOps; i++)
 		printOp(g->op[i]);
-	printf("}</group>\n");
+	printf("}</group>\n\n");
 }
 
 /**

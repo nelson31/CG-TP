@@ -19,7 +19,7 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "SistemaSolar.xml";
+const char* FILE_XML_NAME = "inXML.xml";
 
 // VARIAVEIS GLOBAIS
 float varx = -1000, vary = 250, varz = 0;
@@ -68,7 +68,13 @@ Variável que guarda o conjunto de pontos
 de cada operação caso ela se trata de 
 uma translação dinâmica
 */
-float*** points;
+float**** points;
+
+/**
+Variável que guarda o número de catmoll-rom 
+points em cada operação de cada group
+*/
+float** numPoints;
 
 
 void changeSize(int w, int h) {
@@ -115,7 +121,7 @@ ListVertices getPoints(TiXmlElement* element) {
 	TiXmlNode* ele = NULL;
 	TiXmlElement* subelement;
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
-		subelement = ele->ToElement();
+;		subelement = ele->ToElement();
 		addVertice(lv, atof(subelement->Attribute("X")), atof(subelement->Attribute("Y")), atof(subelement->Attribute("Z")));
 	}
 	return lv;
@@ -123,31 +129,37 @@ ListVertices getPoints(TiXmlElement* element) {
 
 /**
 Função que adiciona um translate 
-ao grupo g
+ao grupo g. Retorna a lista de vértices 
+correspondente ao translate se for dinamica.
 */
-void processaTranslate(Group g, char* tagName, float x, float y, float z, float time, TiXmlElement* element) {
+ListVertices processaTranslate(Group g, char* tagName, float x, float y, float z, float time, TiXmlElement* element) {
 
+	ListVertices lv;
 	float param[_MAX_PARAM_TRANSLATE];
 	param[0] = x;
 	param[1] = y;
 	param[2] = z;
 	param[3] = time;
-	if (time > 0)
-		addDynamicTranslation(g, tagName, param, getPoints(element));
+	if (time > 0) {
+		addDynamicTranslation(g, tagName, param, (lv = getPoints(element)));
+	}
 	/* Adicionamos a operação ao grupo */
-	else
+	else {
 		addOperacao(g, tagName, (float*)param);
+		lv = NULL;
+	}
+	return lv;
 }
 
 /**
 Função que adiciona um rotate 
 ao grupo g
 */
-void processaRotate(Group g, char* tagName, float attrib, float axisX, 
+void processaRotate(Group g, char* tagName, float atrib, float axisX, 
 	float axisY, float axisZ, float type) {
 
 	float param[5];
-	param[0] = attrib;
+	param[0] = atrib;
 	param[1] = axisX;
 	param[2] = axisY;
 	param[3] = axisZ;
@@ -203,42 +215,51 @@ Método que permite adicionar as operações
 especificadas nos arrays ao grupo 
 em questão
 */
-void addOperacoes(Group g, char** opNames, float** params, int size) {
+void addOperacoes(Group g, char** opNames, float** params, ListVertices* catmollpoints, int size) {
 
 	/* Para cada uma das operações, adicionámo-la ao group */
-	for (int i = 0; i < size; i++)
-		addOperacao(g, opNames[i], params[i]);
+	for (int i = 0; i < size; i++) {
+		//printf("Operacao: %s\n",opNames[i]);
+		if (catmollpoints[i] == NULL)
+			addOperacao(g, opNames[i], params[i]);
+		else
+			addDynamicTranslation(g, opNames[i], params[i], catmollpoints[i]);
+		//printf("Parametros: (%f,%f,%f,%f,%f)\n", params[i][0], params[i][1], params[i][2], params[i][3], params[i][4]);
+	}
 }
 
 /**
 Método que tendo em conta 
 a tag toma uma ação
 */
-void processaGroup(TiXmlElement* element, char** opNames, float** params, int numOperacoes) {
+void processaGroup(TiXmlElement* element, char** opNames, float** params, ListVertices* catmollpoints, int numOperacoes) {
 
 	float** localParams = (float**)malloc(sizeof(float*) * numOperacoes);
 	char** localOpNames = (char**)malloc(sizeof(char*) * numOperacoes);
+	ListVertices* localCatmollPoints = (ListVertices*)malloc(sizeof(ListVertices) * numOperacoes);
 	for (int i = 0; i < numOperacoes; i++) {
 		localOpNames[i] = strdup(opNames[i]);
 		int numParams = 0;
 		switch (opNames[i][0]) {
 
 			case 't':
-				numParams = 3;
+				numParams = 4;
 				break;
 			case 'c':
 				numParams = 3;
 				break;
 			case 'r':
-				numParams = 4;
+				numParams = 5;
 				break;
 			default:
 				break;
 		}
 		localParams[i] = (float*)malloc(sizeof(float)*numParams);
+		localCatmollPoints[i] = catmollpoints[i];
 		for (int j = 0; j < numParams; j++) {
-			localParams[i] = params[i];
+			localParams[i][j] = params[i][j];
 		}
+		//printf("Novo array criado: (%f,%f,%f,%f,%f)\n", localParams[i][0], localParams[i][1], localParams[i][2], localParams[i][3], localParams[i][4]);
 	}
 	char** auxc;
 	float** auxf;
@@ -253,7 +274,7 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 	de um group pai adicionamos essas mesmas
 	operações ao grupo filho */
 	if (numOperacoes > 0) {
-		addOperacoes(g, localOpNames, localParams, numOperacoes);
+		addOperacoes(g, localOpNames, localParams, localCatmollPoints, numOperacoes);
 	}
 	char* tagName = (char*)element->Value(), *tagNameSubElem;
 	TiXmlNode* ele = NULL;
@@ -271,7 +292,7 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 		a função recursivamente */
 		if (!strcmp(tagNameSubElem, "group")) {
 			/* Processamos o subgrupo */
-			processaGroup(subelement, localOpNames, localParams, atualNumOps);
+			processaGroup(subelement, localOpNames, localParams, localCatmollPoints, atualNumOps);
 		}
 		/* Se não for group acrescentamos 
 		informação à lista de groups */
@@ -295,7 +316,8 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					localParams[atualNumOps - 1][1] = y;
 					localParams[atualNumOps - 1][2] = z;
 					localParams[atualNumOps - 1][3] = time;
-					processaTranslate(g, tagNameSubElem, x, y, z, time, subelement);
+					localCatmollPoints = (ListVertices*)realloc(localCatmollPoints, sizeof(ListVertices) * atualNumOps);
+					localCatmollPoints[atualNumOps - 1] = processaTranslate(g, tagNameSubElem, x, y, z, time, subelement);
 					break;
 
 				/* Estamos perante uma tag 
@@ -323,6 +345,10 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					localParams[atualNumOps - 1][1] = x;
 					localParams[atualNumOps - 1][2] = y;
 					localParams[atualNumOps - 1][3] = z;
+					/* Esta operação não possui catmoll-points logo colocamos a null */
+					localCatmollPoints = (ListVertices*)realloc(localCatmollPoints, sizeof(ListVertices) * atualNumOps);
+					localCatmollPoints[atualNumOps - 1] = NULL;
+					//printf("Reconheci (%f,%f,%f,%f,%f)\n", localParams[atualNumOps - 1][0], localParams[atualNumOps - 1][1], localParams[atualNumOps - 1][2], localParams[atualNumOps - 1][3], localParams[atualNumOps - 1][4]);
 					processaRotate(g, tagNameSubElem, localParams[atualNumOps-1][0], x, y, z, localParams[atualNumOps-1][4]);
 					break;
 
@@ -341,6 +367,8 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, int nu
 					localParams[atualNumOps - 1][0] = x;
 					localParams[atualNumOps - 1][1] = y;
 					localParams[atualNumOps - 1][2] = z;
+					localCatmollPoints = (ListVertices*)realloc(localCatmollPoints, sizeof(ListVertices) * atualNumOps);
+					localCatmollPoints[atualNumOps - 1] = NULL;
 					processaTranslate(g, tagNameSubElem, x, y, z, -1, NULL);
 					break;
 
@@ -395,7 +423,7 @@ void loadFile() {
 	estruturas de dados
 	*/
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
-		processaGroup(ele->ToElement(),NULL,NULL,0);
+		processaGroup(ele->ToElement(),NULL,NULL,NULL,0);
 	}
 }
 
@@ -429,6 +457,21 @@ void prepareData() {
 	}
 }
 
+void printArrays() {
+
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < numOps[i]; j++) {
+			printf("[Grupo %d e operacao numero %d]: %s -> %f ; %f ; %f ; %f ; %f \n", i, j, names[i][j], params[i][j][0], params[i][j][1], params[i][j][2], params[i][j][3], params[i][j][4]);
+			printf("\tCatmoll-Rom Points: \n");
+			if (points[i][j] != NULL) {
+				for (int k = 0; k < numPoints[i][j]; k++) {
+					printf("\t\t(%f, %f, %f)\n", points[i][j][k][0], points[i][j][k][1], points[i][j][k][2]);
+				}
+			}
+		}
+	}
+}
+
 /**
 Método que desenha o conteudo pedido, 
 inicializando previamente os vbo's
@@ -443,12 +486,40 @@ void prepareScene(){
 	/* Vamos buscar as transformações 
 	de cada group */
 	numOps = getOpsParams(lg, &names, &params);
-	/*for (int i = 0; i < size; i++) {
-		for (int j = 0; j < numOps[i]; j++) {
-			printf("[Grupo %d e operacao numero %d]: %s -> %f ; %f ; %f \n", i, j, names[i][j], params[i][j][0], params[i][j][1], params[i][j][2]);
+	/* Vamos buscar os catmoll-points */
+	ListVertices** cat = getCatmollPoints(lg);
+	/* Inicializamos ambos os array responsáveis 
+	por lidar pelo catmoll-rom points */
+	points = (float****)malloc(sizeof(float***) * size);
+	numPoints = (float**)malloc(sizeof(float*) * size);
+	int numOp, numCatPoints; Vertice v;
+	/* Vamos preencher o array points */
+	for (int i = 0; i < size; i++) {
+		numOp = numOps[i];
+		points[i] = (float***)malloc(sizeof(float**) * numOp);
+		numPoints[i] = (float*)malloc(sizeof(float) * numOp);
+		/* Percorremos cada operação dentro de cada group */
+		for (int j = 0; j < numOp; j++) {
+			if (cat[i][j] != NULL) {
+				numCatPoints = numVertices(cat[i][j]);
+				points[i][j] = (float**)malloc(sizeof(float*) * (numPoints[i][j] = numCatPoints));
+				for (int k = 0; k<numCatPoints; k++) {
+					v = nextV(cat[i][j]);
+					points[i][j][k] = (float*)malloc(sizeof(float) * 3);
+					points[i][j][k][0] = getX(v);
+					points[i][j][k][1] = getY(v);
+					points[i][j][k][2] = getZ(v);
+				}
+				atualizaPointer(cat[i][j]);
+			}
+			else {
+				points[i][j] = NULL;
+				numPoints[i][j] = 0;
+			}
 		}
-	}*/
-	printf("Preparation Done\n");
+	}
+	printArrays();
+	//printf("Preparation Done\n");
 }
 
 /**
@@ -563,12 +634,6 @@ void processSpecialKeys(int key, int xx, int yy) {
 */
 int main(int argc, char **argv) {
 
-	loadFile();
-
-	printOpsLG(lg);
-
-	size = numGroups(lg);
-
 // init GLUT and the window
 	glutInit(&argc, argv);
 
@@ -597,10 +662,16 @@ int main(int argc, char **argv) {
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 // Prepare the scene to draw
+	loadFile();
+
+	//printOpsLG(lg);
+
+	size = numGroups(lg);
+
 	prepareScene();
 
 // enter GLUT's main cycle
-	glutMainLoop();
+	//glutMainLoop();
 
 	//printf("I'll return\n");
 	return 0;
