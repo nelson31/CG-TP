@@ -76,6 +76,120 @@ points em cada operação de cada group
 */
 float** numPoints;
 
+void buildRotMatrix(float* x, float* y, float* z, float* m) {
+
+	m[0] = x[0]; m[1] = x[1]; m[2] = x[2]; m[3] = 0;
+	m[4] = y[0]; m[5] = y[1]; m[6] = y[2]; m[7] = 0;
+	m[8] = z[0]; m[9] = z[1]; m[10] = z[2]; m[11] = 0;
+	m[12] = 0; m[13] = 0; m[14] = 0; m[15] = 1;
+}
+
+
+void cross(float* a, float* b, float* res) {
+
+	res[0] = a[1] * b[2] - a[2] * b[1];
+	res[1] = a[2] * b[0] - a[0] * b[2];
+	res[2] = a[0] * b[1] - a[1] * b[0];
+}
+
+
+void normalize(float* a) {
+
+	float l = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+	a[0] = a[0] / l;
+	a[1] = a[1] / l;
+	a[2] = a[2] / l;
+}
+
+
+float length(float* v) {
+
+	float res = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+	return res;
+
+}
+
+void multMatrixVector(float* m, float* v, float* res) {
+
+	for (int j = 0; j < 4; ++j) {
+		res[j] = 0;
+		for (int k = 0; k < 4; ++k) {
+			res[j] += v[k] * m[j * 4 + k];
+		}
+	}
+
+}
+
+/**
+Função que trata da computação do cálculo de uma
+componente de derivada dada a respetiva linha da
+matriz resultante da multiplicação da matriz
+m pelo vetor p
+*/
+float computeDeriv(float t, float* a) {
+
+	float ret = 0;
+	for (int i = 0; i < 4; i++) {
+		switch (i) {
+		case 0: ret += 3 * (float)pow((double)t, 2) * a[i]; break;
+		case 1: ret += 2 * t * a[i]; break;
+		case 2: ret += a[i]; break;
+		default: break;
+		}
+	}
+	return ret;
+}
+
+
+void getCatmullRomPoint(float t, float* p0, float* p1, float* p2, float* p3, float* pos, float* deriv) {
+
+	// catmull-rom matrix
+	float m[4][4] = { {-0.5f,  1.5f, -1.5f,  0.5f},
+						{ 1.0f, -2.5f,  2.0f, -0.5f},
+						{-0.5f,  0.0f,  0.5f,  0.0f},
+						{ 0.0f,  1.0f,  0.0f,  0.0f} };
+	float v[4];
+	float a[4];
+	/* Para cada coordenada x,y e z */
+	for (int i = 0; i < 3; i++) {
+
+		/* Construimos o array v para cada coordenada */
+		v[0] = p0[i]; v[1] = p1[i]; v[2] = p2[i]; v[3] = p3[i];
+
+		/* Calculamos o vertor a para cada coordenada */
+		multMatrixVector((float*)m, v, a);
+
+		/* Compute pos = T * A */
+		pos[i] = 0;
+
+		for (int j = 0; j < 4; j++) {
+			pos[i] += (float)pow((double)t, (double)3 - j) * a[j];
+		}
+
+		/* compute deriv = T' * A */
+		deriv[i] = computeDeriv(t, a);
+	}
+}
+
+
+// given  global t, returns the point in the curve
+void getGlobalCatmullRomPoint(int group, int opIndice, float gt, float* pos, float* deriv) {
+
+	int point_count = numPoints[group][opIndice];
+	float t = gt * (float)point_count; // this is the real global t
+	int index = floor(t);  // which segment
+	t = t - index; // where within  the segment
+
+	// indices store the points
+	int indices[4];
+	indices[0] = (index + point_count - 1) % point_count;
+	indices[1] = (indices[0] + 1) % point_count;
+	indices[2] = (indices[1] + 1) % point_count;
+	indices[3] = (indices[2] + 1) % point_count;
+
+	getCatmullRomPoint(t, points[group][opIndice][indices[0]], points[group][opIndice][indices[1]], points[group][opIndice][indices[2]], points[group][opIndice][indices[3]], pos, deriv);
+}
+
 
 void changeSize(int w, int h) {
 
@@ -523,35 +637,44 @@ void prepareScene(){
 }
 
 /**
-Método que desenha a scene
+Função que trata das transformações
+geométricas para um determinado group
+tendo em conta o instante. Para além disso 
+esta função desenha o respetivo group
+t
 */
-void drawScene() {
+void reposicionaModels(float gt) {
 
-	/* Percorremos todos 
-	os groups */
+	float position[3], deriv[3];
+	/* Percorremos cada um dos groups */
 	for (int i = 0; i < size; i++) {
-		/* Fazemos push da matriz 
-		de transformações */
-		if(numOps[i]>0) glPushMatrix();
-		/* Percorremos as operações 
-		dentro de cada group */
+		glPushMatrix();
+		/* Percorremos cada uma das operações de cada group */
 		for (int j = 0; j < numOps[i]; j++) {
 			switch (names[i][j][0]) {
-				/* Estamos perante um translate */
-				case 't':
+
+			case 't':
+				/* Caso estejamos perante uma translação estática fazemos um simples translate */
+				if (params[i][j][3] == -1)
 					glTranslatef(params[i][j][0], params[i][j][1], params[i][j][2]);
-					break;
+				else {
+					getGlobalCatmullRomPoint(i, j, gt, position, deriv);
+					glTranslatef(position[0], position[1], position[2]);
+				}
+				break;
 
-				case 'r':
+			case 'r':
+				if (params[i][j][4] == _STATIC)
 					glRotatef(params[i][j][0], params[i][j][1], params[i][j][2], params[i][j][3]);
-					break;
+				// Falta definir para o caso em que a rotação é dinâmica
+				break;
 
-				case 'c':
-					glColor3f(params[i][j][0], params[i][j][1], params[i][j][2]);
-					break;
+			case 'c':
+				glColor3f(params[i][j][0], params[i][j][1], params[i][j][2]);
+				break;
 
-				default :
-					break;
+			default:
+				break;
 			}
 		}
 		/* Desenhamos os respetivos vértices */
@@ -564,6 +687,10 @@ void drawScene() {
 	}
 }
 
+/**
+Função que será posta a correr dentro 
+do ciclo do glut
+*/
 void renderScene(void) {
 
 	// clear buffers
@@ -576,7 +703,7 @@ void renderScene(void) {
 		0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
 
 	// Scene Design
-	drawScene();
+	reposicionaModels(glutGet(GLUT_ELAPSED_TIME));
 
 	// End of frame
 	glutSwapBuffers();
