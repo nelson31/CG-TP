@@ -19,7 +19,7 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "inXML.xml";
+const char* FILE_XML_NAME = "inXML2.xml";
 
 // VARIAVEIS GLOBAIS
 float varx = -1000, vary = 250, varz = 0;
@@ -683,7 +683,7 @@ void reposicionaModels(float gt) {
 		glDrawArrays(GL_TRIANGLES, 0, numVerticess[i]);
 
 		/* Fazemos pop da matrix */
-		if (numOps[i] > 0) glPopMatrix();
+		glPopMatrix();
 	}
 }
 
@@ -693,6 +693,7 @@ do ciclo do glut
 */
 void renderScene(void) {
 
+	static float a = 0;
 	// clear buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -703,10 +704,12 @@ void renderScene(void) {
 		0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
 
 	// Scene Design
-	reposicionaModels(glutGet(GLUT_ELAPSED_TIME));
+	reposicionaModels(a);
 
 	// End of frame
 	glutSwapBuffers();
+
+	a += 0.001;
 }
 
 
@@ -798,7 +801,7 @@ int main(int argc, char **argv) {
 	prepareScene();
 
 // enter GLUT's main cycle
-	//glutMainLoop();
+	glutMainLoop();
 
 	//printf("I'll return\n");
 	return 0;
