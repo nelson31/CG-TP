@@ -8,6 +8,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Variáveis globais só necessária para os Bezier Patches
+int numP = -1; // numero de patches
+int numCP = -1; // numero de control points
+// Matriz que vai guardar os indices dos vários patches respetivos aos control points
+int** indicesP;
+/* Ler todos os control points */
+float** controlPoints;
+/* Variável usada para guardar todos os vértices do objeto que se pretende desenhar 
+ *com os patches de Bezier
+ */
+float** objectVertices;
 
 
 /**
@@ -265,14 +276,123 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 }
 
 /*
+ * Usado para mulltiplicar uma matriz por um vetor
+*/
+void multMatrixVector(float* m, float* v, float* res) {
+
+	for (int j = 0; j < 4; ++j) {
+		res[j] = 0;
+		for (int k = 0; k < 4; ++k) {
+			res[j] += v[k] * m[j * 4 + k];
+		}
+	}
+}
+
+/*
+ * Funcao usada para a partir do numero de patch, devolver os seus pontos de controlo
+*/
+float** getCPsbyPatch(int o) {
+
+	int num;
+	
+	for (num = 0; indicesP[o][num] != -1; num++);
+	
+	float** patchCPs = (float**)malloc(num * sizeof(float*));
+	for (int i = 0; i < num; i++) {
+		patchCPs[i] = (float*)malloc(3 * sizeof(float));
+		patchCPs[i][0] = controlPoints[indicesP[o][i]][0];
+		patchCPs[i][1] = controlPoints[indicesP[o][i]][1];
+		patchCPs[i][2] = controlPoints[indicesP[o][i]][2];
+	}
+
+	return patchCPs;
+}
+
+/*
+ * Funcao que determina a posicao de um vértice dado um conjunto de control points de um patch,
+ * o parâmetro u e o v
+ * Usou-se a fórmula de cálculo matricial para os Patches de Bezier
+*/
+float* getPosition(float** patchCPs, float u, float v) {
+	
+	float* pos = (float*)malloc(sizeof(float) * 3);
+
+	// Matriz de Bezier (nao esquecer que M = Mtransposto)
+	float m[4][4] = { {-1.0f,  3.0f, -3.0f,  1.0f},
+					  {3.0f, -6.0f,  3.0f, 0.0f },
+					  {-3.0f,  3.0f,  0.0f,  0.0f},
+	                  {1.0f,  0.0f,  0.0f,  0.0f }
+    };
+	// Matriz usada para guardar as coordenadas x, y ou z dos control points
+	float p[4][4];
+	// Usados para irem guardandos os respetivoos vetores
+	float vetor1[4];
+	float vetor2[4];
+
+	/* Para cada coordenada x,y e z */
+	for (int i = 0; i < 3; i++) {
+
+		/* Construimos a matriz p com as respetivas coordenadas x,y ou z */
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
+				p[j][k] = patchCPs[j*4+k][i];
+			}
+		}
+
+		vetor1[0] = powf(v, 3); vetor1[0] = powf(v, 2); vetor1[0] = v; vetor1[0] = 1.0f;
+
+		/* Calculamos o resultado da multiplicação de Mtrans por vetor v */
+		multMatrixVector((float*)m, vetor1, vetor2);
+
+		/* Calculamos o resultado da multiplicação da matriz p pela multiplicacao anterior */
+		multMatrixVector((float*)p, vetor2, vetor1);
+
+		/* Calculamos o resultado da multiplicação da matriz M pela multiplicacao anterior */
+		multMatrixVector((float*)m, vetor1, vetor2);
+
+		/* Calculamos o resultado da multiplicaçao do vetor u pelo vetor da mult anterior*/
+
+		/* Calcular agora p(u,v) = u * (vetor resultado anterior) */
+		pos[i] = 0;
+
+		for (int j = 0; j < 4; j++) {
+			pos[i] += (float)powf(u, 3 - j) * vetor2[j];
+		}
+
+	}
+
+	return pos;
+}
+
+/*
+ * Funcao usada para construir a grelha a partir dos patches de Bezier
+*/
+void drawBezierPatches(int tesselevel) {
+
+	objectVertices = (float**) malloc(sizeof(float*)*numP * tesselevel * tesselevel);
+	for (int i = 0; i < (numP * tesselevel * tesselevel); i++) {
+		objectVertices[i] = (float*) malloc(sizeof(float) * 3);
+	}
+
+	// Descobrir todos os vértices necessários para se desenhar os triângulos
+	for (int i = 0; i < numP; i++) {
+		float** patchCPs = getCPsbyPatch(i);
+		for (int j = 0; j < tesselevel; j++) {
+			float u = 1.0 * j / (tesselevel - 1);
+			for (int k = 0; k < tesselevel; k++) {
+				float v = 1.0 * k / (tesselevel - 1);
+				objectVertices[i * tesselevel * tesselevel + j * tesselevel + k] = getPosition(patchCPs, u, v);
+			}
+		}
+	}
+}
+
+/*
  * Funcao usada para ler do ficheiro recebido como parâmetro que contém 
  * os patches de Bezier
 */
 int readPatches(const char* filename) {
 
-	// Variáveis (Ver quais terao ou nao de ser globais)
-	int numP = -1; // numero de patches
-	int numCP = -1; // numero de control points
 	int valor;
 	float x, y, z;
 
@@ -285,7 +405,7 @@ int readPatches(const char* filename) {
 	if (numP < 1) return -1;
 
 	// Matriz que vai guardar os indices dos vários patches respetivos aos control points
-	int** indicesP = (int**) malloc(numP*sizeof(int*));
+	indicesP = (int**) malloc(numP*sizeof(int*));
 	for (int i = 0; i < numP; i++) {
 		indicesP[i] = (int*)malloc(500 * sizeof(int));
 		for (int j = 0; j < 500; j++) {
@@ -306,7 +426,7 @@ int readPatches(const char* filename) {
 	fscanf(fp, "\n%d\n", &numCP);
 
 	/* Ler todos os control points */
-	float** controlPoints = (float**)malloc(numCP * sizeof(float*));
+	controlPoints = (float**)malloc(numCP * sizeof(float*));
 
 	for (int i = 0; (i < numCP && (fscanf(fp, "%f, %f, %f\n", &x,&y,&z) > 0)); i++) {
 		controlPoints[i] = (float*)malloc(3*sizeof(float));
@@ -318,9 +438,9 @@ int readPatches(const char* filename) {
 	fclose(fp);
 	printf("File %s charged successfully with %d patches!\n", filename, numP);
 
-	/*for (i = 0; i < numP; i++) {
+	/*for (int i = 0; i < numP; i++) {
 		printf("Novo Patch\n");
-		for (j = 0; indicesP[i][j] > -1; j++) {
+		for (int j = 0; indicesP[i][j] > -1; j++) {
 			printf("%d\n",indicesP[i][j]);
 		}
 	}*/
@@ -399,6 +519,7 @@ int main(int argc, const char* argv[]) {
 				break;
 			case 6:
 				readPatches(argv[2]);
+				drawBezierPatches(atoi(argv[3]));
 				break;
 			default:
 				printf("INSIRA OS PARAMETROS CORRETOS!");
