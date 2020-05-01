@@ -632,7 +632,7 @@ void prepareScene(){
 			}
 		}
 	}
-	printArrays();
+	//printArrays();
 	//printf("Preparation Done\n");
 }
 
@@ -706,6 +706,8 @@ void renderScene(void) {
 	// Scene Design
 	reposicionaModels(a);
 
+	printf("%f\n", a);
+
 	// End of frame
 	glutSwapBuffers();
 
@@ -770,7 +772,7 @@ int main(int argc, char **argv) {
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
-	glutCreateWindow("CG@TP@Fase1");
+	glutCreateWindow("CG@TP@Fase3");
 
 #ifndef __APPLE__
 	glewInit();
