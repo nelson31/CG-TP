@@ -200,6 +200,26 @@ void getGlobalCatmullRomPoint(int group, int opIndice, float gt, float* pos, flo
 	getCatmullRomPoint(t, points[group][opIndice][indices[0]], points[group][opIndice][indices[1]], points[group][opIndice][indices[2]], points[group][opIndice][indices[3]], pos, deriv);
 }
 
+/**
+Método que calcula o resto da divisão inteira
+*/
+float root(float x, float value) {
+
+	while (x > value)
+		x -= value;
+	return x;
+}
+
+/**
+Função que dado um tempo global calcula o ângulo de 
+rotação para um group que apresente rotação dinâmica
+*/
+float getCurrentAngle(float gt, int group, int opIndice) {
+	
+	gt /= params[group][opIndice][0] / 10.0f;
+	return root(gt*360.0f,360.0f);
+}
+
 
 void changeSize(int w, int h) {
 
@@ -676,7 +696,8 @@ void reposicionaModels(float gt) {
 			case 'r':
 				if (params[i][j][4] == _STATIC)
 					glRotatef(params[i][j][0], params[i][j][1], params[i][j][2], params[i][j][3]);
-				// Falta definir para o caso em que a rotação é dinâmica
+				else
+					glRotatef(getCurrentAngle(gt,i,j), params[i][j][1], params[i][j][2], params[i][j][3]);
 				break;
 
 			case 'c':
