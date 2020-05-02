@@ -1,0 +1,302 @@
+<scene>
+	<group>
+		<color R='1' G='0.3' B='0' />
+		<models>
+			<model file='sol.3d' />
+		</models>
+	</group>
+	<group>
+		<translate time="11.93" >
+			<point X="-161.18" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-169.08" />
+			<point X="161.18" Y="0" Z="0" />
+			<point X="0" Y="0" Z="169.08" />
+		</translate>
+		<color R='1' G='0' B='0' />
+		<models>
+			<model file='mercurio.3d' />
+		</models>
+	</group>
+	<group>
+		<translate time="29.56" >
+			<point X="-177.84" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-179.42" />
+			<point X="177.84" Y="0" Z="0" />
+			<point X="0" Y="0" Z="179.42" />
+		</translate>
+		<color R='1' G='0.85' B='0' />
+		<models>
+			<model file='venus.3d' />
+		</models>
+	</group>
+	<group>
+		<translate time="48.7008" >
+			<point X="-193.4" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-197.2" />
+			<point X="193.4" Y="0" Z="0" />
+			<point X="0" Y="0" Z="197.2" />
+		</translate>
+		<color R='0' G='0' B='1' />
+		<models>
+			<model file='terra.3d' />
+		</models>
+		<group>
+			<translate time="27.84" >
+				<point X="-7" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-7" />
+				<point X="7" Y="0" Z="0" />
+				<point X="0" Y="0" Z="7" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='terraLua.3d' />
+			</models>
+		</group>
+	</group>
+	<group>
+		<translate time="91.597" >
+			<point X="-200.06" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-220.46" />
+			<point X="200.06" Y="0" Z="0" />
+			<point X="0" Y="0" Z="220.46" />
+		</translate>
+		<color R='0.55' G='0' B='0' />
+		<models>
+			<model file='marte.3d' />
+		</models>
+		<group>
+			<translate time="10" >
+				<point X="-5" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-5" />
+				<point X="5" Y="0" Z="0" />
+				<point X="0" Y="0" Z="5" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='marteLua1.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="0" Y="0" Z="-5" />
+				<point X="5" Y="0" Z="0" />
+				<point X="0" Y="0" Z="5" />
+				<point X="-5" Y="0" Z="0" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='marteLua2.3d' />
+			</models>
+		</group>
+	</group>
+	<group>
+		<translate time="604.3452" >
+			<point X="-262.8" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-292.6" />
+			<point X="262.8" Y="0" Z="0" />
+			<point X="0" Y="0" Z="292.6" />
+		</translate>
+		<color R='0.59' G='0.29' B='0' />
+		<models>
+			<model file='jupiter.3d' />
+		</models>
+		<group>
+			<translate time="10" >
+				<point X="-58" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-58" />
+				<point X="58" Y="0" Z="0" />
+				<point X="0" Y="0" Z="58" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='jupiterLua1.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="0" Y="0" Z="-58" />
+				<point X="58" Y="0" Z="0" />
+				<point X="0" Y="0" Z="58" />
+				<point X="-58" Y="0" Z="0" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='jupiterLua2.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="52" Y="0" Z="0" />
+				<point X="0" Y="0" Z="52" />
+				<point X="-52" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-52" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='jupiterLua3.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="0" Y="0" Z="54" />
+				<point X="-54" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-54" />
+				<point X="54" Y="0" Z="0" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='jupiterLua4.3d' />
+			</models>
+		</group>
+	</group>
+	<group>
+		<translate time="1434.56" >
+			<point X="-405.43" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-455.65" />
+			<point X="405.43" Y="0" Z="0" />
+			<point X="0" Y="0" Z="445.65" />
+		</translate>
+		<color R='0.82' G='0.71' B='0.55' />
+		<models>
+			<model file='saturno.3d' />
+		</models>
+		<group>
+			<color R='0.93' G='0.91' B='0.67' />
+			<models>
+				<model file='saturnoAnel.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="0" Y="0" Z="58" />
+				<point X="-58" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-58" />
+				<point X="58" Y="0" Z="0" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='saturnoLua1.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="-85" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-85" />
+				<point X="85" Y="0" Z="0" />
+				<point X="0" Y="0" Z="85" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file="saturnoLua2.3d" />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="0" Y="0" Z="-60" />
+				<point X="60" Y="0" Z="0" />
+				<point X="0" Y="0" Z="60" />
+				<point X="-60" Y="0" Z="0" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='saturnoLua3.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="54" Y="0" Z="0" />
+				<point X="0" Y="0" Z="54" />
+				<point X="-54" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-54" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='saturnoLua4.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="54" Y="20" Z="0" />
+				<point X="0" Y="20" Z="54" />
+				<point X="-54" Y="20" Z="0" />
+				<point X="0" Y="20" Z="-54" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='saturnoLua5.3d' />
+			</models>
+		</group>
+	</group>
+	<group>
+		<translate time="4091.38" >
+			<point X="-515.65" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-585.73" />
+			<point X="515.65" Y="0" Z="0" />
+			<point X="0" Y="0" Z="585.73" />
+		</translate>
+		<color R='0.13' G='0.55' B='0.13' />
+		<models>
+			<model file='urano.3d' />
+		</models>
+		<group>
+			<translate time="10" >
+				<point X="22" Y="0" Z="0" />
+				<point X="0" Y="0" Z="22" />
+				<point X="-22" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-22" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='uranoLua1.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="0" Y="0" Z="22" />
+				<point X="-22" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-22" />
+				<point X="22" Y="0" Z="0" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='uranoLua2.3d' />
+			</models>
+		</group>
+		<group>
+			<translate time="10" >
+				<point X="-22" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-22" />
+				<point X="22" Y="0" Z="0" />
+				<point X="0" Y="0" Z="22" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='uranoLua3.3d' />
+			</models>
+		</group>
+	</group>
+	<group>
+		<translate time="8025.2" >
+			<point X="-644.6" Y="0" Z="0" />
+			<point X="0" Y="0" Z="-656.8" />
+			<point X="644.6" Y="0" Z="0" />
+			<point X="0" Y="0" Z="656.8" />
+		</translate>
+		<color R='0.68' G='0.85' B='0.9' />
+		<models>
+			<model file='neptuno.3d' />
+		</models>
+		<group>
+			<translate time="10" >
+				<point X="-19" Y="0" Z="0" />
+				<point X="0" Y="0" Z="-19" />
+				<point X="19" Y="0" Z="0" />
+				<point X="0" Y="0" Z="19" />
+			</translate>
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='neptunoLua.3d' />
+			</models>
+		</group>
+	</group>
+</scene>
