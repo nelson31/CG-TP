@@ -76,6 +76,15 @@ points em cada operação de cada group
 */
 float** numPoints;
 
+/**
+Variáveis que possibilitam a adição do efeito 
+do tempo nas trajetorias dos objetos que apresentam 
+translações dinâmicas
+*/
+float oldTimeSinceStart = 0;
+float timeSinceStart;
+float deltaTime;
+
 void buildRotMatrix(float* x, float* y, float* z, float* m) {
 
 	m[0] = x[0]; m[1] = x[1]; m[2] = x[2]; m[3] = 0;
@@ -175,6 +184,7 @@ void getCatmullRomPoint(float t, float* p0, float* p1, float* p2, float* p3, flo
 // given  global t, returns the point in the curve
 void getGlobalCatmullRomPoint(int group, int opIndice, float gt, float* pos, float* deriv) {
 
+	gt /= params[group][opIndice][3]/10.0f;
 	int point_count = numPoints[group][opIndice];
 	float t = gt * (float)point_count; // this is the real global t
 	int index = floor(t);  // which segment
@@ -693,6 +703,9 @@ do ciclo do glut
 */
 void renderScene(void) {
 
+	timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
+	deltaTime = timeSinceStart - oldTimeSinceStart;
+	oldTimeSinceStart = timeSinceStart;
 	static float a = 0;
 	// clear buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -711,7 +724,7 @@ void renderScene(void) {
 	// End of frame
 	glutSwapBuffers();
 
-	a += 0.001;
+	a += 0.0001*deltaTime;
 }
 
 
