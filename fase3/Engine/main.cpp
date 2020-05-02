@@ -719,7 +719,7 @@ void renderScene(void) {
 	// Scene Design
 	reposicionaModels(a);
 
-	printf("%f\n", a);
+	//printf("%f\n", a);
 
 	// End of frame
 	glutSwapBuffers();
