@@ -423,6 +423,11 @@ float* getParamsOp(Operacao op, char** name) {
 			strcpy(*name,"color");
 			break;
 
+		case SCALE :
+			param = (float*)malloc(sizeof(float) * 3);
+			nParam = _PARAM_SCALE;
+			strcpy(*name, "scale");
+
 		default:
 			break;
 	}
@@ -431,6 +436,7 @@ float* getParamsOp(Operacao op, char** name) {
 			case TRANSLATE: param[i] = op->operacao->t->parametros[i]; break;
 			case ROTATE: param[i] = op->operacao->r->parametros[i]; break;
 			case COLOR: param[i] = op->operacao->c->parametros[i]; break;
+			case SCALE: param[i] = op->operacao->s->parametros[i]; break;
 		}
 	}
 	return param;
