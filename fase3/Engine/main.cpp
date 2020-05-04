@@ -767,6 +767,10 @@ void preparePercurso(int group, int indiceOP) {
 	}
 }
 
+/**
+Função que inicializa as estruturas de dados 
+que guardam os eixos de cada group
+*/
 void prepareAxis(int group) {
 
 	X[group] = (float*)malloc(sizeof(float) * 3);
