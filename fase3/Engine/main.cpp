@@ -19,7 +19,7 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "testeXML.xml";
+const char* FILE_XML_NAME = "inXML2.xml";
 
 // VARIAVEIS GLOBAIS
 float varx = -1000, vary = 250, varz = 0;
@@ -53,7 +53,7 @@ int* numOps;
 Variáveis usadas para desenhar o 
 conteudo da ListGroups
 */
-GLuint* vertices, *numVerticess;
+GLuint* vertices, *numVerticess, *vertPercursos;
 
 /**
 Variáveis para ir buscar as
@@ -84,6 +84,31 @@ translações dinâmicas
 float oldTimeSinceStart = 0;
 float timeSinceStart;
 float deltaTime;
+
+/**
+Variável que guarda os vértices de modo a 
+desenhar os percursos de todos os objetos 
+que apresentam translações dinâmicas
+*/
+vector<float>** percursos;
+
+/**
+Variável que associa os percursos aos respetivos 
+groups e operações, tendo em conta os indices
+*/
+float** groupOpToPercurso;
+
+/**
+Variável que guarda o número de translações 
+dinâmicas em vigor na aplicação
+*/
+int nPercursos = 0;
+
+/**
+Variável que serve para ativar ou desativar as 
+rotas dos modelos que possuem translações dinâmicas
+*/
+int showRotas = 1;
 
 void buildRotMatrix(float* x, float* y, float* z, float* m) {
 
@@ -197,7 +222,30 @@ void getGlobalCatmullRomPoint(int group, int opIndice, float gt, float* pos, flo
 	indices[2] = (indices[1] + 1) % point_count;
 	indices[3] = (indices[2] + 1) % point_count;
 
-	getCatmullRomPoint(t, points[group][opIndice][indices[0]], points[group][opIndice][indices[1]], points[group][opIndice][indices[2]], points[group][opIndice][indices[3]], pos, deriv);
+	getCatmullRomPoint(t, points[group][opIndice][indices[0]], points[group][opIndice][indices[1]], 
+		points[group][opIndice][indices[2]], points[group][opIndice][indices[3]], pos, deriv);
+}
+
+/**
+Função que retorna um ponto de um determinada 
+rota não tendo em conta o tempo
+*/
+void getGlobalCatmullRomPointNoTime(int group, int opIndice, float gt, float* pos, float* deriv) {
+
+	int point_count = numPoints[group][opIndice];
+	float t = gt * (float)point_count; // this is the real global t
+	int index = floor(t);  // which segment
+	t = t - index; // where within  the segment
+
+	// indices store the points
+	int indices[4];
+	indices[0] = (index + point_count - 1) % point_count;
+	indices[1] = (indices[0] + 1) % point_count;
+	indices[2] = (indices[1] + 1) % point_count;
+	indices[3] = (indices[2] + 1) % point_count;
+
+	getCatmullRomPoint(t, points[group][opIndice][indices[0]], points[group][opIndice][indices[1]], 
+		points[group][opIndice][indices[2]], points[group][opIndice][indices[3]], pos, deriv);
 }
 
 /**
@@ -630,7 +678,7 @@ void prepareData() {
 	int* sizes=(int*)malloc(sizeof(int)*groups);
 	/* Sizes é parâmetro de saida */
 	vector<float>** vec = getVectors(lg, &sizes);
-	/* Criamos os vbo's */
+	/* Criamos os vbo's para desenhar os modelos */
 	glGenBuffers(groups, vertices);
 	/* Passamos os vetores para 
 	a memória gráfica */
@@ -645,6 +693,33 @@ void prepareData() {
 			(*(vec[i])).data(), // os dados do array associado ao vector
 			GL_STATIC_DRAW); // indicativo da utilização (estático e para desenho)
 	}
+}
+
+/**
+Função usada para preparar as estruturas de 
+dados para desenhar as rotas de cada group 
+que possua translações dinâmicas
+*/
+void prepareRotaData() {
+
+	vertPercursos = (GLuint*)malloc(sizeof(GLuint) * nPercursos);
+	/* Criamos os vbo's para desenhar as rotas */
+	glGenBuffers(nPercursos, vertPercursos);
+	for (int i = 0; i < nPercursos; i++) {
+		glBindBuffer(GL_ARRAY_BUFFER, vertPercursos[i]);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			sizeof(float) * 303,
+			percursos[i]->data(),
+			GL_STATIC_DRAW
+		);
+	}
+}
+
+void printTams() {
+
+	for (int i = 0; i < nPercursos; i++)
+		printf("Numero de floats: %d\n", percursos[i]->size());
 }
 
 void printArrays() {
@@ -663,11 +738,45 @@ void printArrays() {
 }
 
 /**
+Função que prepara as estruturas de dados para
+*/
+void preparePercurso(int group, int indiceOP) {
+
+	float gt;
+	float rota[3], deriv[3];
+	/**
+	Se estivermos perante uma rota de translate
+	dinâmica adicionamos valores ao percurso
+	*/
+	if (!strcmp(names[group][indiceOP], "translate") && params[group][indiceOP][3] > 0) {
+		percursos = (vector<float>**)realloc(percursos, sizeof(vector<float>*) * nPercursos);
+		percursos[nPercursos - 1] = new vector<float>();
+		groupOpToPercurso = (float**)realloc(groupOpToPercurso, sizeof(float*) * nPercursos);
+		groupOpToPercurso[nPercursos - 1] = (float*)malloc(sizeof(float) * 2);
+		groupOpToPercurso[nPercursos - 1][0] = group;
+		groupOpToPercurso[nPercursos - 1][1] = indiceOP;
+		/* Construimos o array */
+		for (int i = 0; i < 100; i++) {
+			gt = (float)i / (float)100;
+			getGlobalCatmullRomPointNoTime(group, indiceOP, gt, rota, deriv);
+			percursos[nPercursos - 1]->push_back(rota[0]);
+			percursos[nPercursos - 1]->push_back(rota[1]);
+			percursos[nPercursos - 1]->push_back(rota[2]);
+		}
+	}
+}
+
+/**
 Método que desenha o conteudo pedido, 
 inicializando previamente os vbo's
 */
 void prepareScene(){
 
+	/* Alocamos espaço para o array percursos */
+	percursos = (vector<float>**)malloc(sizeof(vector<float>*));
+	/* Alocamos espaço para o array que referencia 
+	os percursos para o group */
+	groupOpToPercurso = (float**)malloc(sizeof(float*));
 	/* Preparamos os vbo's 
 	para serem desenhados */
 	prepareData();
@@ -701,6 +810,11 @@ void prepareScene(){
 					points[i][j][k][2] = getZ(v);
 				}
 				atualizaPointer(cat[i][j]);
+				/* Visto que estamos perante uma translação 
+				dinâmica aumentamos em uma unidade o número 
+				de rotas a desenhar */
+				nPercursos++;
+				preparePercurso(i, j);
 			}
 			else {
 				points[i][j] = NULL;
@@ -708,8 +822,31 @@ void prepareScene(){
 			}
 		}
 	}
+	prepareRotaData();
 	//printArrays();
 	//printf("Preparation Done\n");
+}
+
+/**
+Função que desenha a rota a ser percorrida 
+pelos modelos incluidos no group e operação 
+especificados nos parâmetros dá função
+*/
+void drawRotas(int group, int indiceOP) {
+
+	/* Percorremos cada um dos percursos */
+	for (int i = 0; i < nPercursos; i++) {
+		/* verificamos se existe alguma rota 
+		referenciada para a operação respetiva */
+		if (groupOpToPercurso[i][0] == group && groupOpToPercurso[i][1] == indiceOP) {
+
+			glColor3f(1.0f, 1.0f, 1.0f);
+			/* Desenhamos os respetivos vértices */
+			glBindBuffer(GL_ARRAY_BUFFER, vertPercursos[i]);
+			glVertexPointer(3, GL_FLOAT, 0, 0);
+			glDrawArrays(GL_LINE_LOOP, 0, 100);
+		}
+	}
 }
 
 /**
@@ -734,6 +871,9 @@ void reposicionaModels(float gt) {
 				if (params[i][j][3] == -1)
 					glTranslatef(params[i][j][0], params[i][j][1], params[i][j][2]);
 				else {
+					/* Desenhamos o percurso dos modelos do respetivo group */
+					if(showRotas)
+						drawRotas(i, j);
 					getGlobalCatmullRomPoint(i, j, gt, position, deriv);
 					glTranslatef(position[0], position[1], position[2]);
 				}
@@ -794,9 +934,20 @@ void renderScene(void) {
 	a += 0.0001*deltaTime;
 }
 
-
+/**
+Função que reaje à interação do utilizador com o teclado
+*/
 void processKeys(unsigned char c, int xx, int yy) {
 
+	switch (c) {
+
+		case 'r':
+			showRotas = !showRotas;
+			break;
+
+		default :
+			break;
+	}
 }
 
 
