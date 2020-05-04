@@ -994,6 +994,15 @@ void processSpecialKeys(int key, int xx, int yy) {
 	glutPostRedisplay();
 }
 
+/**
+Função que permite imprimir 
+informações no ecrã
+*/
+void printInfo() {
+
+	printf("Press 'r' to switch the orbits' lines off...");
+}
+
 
 /* Cuidado que deve-se fazer o build novamente com o CMake 
  * Deve-se buscar os ficheiros gerados ao programa "Generator"
@@ -1037,9 +1046,10 @@ int main(int argc, char **argv) {
 
 	prepareScene();
 
+	printInfo();
+
 // enter GLUT's main cycle
 	glutMainLoop();
 
-	//printf("I'll return\n");
 	return 0;
 }
