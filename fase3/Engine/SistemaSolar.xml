@@ -6,92 +6,222 @@
 		</models>
 	</group>
 	<group>
+		<rotate angle="7" axisX="1" axisY="0" axisZ="0" />
+		<translate time="11.93" >
+			<point X="-165.13" Y="0" Z="0" />
+			<point X="-116.76" Y="0" Z="-116.76" />
+			<point X="0" Y="0" Z="-165.13" />
+			<point X="116.76" Y="0" Z="-116.76" />
+			<point X="165.13" Y="0" Z="0" />
+			<point X="116.76" Y="0" Z="116.76" />
+			<point X="0" Y="0" Z="165.13" />
+			<point X="-116.76" Y="0" Z="116.76" />
+		</translate>
 		<color R='1' G='0' B='0' />
-		<translate X='0' Y='0' Z='165.13' />
 		<models>
 			<model file='mercurio.3d' />
 		</models>
 	</group>
 	<group>
+		<rotate angle="3.39" axisX="0" axisY="0" axisZ="1" />
+		<translate time="29.56" >
+			<point X="-178.62" Y="0" Z="0" />
+			<point X="-126.30" Y="0" Z="-126.30" />
+			<point X="0" Y="0" Z="-178.62" />
+			<point X="126.30" Y="0" Z="-126.30" />
+			<point X="178.62" Y="0" Z="0" />
+			<point X="126.30" Y="0" Z="126.30" />
+			<point X="0" Y="0" Z="178.62" />
+			<point X="-126.30" Y="0" Z="126.30" />
+		</translate>
 		<color R='1' G='0.85' B='0' />
-		<translate X='0' Y='0' Z='178.62' />
 		<models>
 			<model file='venus.3d' />
 		</models>
 	</group>
 	<group>
+		<rotate angle="0.5" axisX="1" axisY="0" axisZ="0" />
+		<translate time="48.7008" >
+			<point X="-195.3" Y="0" Z="0" />
+			<point X="-138.1" Y="0" Z="-138.1" />
+			<point X="0" Y="0" Z="-195.3" />
+			<point X="138.1" Y="0" Z="-138.1" />
+			<point X="195.3" Y="0" Z="0" />
+			<point X="138.1" Y="0" Z="138.1" />
+			<point X="0" Y="0" Z="195.3" />
+			<point X="-138.1" Y="0" Z="138.1" />
+		</translate>
 		<color R='0' G='0' B='1' />
-		<translate X='0' Y='0' Z='195.3' />
 		<models>
 			<model file='terra.3d' />
 		</models>
 		<group>
+			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+			<translate time="7.84" >
+				<point X="-7" Y="0" Z="0" />
+				<point X="-4.95" Y="0" Z="-4.95" />
+				<point X="0" Y="0" Z="-7" />
+				<point X="4.95" Y="0" Z="-4.95" />
+				<point X="7" Y="0" Z="0" />
+				<point X="4.95" Y="0" Z="4.95" />
+				<point X="0" Y="0" Z="7" />
+				<point X="-4.95" Y="0" Z="4.95" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='7' Y='4' Z='0' />
 			<models>
 				<model file='terraLua.3d' />
 			</models>
 		</group>
 	</group>
 	<group>
+		<rotate angle="1.85" axisX="0" axisY="0" axisZ="1" />
+		<translate time="91.597" >
+			<point X="-210.26" Y="0" Z="0" />
+			<point X="-148.67" Y="0" Z="-148.67" />
+			<point X="0" Y="0" Z="-210.26" />
+			<point X="148.67" Y="0" Z="-148.67" />
+			<point X="210.26" Y="0" Z="0" />
+			<point X="148.67" Y="0" Z="148.67" />
+			<point X="0" Y="0" Z="210.26" />
+			<point X="-148.67" Y="0" Z="148.67" />
+		</translate>
 		<color R='0.55' G='0' B='0' />
-		<translate X='0' Y='0' Z='210.26' />
 		<models>
 			<model file='marte.3d' />
 		</models>
 		<group>
+			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="-5" Y="0" Z="0" />
+				<point X="-3.54" Y="0" Z="-3.54" />
+				<point X="0" Y="0" Z="-5" />
+				<point X="3.54" Y="0" Z="-3.54" />
+				<point X="5" Y="0" Z="0" />
+				<point X="3.54" Y="0" Z="3.54" />
+				<point X="0" Y="0" Z="5" />
+				<point X="-3.54" Y="0" Z="3.54" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='5' Y='2' Z='0' />
 			<models>
 				<model file='marteLua1.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="15" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="0" Y="0" Z="-5" />
+				<point X="3.54" Y="0" Z="-3.54" />
+				<point X="5" Y="0" Z="0" />
+				<point X="3.54" Y="0" Z="3.54" />
+				<point X="0" Y="0" Z="5" />
+				<point X="-3.54" Y="0" Z="3.54" />
+				<point X="-5" Y="0" Z="0" />
+				<point X="-3.54" Y="0" Z="-3.54" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='0' Y='5' Z='0' />
 			<models>
 				<model file='marteLua2.3d' />
 			</models>
 		</group>
 	</group>
 	<group>
+		<rotate angle="1.3" axisX="1" axisY="0" axisZ="0" />
+		<translate time="604.3452" >
+			<point X="-277.2" Y="0" Z="0" />
+			<point X="-196.01" Y="0" Z="-196.01" />
+			<point X="0" Y="0" Z="-277.2" />
+			<point X="196.01" Y="0" Z="-196.01" />
+			<point X="277.2" Y="0" Z="0" />
+			<point X="196.01" Y="0" Z="196.01" />
+			<point X="0" Y="0" Z="277.2" />
+			<point X="-196.01" Y="0" Z="196.01" />
+		</translate>
 		<color R='0.59' G='0.29' B='0' />
-		<translate X='0' Y='0' Z='277.2' />
 		<models>
 			<model file='jupiter.3d' />
 		</models>
 		<group>
+			<rotate angle="3" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="0" Y="0" Z="-61" />
+				<point X="43.13" Y="0" Z="-43.13" />
+				<point X="61" Y="0" Z="0" />
+				<point X="43.13" Y="0" Z="43.13" />
+				<point X="0" Y="0" Z="61" />
+				<point X="-43.13" Y="0" Z="43.13" />
+				<point X="-61" Y="0" Z="0" />
+				<point X="-43.13" Y="0" Z="-43.13" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='58' Y='3' Z='30' />
 			<models>
 				<model file='jupiterLua1.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="9" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="60" Y="0" Z="0" />
+				<point X="42.43" Y="0" Z="42.43" />
+				<point X="0" Y="0" Z="60" />
+				<point X="-42.43" Y="0" Z="42.43" />
+				<point X="-60" Y="0" Z="0" />
+				<point X="-42.43" Y="0" Z="-42.43" />
+				<point X="0" Y="0" Z="-60" />
+				<point X="42.43" Y="0" Z="-42.43" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='-58' Y='8' Z='25' />
 			<models>
 				<model file='jupiterLua2.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="0" Y="0" Z="59" />
+				<point X="-41.72" Y="0" Z="41.72" />
+				<point X="-59" Y="0" Z="0" />
+				<point X="-41.72" Y="0" Z="-41.72" />
+				<point X="0" Y="0" Z="-59" />
+				<point X="41.72" Y="0" Z="-41.72" />
+				<point X="59" Y="0" Z="0" />
+				<point X="41.72" Y="0" Z="41.72" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='52' Y='25' Z='0' />
 			<models>
 				<model file='jupiterLua3.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="15" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="-58" Y="0" Z="0" />
+				<point X="-41.01" Y="0" Z="-41.01" />
+				<point X="0" Y="0" Z="-58" />
+				<point X="41.01" Y="0" Z="-41.01" />
+				<point X="58" Y="0" Z="0" />
+				<point X="41.01" Y="0" Z="41.01" />
+				<point X="0" Y="0" Z="58" />
+				<point X="-41.01" Y="0" Z="41.01" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='-54' Y='50' Z='15' />
 			<models>
 				<model file='jupiterLua4.3d' />
 			</models>
 		</group>
 	</group>
 	<group>
+		<rotate angle="2.49" axisX="0" axisY="0" axisZ="1" />
+		<translate time="1434.56" >
+			<point X="0" Y="0" Z="430.54" />
+			<point X="-304.44" Y="0" Z="304.44" />
+			<point X="-430.54" Y="0" Z="0" />
+			<point X="-304.44" Y="0" Z="-304.44" />
+			<point X="0" Y="0" Z="-430.54" />
+			<point X="304.44" Y="0" Z="-304.44" />
+			<point X="430.54" Y="0" Z="0" />
+			<point X="304.44" Y="0" Z="304.44" />
+		</translate>
 		<color R='0.82' G='0.71' B='0.55' />
-		<translate X='0' Y='0' Z='430.54' />
 		<models>
 			<model file='saturno.3d' />
 		</models>
@@ -102,78 +232,188 @@
 			</models>
 		</group>
 		<group>
+			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="0" Y="0" Z="87" />
+				<point X="-61.52" Y="0" Z="61.52" />
+				<point X="-87" Y="0" Z="0" />
+				<point X="-61.52" Y="0" Z="-61.52" />
+				<point X="0" Y="0" Z="-87" />
+				<point X="61.52" Y="0" Z="-61.52" />
+				<point X="87" Y="0" Z="0" />
+				<point X="61.52" Y="0" Z="61.52" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='58' Y='3' Z='30' />
 			<models>
 				<model file='saturnoLua1.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="13" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="-84" Y="0" Z="0" />
+				<point X="-59.4" Y="0" Z="-59.4" />
+				<point X="0" Y="0" Z="-84" />
+				<point X="59.4" Y="0" Z="-59.4" />
+				<point X="84" Y="0" Z="0" />
+				<point X="59.4" Y="0" Z="59.4" />
+				<point X="0" Y="0" Z="84" />
+				<point X="-59.4" Y="0" Z="59.4" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='-58' Y='8' Z='25' />
 			<models>
 				<model file="saturnoLua2.3d" />
 			</models>
 		</group>
 		<group>
+			<rotate angle="7" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="0" Y="0" Z="-81" />
+				<point X="57.28" Y="0" Z="-57.28" />
+				<point X="81" Y="0" Z="0" />
+				<point X="57.28" Y="0" Z="57.28" />
+				<point X="0" Y="0" Z="81" />
+				<point X="-57.28" Y="0" Z="57.28" />
+				<point X="-81" Y="0" Z="0" />
+				<point X="-57.28" Y="0" Z="-57.28" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='52' Y='25' Z='0' />
 			<models>
 				<model file='saturnoLua3.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="17" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="78" Y="0" Z="0" />
+				<point X="55.15" Y="0" Z="55.15" />
+				<point X="0" Y="0" Z="78" />
+				<point X="-55.15" Y="0" Z="55.15" />
+				<point X="-78" Y="0" Z="0" />
+				<point X="-55.15" Y="0" Z="-55.15" />
+				<point X="0" Y="0" Z="-78" />
+				<point X="55.15" Y="0" Z="-55.15" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='-54' Y='50' Z='15' />
 			<models>
 				<model file='saturnoLua4.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="3" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="-53.03" Y="0" Z="-53.03" />
+				<point X="0" Y="0" Z="-75" />
+				<point X="53.03" Y="0" Z="-53.03" />
+				<point X="75" Y="0" Z="0" />
+				<point X="53.03" Y="0" Z="53.03" />
+				<point X="0" Y="0" Z="75" />
+				<point X="-53.03" Y="0" Z="53.03" />
+				<point X="-75" Y="0" Z="0" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='-54' Y='30' Z='30' />
 			<models>
 				<model file='saturnoLua5.3d' />
 			</models>
 		</group>
 	</group>
 	<group>
+		<rotate angle="0.77" axisX="1" axisY="0" axisZ="0" />
+		<translate time="3091.38" >
+			<point X="0" Y="0" Z="-550.84" />
+			<point X="389.5" Y="0" Z="-389.5" />
+			<point X="550.84" Y="0" Z="0" />
+			<point X="389.5" Y="0" Z="389.5" />
+			<point X="0" Y="0" Z="550.84" />
+			<point X="-389.5" Y="0" Z="389.5" />
+			<point X="-550.84" Y="0" Z="0" />
+			<point X="-389.5" Y="0" Z="-389.5" />
+		</translate>
 		<color R='0.13' G='0.55' B='0.13' />
-		<translate X='0' Y='0' Z='550.84' />
 		<models>
 			<model file='urano.3d' />
 		</models>
 		<group>
+			<rotate angle="6" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="26" Y="0" Z="0" />
+				<point X="18.38" Y="0" Z="18.38" />
+				<point X="0" Y="0" Z="26" />
+				<point X="-18.38" Y="0" Z="18.38" />
+				<point X="-26" Y="0" Z="0" />
+				<point X="-18.38" Y="0" Z="-18.38" />
+				<point X="0" Y="0" Z="-26" />
+				<point X="18.38" Y="0" Z="-18.38" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='22' Y='3' Z='19' />
 			<models>
 				<model file='uranoLua1.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="14" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="0" Y="0" Z="24" />
+				<point X="-16.97" Y="0" Z="16.97" />
+				<point X="-24" Y="0" Z="0" />
+				<point X="-16.97" Y="0" Z="-16.97" />
+				<point X="0" Y="0" Z="-24" />
+				<point X="16.97" Y="0" Z="-16.97" />
+				<point X="24" Y="0" Z="0" />
+				<point X="16.97" Y="0" Z="16.97" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='-22' Y='8' Z='18' />
 			<models>
 				<model file='uranoLua2.3d' />
 			</models>
 		</group>
 		<group>
+			<rotate angle="4" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="-22" Y="0" Z="0" />
+				<point X="-15.56" Y="0" Z="-15.56" />
+				<point X="0" Y="0" Z="-22" />
+				<point X="15.56" Y="0" Z="-15.56" />
+				<point X="22" Y="0" Z="0" />
+				<point X="15.56" Y="0" Z="15.56" />
+				<point X="0" Y="0" Z="22" />
+				<point X="-15.56" Y="0" Z="15.56" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='22' Y='10' Z='0' />
 			<models>
 				<model file='uranoLua3.3d' />
 			</models>
 		</group>
 	</group>
 	<group>
+		<rotate angle="1.77" axisX="0" axisY="0" axisZ="1" />
+		<translate time="5025.2" >
+			<point X="460.26" Y="0" Z="-460.26" />
+			<point X="650.9" Y="0" Z="0" />
+			<point X="460.26" Y="0" Z="460.26" />
+			<point X="0" Y="0" Z="650.9" />
+			<point X="-460.26" Y="0" Z="460.26" />
+			<point X="-650.9" Y="0" Z="0" />
+			<point X="-460.26" Y="0" Z="-460.26" />
+			<point X="0" Y="0" Z="-650.9" />
+		</translate>
 		<color R='0.68' G='0.85' B='0.9' />
-		<translate X='0' Y='0' Z='650.9' />
 		<models>
 			<model file='neptuno.3d' />
 		</models>
 		<group>
+			<rotate angle="8" axisX="1" axisY="0" axisZ="0" />
+			<translate time="10" >
+				<point X="-24" Y="0" Z="0" />
+				<point X="-16.97" Y="0" Z="-16.97" />
+				<point X="0" Y="0" Z="-24" />
+				<point X="16.97" Y="0" Z="-16.97" />
+				<point X="24" Y="0" Z="0" />
+				<point X="16.97" Y="0" Z="16.97" />
+				<point X="0" Y="0" Z="24" />
+				<point X="-16.97" Y="0" Z="16.97" />
+			</translate>
 			<color R='0.5' G='0.5' B='0.5' />
-			<translate X='19' Y='5' Z='10' />
 			<models>
 				<model file='neptunoLua.3d' />
 			</models>
