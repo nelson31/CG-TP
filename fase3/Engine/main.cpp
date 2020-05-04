@@ -425,7 +425,7 @@ void processaModels(TiXmlElement* element, Group g) {
 				addVertice(g, x, y, z);
 			}
 			fclose(fp);
-			printf("File %s charged successfully!\n", filename);
+			printf("File %s loaded successfully!\n", filename);
 		}
 	}
 }
@@ -714,12 +714,6 @@ void prepareRotaData() {
 			GL_STATIC_DRAW
 		);
 	}
-}
-
-void printTams() {
-
-	for (int i = 0; i < nPercursos; i++)
-		printf("Numero de floats: %d\n", percursos[i]->size());
 }
 
 void printArrays() {
