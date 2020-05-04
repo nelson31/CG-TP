@@ -419,4 +419,25 @@
 			</models>
 		</group>
 	</group>
+	<group>
+		<translate X="0" Y="0" Z="500" />
+		<group>
+			<rotate angle="12" axisX="1" axisY="0" axisZ="1" />
+			<translate time="925.2" >
+				<point X="0" Y="0" Z="-1000" />
+				<point X="707.11" Y="0" Z="-707.11" />
+				<point X="1000" Y="0" Z="0" />
+				<point X="707.11" Y="0" Z="707.11" />
+				<point X="0" Y="0" Z="1000" />
+				<point X="-707.11" Y="0" Z="707.11" />
+				<point X="-1000" Y="0" Z="0" />
+				<point X="-707.11" Y="0" Z="-707.11" />
+			</translate>
+			<scale X="8" Y="8" Z="8" />
+			<color R='0.5' G='0.5' B='0.5' />
+			<models>
+				<model file='teapot.3d' />
+			</models>
+		</group>
+	</group>
 </scene>
