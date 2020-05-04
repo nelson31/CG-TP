@@ -423,7 +423,7 @@
 		<translate X="0" Y="0" Z="500" />
 		<group>
 			<rotate angle="12" axisX="1" axisY="0" axisZ="1" />
-			<translate time="925.2" >
+			<translate time="325.2" >
 				<point X="0" Y="0" Z="-1000" />
 				<point X="707.11" Y="0" Z="-707.11" />
 				<point X="1000" Y="0" Z="0" />
