@@ -384,7 +384,7 @@ void getPosition(int indice, float** patchCPs, float u, float v) {
 	/* Para cada coordenada x,y e z do ponto */
 	for (int i = 0; i < NUM_COORDENADAS; i++) {
 
-		/* Construimos a matriz p com as respetivas coordenadas x,y ou z */
+		/* Construimos a matriz p dependendo da coordenada ser x,y ou z */
 		for (int j = 0; j < 4; j++) {
 			for (int k = 0; k < 4; k++) {
 				p[j][k] = patchCPs[j*4+k][i];
