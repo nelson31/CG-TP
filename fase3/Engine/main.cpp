@@ -110,6 +110,13 @@ rotas dos modelos que possuem translações dinâmicas
 */
 int showRotas = 1;
 
+/**
+Variáveis que guardam os vetores que
+representam os eixos do teapot
+*/
+float** X, **Y, **Z;
+
+
 void buildRotMatrix(float* x, float* y, float* z, float* m) {
 
 	m[0] = x[0]; m[1] = x[1]; m[2] = x[2]; m[3] = 0;
@@ -760,12 +767,25 @@ void preparePercurso(int group, int indiceOP) {
 	}
 }
 
+void prepareAxis(int group) {
+
+	X[group] = (float*)malloc(sizeof(float) * 3);
+	Y[group] = (float*)malloc(sizeof(float) * 3);
+	Z[group] = (float*)malloc(sizeof(float) * 3);
+	Y[group][0] = 0.0f;
+	Y[group][1] = 1.0f;
+	Y[group][2] = 0.0f;
+}
+
 /**
 Método que desenha o conteudo pedido, 
 inicializando previamente os vbo's
 */
 void prepareScene(){
 
+	X = (float**)malloc(sizeof(float*) * size);
+	Y = (float**)malloc(sizeof(float*) * size);
+	Z = (float**)malloc(sizeof(float*) * size);
 	/* Alocamos espaço para o array percursos */
 	percursos = (vector<float>**)malloc(sizeof(vector<float>*));
 	/* Alocamos espaço para o array que referencia 
@@ -788,6 +808,7 @@ void prepareScene(){
 	int numOp, numCatPoints; Vertice v;
 	/* Vamos preencher o array points */
 	for (int i = 0; i < size; i++) {
+		prepareAxis(i);
 		numOp = numOps[i];
 		points[i] = (float***)malloc(sizeof(float**) * numOp);
 		numPoints[i] = (float*)malloc(sizeof(float) * numOp);
@@ -852,6 +873,7 @@ t
 */
 void reposicionaModels(float gt) {
 
+	float matrix[4][4];
 	float position[3], deriv[3];
 	/* Percorremos cada um dos groups */
 	for (int i = 0; i < size; i++) {
@@ -870,6 +892,17 @@ void reposicionaModels(float gt) {
 						drawRotas(i, j);
 					getGlobalCatmullRomPoint(i, j, gt, position, deriv);
 					glTranslatef(position[0], position[1], position[2]);
+					/* Calculamos os valores dos vetores para os eixos */
+					for (int k = 0; k < 3; k++)
+						X[i][k] = deriv[k];
+					normalize(X[i]);
+					cross(X[i], Y[i], Z[i]);
+					normalize(Z[i]);
+					cross(Z[i], X[i], Y[i]);
+					normalize(Y[i]);
+					/* Construimos a matriz de rotação */
+					buildRotMatrix(X[i], Y[i], Z[i], (float*)matrix);
+					glMultMatrixf((float*)matrix);
 				}
 				break;
 
