@@ -19,7 +19,7 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "inXML2.xml";
+const char* FILE_XML_NAME = "SistemaSolar.xml";
 
 // VARIAVEIS GLOBAIS
 float varx = -1000, vary = 250, varz = 0;
@@ -888,6 +888,10 @@ void reposicionaModels(float gt) {
 
 			case 'c':
 				glColor3f(params[i][j][0], params[i][j][1], params[i][j][2]);
+				break;
+
+			case 's':
+				glScalef(params[i][j][0], params[i][j][1], params[i][j][2]);
 				break;
 
 			default:
