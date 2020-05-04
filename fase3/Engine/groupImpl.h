@@ -11,6 +11,7 @@ parâmetros de cada operação */
 #define _MAX_PARAM_TRANSLATE 4
 #define _MAX_PARAM_ROTATE 5
 #define _PARAM_COLOR 3
+#define _PARAM_SCALE 3
 
 /* Definição dos 2 tipos de
 rotação (estática/dinâmica)*/

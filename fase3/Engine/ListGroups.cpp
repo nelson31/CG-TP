@@ -88,9 +88,9 @@ Método que desenha uma ListGroups no ecrã
 void desenhaListGroups(ListGroups lg) {
 
 	for (int i = 0; i < lg->numGroups; i++) {
-		printf("<Group nº%d>\n");
+		printf("<Group nº%d>\n", i);
 		desenhaGroup(lg->groups[i]);
-		printf("</Group nº%d>\n");
+		printf("</Group nº%d>\n", i);
 	}
 }
 

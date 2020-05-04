@@ -11,6 +11,7 @@ Definição dos tres tipos de operação
 */
 #define TRANSLATE 0
 #define ROTATE 1
+#define SCALE 2
 #define COLOR 3
 
 /**
@@ -49,6 +50,17 @@ typedef struct color {
 	float parametros[3];
 } *Color;
 
+/**
+Definição de uma estrutura de dados que 
+guarda uma operação de scale
+*/
+typedef struct scale {
+
+	/* Array que guarda os parâmetros
+	da escala */
+	float parametros[3];
+} *Scale;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -59,6 +71,7 @@ typedef union operacao {
 	Translate t;
 	Rotate r;
 	Color c;
+	Scale s;
 } *OperacaoParam;
 
 /**
@@ -135,6 +148,18 @@ Color newColor(float* params) {
 	for (int i = 0; i < 3; i++)
 		c->parametros[i] = params[i];
 	return c;
+}
+
+/**
+Função que permite criar uma nova estrutura 
+de dados do tipo scale
+*/
+Scale newScale(float* params) {
+
+	Scale s = (Scale)malloc(sizeof(struct scale));
+	for (int i = 0; i < _PARAM_SCALE; i++)
+		s->parametros[i] = params[i];
+	return s;
 }
 
 /**
@@ -243,6 +268,14 @@ Operacao newOperacao(char* name, float* param) {
 			/* Se estamos perante uma color
 			temos 3 parâmetros */
 			numParam = 3;
+			break;
+
+		case 's':
+			ret->type = SCALE;
+			ret->operacao->s = newScale(param);
+			/* Se estamos perante um scale 
+			temos 3 parâmetros */
+			numParam = _PARAM_SCALE;
 			break;
 
 		default:

@@ -19,7 +19,7 @@
 using std::vector;
 
 /*Nome do Ficheiro XML*/
-const char* FILE_XML_NAME = "inXML2.xml";
+const char* FILE_XML_NAME = "testeXML.xml";
 
 // VARIAVEIS GLOBAIS
 float varx = -1000, vary = 250, varz = 0;
@@ -313,6 +313,34 @@ void processaRotate(Group g, char* tagName, float atrib, float axisX,
 }
 
 /**
+Função que adiciona um color 
+ao grupo g
+*/
+void processaColor(Group g, char* tagName, float r, float gr, float b) {
+
+	float param[3];
+	param[0] = r;
+	param[1] = gr;
+	param[2] = b;
+	/* Adicionamos a operação ao group */
+	addOperacao(g, tagName, (float*)param);
+}
+
+/**
+Função que adiciona um scale 
+ao group g
+*/
+void processaScale(Group g, char* tagName, float x, float y, float z) {
+
+	float param[3];
+	param[0] = x;
+	param[1] = y;
+	param[2] = z;
+	/* Adicionamos a operação ao group */
+	addOperacao(g, tagName, (float*)param);
+}
+
+/**
 Método que adiciona um modelo ao grupo 
 ao qual é passado por parâmetro para 
 ser desenhado
@@ -513,7 +541,25 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, ListVe
 					localParams[atualNumOps - 1][2] = z;
 					localCatmollPoints = (ListVertices*)realloc(localCatmollPoints, sizeof(ListVertices) * atualNumOps);
 					localCatmollPoints[atualNumOps - 1] = NULL;
-					processaTranslate(g, tagNameSubElem, x, y, z, -1, NULL);
+					processaColor(g, tagNameSubElem, x, y, z);
+					break;
+
+				case 's':
+					auxc = (char**)realloc(localOpNames, sizeof(char*) * (++atualNumOps));
+					localOpNames = auxc;
+					localOpNames[atualNumOps - 1] = strdup("scale");
+					auxf = (float**)realloc(localParams, sizeof(float*) * (atualNumOps));
+					localParams = auxf;
+					(subelement->Attribute("X") == NULL) ? x = 0 : x = atof(subelement->Attribute("X"));
+					(subelement->Attribute("Y") == NULL) ? y = 0 : y = atof(subelement->Attribute("Y"));
+					(subelement->Attribute("Z") == NULL) ? z = 0 : z = atof(subelement->Attribute("Z"));
+					localParams[atualNumOps - 1] = (float*)malloc(sizeof(float) * 3);
+					localParams[atualNumOps - 1][0] = x;
+					localParams[atualNumOps - 1][1] = y;
+					localParams[atualNumOps - 1][2] = z;
+					localCatmollPoints = (ListVertices*)realloc(localCatmollPoints, sizeof(ListVertices) * atualNumOps);
+					localCatmollPoints[atualNumOps - 1] = NULL;
+					processaScale(g, tagNameSubElem, x, y, z);
 					break;
 
 				/* Estamos perante uma tag 
