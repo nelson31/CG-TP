@@ -5,7 +5,7 @@ PROJECT(fase3tp)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp groupImpl.cpp groupImpl.h vertice.cpp vertice.h ListVertices.cpp ListVertices.h ListGroups.cpp ListGroups.h tinystr.cpp tinystr.h tinyxml.cpp tinyxml.h tinyxmlerror.cpp tinyxmlparser.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
@@ -89,6 +89,7 @@ file(COPY ${CMAKE_SOURCE_DIR}/uranoLua3.3d DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/venus.3d DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/SistemaSolar.xml DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/saturnoAnel.3d DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/teapot.3d DESTINATION ${CMAKE_BINARY_DIR})
 
 
 
