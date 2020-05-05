@@ -131,24 +131,19 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 	float x, y, z;
 
 	/* Definição do número de vértices */
-	fprintf(fp, "%d\n", 3 * slices * stacks);
+	fprintf(fp, "%d\n", 6 * slices * stacks);
 
 	for (int i = 0; i<stacks; i++) {
 
 		float angleB = beta * i - M_PI_2;
+		float nexAngleB = angleB + beta;
 
 		// Desenhar os circulos de cima e de baixo
 		for (int j = 0; j < slices; j++) {
 
 			float angleA = alpha * j;
 
-			float nextAngle = angleA + alpha;
-
-			x = 0.0f;
-			y = radius * sin(angleB);
-			z = 0.0f;
-
-			fprintf(fp, "%f %f %f\n", x, y, z);
+			float nextAngleA = angleA + alpha;
 
 			x = (radius * cos(angleB)) * sin(angleA);
 			y = radius * sin(angleB);
@@ -156,9 +151,33 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
 
-			x = (radius * cos(angleB)) * sin(nextAngle);
+			x = (radius * cos(nexAngleB)) * sin(angleA);
+			y = radius * sin(nexAngleB);
+			z = (radius * cos(nexAngleB)) * cos(angleA);
+
+			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			x = (radius * cos(nexAngleB)) * sin(nextAngleA);
+			y = radius * sin(nexAngleB);
+			z = (radius * cos(nexAngleB)) * cos(nextAngleA);
+
+			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			x = (radius * cos(nexAngleB)) * sin(nextAngleA);
+			y = radius * sin(nexAngleB);
+			z = (radius * cos(nexAngleB)) * cos(nextAngleA);
+
+			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			x = (radius * cos(angleB)) * sin(nextAngleA);
 			y = radius * sin(angleB);
-			z = (radius * cos(angleB)) * cos(nextAngle);
+			z = (radius * cos(angleB)) * cos(nextAngleA);
+
+			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			x = (radius * cos(angleB)) * sin(angleA);
+			y = radius * sin(angleB);
+			z = (radius * cos(angleB)) * cos(angleA);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
 		}
