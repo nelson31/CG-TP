@@ -79,7 +79,6 @@ float h(int i, int j) {
 
 float h2(float x, float z) {
 
-
 	int x1, x2, z1, z2;
 	float xGrid, zGrid;
 	float fracX, fracZ, ha, hb;
@@ -123,21 +122,21 @@ void computeNormal(int i, int j) {
 
 	// fill the normal vector with the normal for vertex at grid location (i,j)
 
-	float p1x = i - imageWidth * 0.5f;
+	float p1x = i;
 	float p1y = h(i,j - 1);
-	float p1z = (j-1) - imageWidth * 0.5f;
-	float p2x = i - imageWidth * 0.5f;
+	float p1z = j-1;
+	float p2x = i;
 	float p2y = h(i, j + 1);
-	float p2z = (j + 1) - imageWidth * 0.5f;
+	float p2z = j + 1;
 
 	float v1[3] = {p2x-p1x,p2y-p2x,p2z-p1z};
 
-	float p3x = (i-1) - imageWidth * 0.5f;
+	float p3x = i-1;
 	float p3y = h(i-1, j);
-	float p3z = j - imageWidth * 0.5f;
-	float p4x = (i + 1) - imageWidth * 0.5f;
+	float p3z = j;
+	float p4x = i + 1;
 	float p4y = h(i + 1, j);
-	float p4z = j - imageWidth * 0.5f;
+	float p4z = j;
 
 	float v2[3] = {p4x-p3x,p4y-p3y,p4z-p3z};
 
