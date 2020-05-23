@@ -280,8 +280,8 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 
 	float x, y, z;
 
-	/* Definição do número de vértices */
-	fprintf(fp, "%d\n", 2*(6 * slices * stacks));
+	/* Definição do número de vértices/linhas presentes no ficheiro*/
+	fprintf(fp, "%d\n", 3*(6 * slices * stacks));
 
 	for (int i = 0; i<stacks; i++) {
 
@@ -310,6 +310,12 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 
 			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
 
+			// Coordenadas Texturas
+			x = (float)j/slices;
+			y = (float)i/stacks;
+
+			fprintf(fp, "%f %f\n", x, y);
+
 			// Posicao
 			x = (radius * cos(nexAngleB)) * sin(angleA);
 			y = radius * sin(nexAngleB);
@@ -326,21 +332,11 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 
 			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
 
-			// Posicao
-			x = (radius * cos(nexAngleB)) * sin(nextAngleA);
-			y = radius * sin(nexAngleB);
-			z = (radius * cos(nexAngleB)) * cos(nextAngleA);
+			// Coordenadas Texturas
+			x = (float)j / slices;
+			y = (float)(i+1) / stacks;
 
-			fprintf(fp, "%f %f %f\n", x, y, z);
-
-			// Normal
-			aux[0] = (radius * cos(nexAngleB)) * sin(nextAngleA);
-			aux[1] = radius * sin(nexAngleB);
-			aux[2] = (radius * cos(nexAngleB)) * cos(nextAngleA);
-
-			normalize(aux);
-
-			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+			fprintf(fp, "%f %f\n", x, y);
 
 			// Posicao
 			x = (radius * cos(nexAngleB)) * sin(nextAngleA);
@@ -357,6 +353,34 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 			normalize(aux);
 
 			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Coordenadas Texturas
+			x = (float)(j + 1) / slices;
+			y = (float)(i + 1) / stacks;
+
+			fprintf(fp, "%f %f\n", x, y);
+
+			// Posicao
+			x = (radius * cos(nexAngleB)) * sin(nextAngleA);
+			y = radius * sin(nexAngleB);
+			z = (radius * cos(nexAngleB)) * cos(nextAngleA);
+
+			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			// Normal
+			aux[0] = (radius * cos(nexAngleB)) * sin(nextAngleA);
+			aux[1] = radius * sin(nexAngleB);
+			aux[2] = (radius * cos(nexAngleB)) * cos(nextAngleA);
+
+			normalize(aux);
+
+			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Coordenadas Texturas
+			x = (float)(j + 1) / slices;
+			y = (float)(i + 1) / stacks;
+
+			fprintf(fp, "%f %f\n", x, y);
 
 			// Posicao
 			x = (radius * cos(angleB)) * sin(nextAngleA);
@@ -374,6 +398,12 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 
 			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
 
+			// Coordenadas Texturas
+			x = (float)(j + 1) / slices;
+			y = (float)i / stacks;
+
+			fprintf(fp, "%f %f\n", x, y);
+
 			// Posicao
 			x = (radius * cos(angleB)) * sin(angleA);
 			y = radius * sin(angleB);
@@ -389,6 +419,12 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 			normalize(aux);
 
 			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Coordenadas Texturas
+			x = (float)j / slices;
+			y = (float)i / stacks;
+
+			fprintf(fp, "%f %f\n", x, y);
 		}
 	}
 }
