@@ -21,7 +21,42 @@ float** controlPoints;
 /* Variável usada para guardar todos os vértices do objeto que se pretende desenhar 
  *com os patches de Bezier
  */
-float** objectVertices;
+float **objectVertices, **objectDeriv_u, **objectDeriv_v;
+
+
+/*
+ * Usado para mulltiplicar uma matriz por um vetor
+*/
+void multMatrixVector(float* m, float* v, float* res) {
+
+	for (int j = 0; j < 4; ++j) {
+		res[j] = 0;
+		for (int k = 0; k < 4; ++k) {
+			res[j] += v[k] * m[j * 4 + k];
+		}
+	}
+}
+
+/**
+ * Calcula o produto externo entre dois vetores
+*/
+void cross(float* a, float* b, float* res) {
+
+	res[0] = a[1] * b[2] - a[2] * b[1];
+	res[1] = a[2] * b[0] - a[0] * b[2];
+	res[2] = a[0] * b[1] - a[1] * b[0];
+}
+
+/**
+ * Normaliza um vetores
+*/
+void normalize(float* a) {
+
+	float l = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+	a[0] = a[0] / l;
+	a[1] = a[1] / l;
+	a[2] = a[2] / l;
+}
 
 
 /**
@@ -30,16 +65,32 @@ float** objectVertices;
 void drawPlane(FILE* fp, float size) {
 
 	/* Definição do número de vértices */
-	fprintf(fp, "6\n");
+	fprintf(fp, "12\n");
 
+	// Posicao
 	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, size/2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, -size/2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", 0.0f, size/2, -size/2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", 0.0f, -size/2, size/2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", 0.0f, size/2, -size/2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", 0.0f, size/2, size/2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
 }
 
 /**
@@ -48,73 +99,170 @@ void drawPlane(FILE* fp, float size) {
 void drawBox(FILE* fp, float x, float y, float z) {
 
 	/* Definição do número de vértices */
-	fprintf(fp, "36\n");
+	fprintf(fp, "72\n");
 
 	//Base da caixa
 
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, -1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, -1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, -1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, -1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, -1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, -1.0f, 0.0f);
 
 	//Tampa da caixa
 
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, -z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 1.0f, 0.0f);
 
 
 	//Face ao longo do eixo x no z positivo
 
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, 1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, 1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, 1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, 1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, 1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, 1.0f);
 
 	//Face ao longo do eixo x no z negativo
 
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, -1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, -1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, -z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, -1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, -1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, -1.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, -z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 0.0f, 0.0f, -1.0f);
 
 	//Face ao longo do eixo z no x negativo
 
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", -1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", -1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", -1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", -1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", -1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", -x / 2, -y / 2, z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", -1.0f, 0.0f, 0.0f);
 
 	//Face ao longo do eixo z no x positivo
 
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, y / 2, -z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, z / 2);
+	// Normal
+	fprintf(fp, "%f %f %f\n", 1.0f, 0.0f, 0.0f);
+	// Posicao
 	fprintf(fp, "%f %f %f\n", x / 2, -y / 2, -z / 2);
-
+	// Normal
+	fprintf(fp, "%f %f %f\n", 1.0f, 0.0f, 0.0f);
 }
 
 /**
@@ -124,6 +272,8 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 
 	// Usado para a construcao de cada uma das circunferencias
 	float alpha = 2 * M_PI / slices;
+	// Vetor auxiliar
+	float* aux = (float*)malloc(sizeof(float) * NUM_COORDENADAS);
 
 	// Angulo usado para a construcao das circunferencias
 	float beta = M_PI / stacks;
@@ -131,7 +281,7 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 	float x, y, z;
 
 	/* Definição do número de vértices */
-	fprintf(fp, "%d\n", 6 * slices * stacks);
+	fprintf(fp, "%d\n", 2*(6 * slices * stacks));
 
 	for (int i = 0; i<stacks; i++) {
 
@@ -142,44 +292,103 @@ void drawSphere(FILE* fp, int radius, int slices, int stacks) {
 		for (int j = 0; j < slices; j++) {
 
 			float angleA = alpha * j;
-
 			float nextAngleA = angleA + alpha;
 
+			// Posicao
 			x = (radius * cos(angleB)) * sin(angleA);
 			y = radius * sin(angleB);
 			z = (radius * cos(angleB)) * cos(angleA);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
 
+			// Normal
+			aux[0] = (radius * cos(angleB)) * sin(angleA);
+			aux[1] = radius * sin(angleB);
+			aux[2] = (radius * cos(angleB)) * cos(angleA);
+
+			normalize(aux);
+
+			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Posicao
 			x = (radius * cos(nexAngleB)) * sin(angleA);
 			y = radius * sin(nexAngleB);
 			z = (radius * cos(nexAngleB)) * cos(angleA);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
 
+			// Normal
+			aux[0] = (radius * cos(nexAngleB)) * sin(angleA);
+			aux[1] = radius * sin(nexAngleB);
+			aux[2] = (radius * cos(nexAngleB)) * cos(angleA);
+
+			normalize(aux);
+
+			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Posicao
 			x = (radius * cos(nexAngleB)) * sin(nextAngleA);
 			y = radius * sin(nexAngleB);
 			z = (radius * cos(nexAngleB)) * cos(nextAngleA);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
 
+			// Normal
+			aux[0] = (radius * cos(nexAngleB)) * sin(nextAngleA);
+			aux[1] = radius * sin(nexAngleB);
+			aux[2] = (radius * cos(nexAngleB)) * cos(nextAngleA);
+
+			normalize(aux);
+
+			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Posicao
 			x = (radius * cos(nexAngleB)) * sin(nextAngleA);
 			y = radius * sin(nexAngleB);
 			z = (radius * cos(nexAngleB)) * cos(nextAngleA);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
 
+			// Normal
+			aux[0] = (radius * cos(nexAngleB)) * sin(nextAngleA);
+			aux[1] = radius * sin(nexAngleB);
+			aux[2] = (radius * cos(nexAngleB)) * cos(nextAngleA);
+
+			normalize(aux);
+
+			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Posicao
 			x = (radius * cos(angleB)) * sin(nextAngleA);
 			y = radius * sin(angleB);
 			z = (radius * cos(angleB)) * cos(nextAngleA);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
 
+			// Normal
+			aux[0] = (radius * cos(angleB)) * sin(nextAngleA);
+			aux[1] = radius * sin(angleB);
+			aux[2] = (radius * cos(angleB)) * cos(nextAngleA);
+
+			normalize(aux);
+
+			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
+
+			// Posicao
 			x = (radius * cos(angleB)) * sin(angleA);
 			y = radius * sin(angleB);
 			z = (radius * cos(angleB)) * cos(angleA);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			// Normal
+			aux[0] = (radius * cos(angleB)) * sin(angleA);
+			aux[1] = radius * sin(angleB);
+			aux[2] = (radius * cos(angleB)) * cos(angleA);
+
+			normalize(aux);
+
+			fprintf(fp, "%f %f %f\n", aux[0], aux[1], aux[2]);
 		}
 	}
 }
@@ -255,34 +464,60 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 	// Razao entre a altura e o numero de stacks 
 	float reason = (float)height / stacks;
 
-	// Angulo alfa entre cada slice
-	float alpha = 2 * M_PI / slices;
-
 	float currentRadius = bottomRadius;
 
-	float x, y, z;
+	// Usado para a construcao de cada uma das circunferencias
+	float alpha = 2 * M_PI / slices;
+	// Vetor auxiliar
+	float* aux = (float*)malloc(sizeof(float) * NUM_COORDENADAS);
+
+	float x = 0.0f, y = 0.0f, z = 0.0f;
 
 	/* Definição do número de vértices */
-	fprintf(fp, "%d\n", 3 * slices * stacks);
+	fprintf(fp, "%d\n", 3*slices + 6 * slices * stacks);
 
+	// Base
+	for (int j = 0; j < slices; j++) {
+
+		float angle = alpha * j;
+		float nextAngle = angle + alpha;
+
+		x = 0.0f;
+		z = 0.0f;
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		x = bottomRadius * sin(nextAngle);
+		z = bottomRadius * cos(nextAngle);
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		x = bottomRadius * sin(angle);
+		z = bottomRadius * cos(angle);
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+	}
+
+	// Corpo
 	for (int i =0; i<stacks; i++) {
 
-		// Raio do proximo circulo a ser feito
+		// Raios a serem usados no momento
 		currentRadius = (float) ((stacks-i) * bottomRadius) / stacks;
+		float nextRadius = (float)((stacks - (i+1)) * bottomRadius) / stacks;
 
 		// Proxima altura a que o circulo se encontra da base
 		y = reason*i;
+		float nexty = y + reason;
 
 		for (int j = 0; j < slices; j++) {
 
-			float angle = (float) alpha * j;
-
+			float angle = alpha * j;
 			float nextAngle = angle + alpha;
 
-			x = 0.0f;
-			z = 0.0f;
+			x = nextRadius * sin(angle);
+			z = nextRadius * cos(angle);
 
-			fprintf(fp, "%f %f %f\n", x, y, z);
+			fprintf(fp, "%f %f %f\n", x, nexty, z);
 
 			x = currentRadius * sin(angle);
 			z = currentRadius * cos(angle);
@@ -293,6 +528,21 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 			z = currentRadius * cos(nextAngle);
 
 			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			x = currentRadius * sin(nextAngle);
+			z = currentRadius * cos(nextAngle);
+
+			fprintf(fp, "%f %f %f\n", x, y, z);
+
+			x = nextRadius * sin(nextAngle);
+			z = nextRadius * cos(nextAngle);
+
+			fprintf(fp, "%f %f %f\n", x, nexty, z);
+
+			x = nextRadius * sin(angle);
+			z = nextRadius * cos(angle);
+
+			fprintf(fp, "%f %f %f\n", x, nexty, z);
 		}
 	}
 }
@@ -303,8 +553,11 @@ void drawCone(FILE* fp, int bottomRadius, int height, int slices, int stacks) {
 */
 void drawObjectBP(FILE* fp, int tesselevel) {
 
-	// Numero de Vertices = numPatches * tesselationlevel^2 * 3Vertices * 2triangulos
-	int numVertices = numP * tesselevel * tesselevel * 3 * 2;
+	// Numero de Vertices = 2*(numPatches * tesselationlevel^2 * 3Vertices * 2triangulos)
+	// 2x por causa das normais
+	int numVertices = 2*(numP * tesselevel * tesselevel * 3 * 2);
+	// Variavel usada para a normal a um ponto
+	float* normal = (float*)malloc(sizeof(float) * NUM_COORDENADAS);
 	float x, y, z;
 	/* Definição do número de vértices */
 	fprintf(fp, "%d\n", numVertices);
@@ -317,53 +570,83 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 			// Variacao do v
 			for (int k = 0; k < tesselevel - 1; k++) {
 				// Vértices do primeiro triangulo do quadrado respetivo
+				//Posicao
 				x = objectVertices[numoldV + j * tesselevel + k][0];
 				y = objectVertices[numoldV + j * tesselevel + k][1];
 				z = objectVertices[numoldV + j * tesselevel + k][2];
 				fprintf(fp, "%f %f %f\n", x, y, z);
 
+				// Normal
+				cross(objectDeriv_v[numoldV + j * tesselevel + k], objectDeriv_u[numoldV + j * tesselevel + k], normal);
+				normalize(normal);
+
+				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
+
+				//Posicao
 				x = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][0];
 				y = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][1];
 				z = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][2];
 				fprintf(fp, "%f %f %f\n", x, y, z);
 
+				// Normal
+				cross(objectDeriv_v[numoldV + (j + 1) * tesselevel + (k + 1)], objectDeriv_u[numoldV + (j + 1) * tesselevel + (k + 1)], normal);
+				normalize(normal);
+
+				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
+
+				// Posicao
 				x = objectVertices[numoldV + j * tesselevel + (k + 1)][0];
 				y = objectVertices[numoldV + j * tesselevel + (k + 1)][1];
 				z = objectVertices[numoldV + j * tesselevel + (k + 1)][2];
 				fprintf(fp, "%f %f %f\n", x, y, z);
 
+				// Normal
+				cross(objectDeriv_v[numoldV + j * tesselevel + (k + 1)], objectDeriv_u[numoldV + j * tesselevel + (k + 1)], normal);
+				normalize(normal);
+
+				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
+
 				// Vértices do segundo triangulo do quadrado respetivo
+				//Posicao
 				x = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][0];
 				y = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][1];
 				z = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][2];
 				fprintf(fp, "%f %f %f\n", x, y, z);
 
+				// Normal
+				cross(objectDeriv_v[numoldV + (j + 1) * tesselevel + (k + 1)], objectDeriv_u[numoldV + (j + 1) * tesselevel + (k + 1)], normal);
+				normalize(normal);
+
+				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
+
+				// Posicao
 				x = objectVertices[numoldV + j * tesselevel + k][0];
 				y = objectVertices[numoldV + j * tesselevel + k][1];
 				z = objectVertices[numoldV + j * tesselevel + k][2];
 				fprintf(fp, "%f %f %f\n", x, y, z);
 
+				// Normal
+				cross(objectDeriv_v[numoldV + j * tesselevel + k], objectDeriv_u[numoldV + j * tesselevel + k], normal);
+				normalize(normal);
+
+				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
+
+				// Posicao
 				x = objectVertices[numoldV + (j + 1) * tesselevel + k][0];
 				y = objectVertices[numoldV + (j + 1) * tesselevel + k][1];
 				z = objectVertices[numoldV + (j + 1) * tesselevel + k][2];
 				fprintf(fp, "%f %f %f\n", x, y, z);
+
+				// Normal
+				cross(objectDeriv_v[numoldV + (j + 1) * tesselevel + k], objectDeriv_u[numoldV + (j + 1) * tesselevel + k], normal);
+				normalize(normal);
+
+				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
 			}
 		}
 	}
 }
 
-/*
- * Usado para mulltiplicar uma matriz por um vetor
-*/
-void multMatrixVector(float* m, float* v, float* res) {
-
-	for (int j = 0; j < 4; ++j) {
-		res[j] = 0;
-		for (int k = 0; k < 4; ++k) {
-			res[j] += v[k] * m[j * 4 + k];
-		}
-	}
-}
 
 /*
  * Funcao usada para a partir do numero de patch, devolver os seus pontos de controlo
@@ -433,14 +716,119 @@ void getPosition(int indice, float** patchCPs, float u, float v) {
 }
 
 /*
+ * Funcao que determina a derivada parcial em ordem a u de um ponto num patch de Bezier
+ * Usou-se a fórmula de cálculo matricial (dp/du(u,v) = u' x M x P x MT x v)
+*/
+void getDeriv_u(int indice, float** patchCPs, float u, float v) {
+
+	// Matriz de Bezier (nao esquecer que M = Mtransposto)
+	float m[4][4] = { {-1.0f,  3.0f, -3.0f,  1.0f},
+					  {3.0f, -6.0f,  3.0f, 0.0f },
+					  {-3.0f,  3.0f,  0.0f,  0.0f},
+					  {1.0f,  0.0f,  0.0f,  0.0f }
+	};
+	// Matriz usada para guardar as coordenadas x, y ou z dos control points
+	float p[4][4];
+	// Usados para irem guardando os vetores resultantes dos cálculos 
+	float vetor1[4];
+	float vetor2[4];
+
+	/* Para cada coordenada x,y e z do ponto */
+	for (int i = 0; i < NUM_COORDENADAS; i++) {
+
+		/* Construimos a matriz p dependendo da coordenada ser x,y ou z */
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
+				p[j][k] = patchCPs[j * 4 + k][i];
+			}
+		}
+
+		// Cálculo das componentes do vetor v
+		vetor1[0] = pow((double)v, (double)3); vetor1[1] = pow((double)v, (double)2); vetor1[2] = v; vetor1[3] = 1.0f;
+
+		/* Calculamos o resultado da multiplicação de Mtrans por vetor v */
+		multMatrixVector((float*)m, vetor1, vetor2);
+
+		/* Calculamos o resultado da multiplicação da matriz p pela multiplicacao anterior */
+		multMatrixVector((float*)p, vetor2, vetor1);
+
+		/* Calculamos o resultado da multiplicação da matriz M pela multiplicacao anterior */
+		multMatrixVector((float*)m, vetor1, vetor2);
+
+		/* Calculamos o resultado da multiplicaçao do vetor u pelo vetor da mult anterior*/
+		/* Calcular agora dp/du(u,v) = u' * (vetor resultado anterior) */
+		objectDeriv_u[indice][i] = 0;
+
+		for (int j = 0; j < 4; j++) {
+			objectDeriv_u[indice][i] += (3-j)*(float)pow((double)u, (double)2 - j) * vetor2[j];
+		}
+	}
+}
+
+/*
+ * Funcao que determina a derivada parcial em ordem a v de um ponto num patch de Bezier
+ * Usou-se a fórmula de cálculo matricial (dp/dv(u,v) = u x M x P x MT x v')
+*/
+void getDeriv_v(int indice, float** patchCPs, float u, float v) {
+
+	// Matriz de Bezier (nao esquecer que M = Mtransposto)
+	float m[4][4] = { {-1.0f,  3.0f, -3.0f,  1.0f},
+					  {3.0f, -6.0f,  3.0f, 0.0f },
+					  {-3.0f,  3.0f,  0.0f,  0.0f},
+					  {1.0f,  0.0f,  0.0f,  0.0f }
+	};
+	// Matriz usada para guardar as coordenadas x, y ou z dos control points
+	float p[4][4];
+	// Usados para irem guardando os vetores resultantes dos cálculos 
+	float vetor1[4];
+	float vetor2[4];
+
+	/* Para cada coordenada x,y e z do ponto */
+	for (int i = 0; i < NUM_COORDENADAS; i++) {
+
+		/* Construimos a matriz p dependendo da coordenada ser x,y ou z */
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
+				p[j][k] = patchCPs[j * 4 + k][i];
+			}
+		}
+
+		// Cálculo das componentes do vetor v'
+		vetor1[0] = 3*(float)pow((double)v, (double)2); vetor1[1] = 2*v; vetor1[2] = 1.0f; vetor1[3] = 0.0f;
+
+		/* Calculamos o resultado da multiplicação de Mtrans por vetor v */
+		multMatrixVector((float*)m, vetor1, vetor2);
+
+		/* Calculamos o resultado da multiplicação da matriz p pela multiplicacao anterior */
+		multMatrixVector((float*)p, vetor2, vetor1);
+
+		/* Calculamos o resultado da multiplicação da matriz M pela multiplicacao anterior */
+		multMatrixVector((float*)m, vetor1, vetor2);
+
+		/* Calculamos o resultado da multiplicaçao do vetor u pelo vetor da mult anterior*/
+		/* Calcular agora dp/dv(u,v) = u * (vetor resultado anterior) */
+		objectDeriv_v[indice][i] = 0;
+
+		for (int j = 0; j < 4; j++) {
+			objectDeriv_v[indice][i] += (float)pow((double)u, (double)3 - j) * vetor2[j];
+		}
+	}
+}
+
+/*
  * Funcao usada para calcular os vértices dado o tesselation level
  * a partir dos control points que foram lidos do ficheiro dos patches
 */
 void calculateObjVertexs(int tesselevel) {
 
 	objectVertices = (float**) malloc(sizeof(float*) * numP * tesselevel * tesselevel);
+	objectDeriv_u = (float**) malloc(sizeof(float*) * numP * tesselevel * tesselevel);
+	objectDeriv_v = (float**) malloc(sizeof(float*) * numP * tesselevel * tesselevel);
+
 	for (int i = 0; i < (numP * tesselevel * tesselevel); i++) {
 		objectVertices[i] = (float*) malloc(sizeof(float) * NUM_COORDENADAS);
+		objectDeriv_u[i] = (float*)malloc(sizeof(float) * NUM_COORDENADAS);
+		objectDeriv_v[i] = (float*)malloc(sizeof(float) * NUM_COORDENADAS);
 	}
 
 	// Descobrir todos os vértices necessários para se desenhar os triângulos
@@ -452,6 +840,8 @@ void calculateObjVertexs(int tesselevel) {
 			for (int k = 0; k < tesselevel; k++) {
 				float v = (float)((float)1.0 * k) / (tesselevel - 1);
 				getPosition(i*tesselevel*tesselevel+j*tesselevel+k, patchCPs, u, v);
+				getDeriv_u(i * tesselevel * tesselevel + j * tesselevel + k, patchCPs, u, v);
+				getDeriv_v(i * tesselevel * tesselevel + j * tesselevel + k, patchCPs, u, v);
 			}
 		}
 	}
