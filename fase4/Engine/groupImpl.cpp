@@ -98,8 +98,9 @@ struct group {
 	/* Variável que guarda o número de 
 	operações do group em questão */
 	int numOps;
-	/* Lista de vértices */
-	vector<float>* lv;
+	/* Lista com cada um dos modelos 
+	a desenhar */
+	vector<vector<float>*>* models;
 	/* Lista que guarda as normais dos 
 	modelos a serem desenhados dentro 
 	do group */
@@ -107,6 +108,10 @@ struct group {
 	/* Lista que guarda as coordenadas 
 	de textura para os modelos */
 	vector<float>* textures;
+	/* Variável que guarda os id's para 
+	as texturas que estão carregadas em 
+	memória gráfica */
+	vector<int>* textureIds;
 	/* Variável que guarda o número de 
 	vértices inseridos no grupo */
 	int numVertices;
@@ -205,6 +210,7 @@ Group newGroup() {
 	novo->lv = new vector<float>();
 	novo->normals = new vector<float>();
 	novo->textures = new vector<float>();
+	novo->textureIds = new vector<int>();
 	novo->numVertices = 0;
 
 	return novo;
@@ -376,6 +382,14 @@ void addTextureVertice(Group g, float x, float y) {
 
 	g->textures->push_back(x);
 	g->textures->push_back(y);
+}
+
+/**
+Método que permite adicionar um novo id de textura a um group
+*/
+void addTextureId(Group g, int id) {
+
+	g->textureIds->push_back(id);
 }
 
 /**

@@ -64,6 +64,11 @@ ao group especificado como parâmetro da função
 void addTextureVertice(Group g, float x, float y);
 
 /**
+Método que permite adicionar um novo id de textura a um group
+*/
+void addTextureId(Group g, int id);
+
+/**
 Método que retorna o vetor no qual se encontram
 representados os vértices a serem desenhados
 pela aplicação
