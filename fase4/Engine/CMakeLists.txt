@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 PROJECT(fase4tp)
 
+if(NOT OPENGL_FOUND)
+    message(ERROR " OPENGL not found!")
+endif(NOT OPENGL_FOUND)
+
 if (NOT APPLE)
 	if (WIN32)
 		set(TOOLKITS_FOLDER "" CACHE PATH "Path to toolkits folder")
@@ -37,7 +41,7 @@ include_directories(${OpenGL_INCLUDE_DIRS})
 link_directories(${OpenGL_LIBRARY_DIRS})
 add_definitions(${OpenGL_DEFINITIONS})
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp groupImpl.cpp groupImpl.h vertice.cpp vertice.h ListVertices.cpp ListVertices.h ListGroups.cpp ListGroups.h tinystr.cpp tinystr.h tinyxml.cpp tinyxml.h tinyxmlerror.cpp tinyxmlparser.cpp)
 
 if (WIN32)
 	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glut32 glew32 DevIL)
