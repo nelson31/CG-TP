@@ -451,41 +451,89 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 
 		// Primeiro triangulo
 
+		//Posicao
 		x = (radius1 * sin(angleA));
 		y = 0.0f;
 		z = (radius1 * cos(angleA));
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Normal
+		x = 0.0f;
+		y = 1.0f;
+		z = 0.0f;
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		// Posicao
 		x = (radius2 * sin(angleA));
 		y = 0.0f;
 		z = (radius2 * cos(angleA));
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Normal
+		x = 0.0f;
+		y = 1.0f;
+		z = 0.0f;
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		// Posicao
 		x = (radius1 * sin(nextAngle));
 		y = 0.0f;
 		z = (radius1 * cos(nextAngle));
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Normal
+		x = 0.0f;
+		y = 1.0f;
+		z = 0.0f;
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
 		// Segundo triangulo
 
+		// Posicao
 		x = (radius2 * sin(angleA));
 		y = 0.0f;
 		z = (radius2 * cos(angleA));
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Normal
+		x = 0.0f;
+		y = 1.0f;
+		z = 0.0f;
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		// Posicao
 		x = (radius2 * sin(nextAngle));
 		y = 0.0f;
 		z = (radius2 * cos(nextAngle));
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Normal
+		x = 0.0f;
+		y = 1.0f;
+		z = 0.0f;
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		// Posicao
 		x = (radius1 * sin(nextAngle));
 		y = 0.0f;
 		z = (radius1 * cos(nextAngle));
+
+		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		// Normal
+		x = 0.0f;
+		y = 1.0f;
+		z = 0.0f;
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 	}
