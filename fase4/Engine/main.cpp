@@ -6,6 +6,8 @@
 #include <GL/glut.h>
 #endif
 
+#include <IL/il.h>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
