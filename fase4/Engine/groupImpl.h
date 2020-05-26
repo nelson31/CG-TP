@@ -52,6 +52,18 @@ ao group para também ser desenhado
 void addVertice(Group g, float x, float y, float z);
 
 /**
+Função que permite adicionar um vértice de normal ao
+group especificado como parâmetro da função
+*/
+void addNormalVertice(Group g, float x, float y, float z);
+
+/**
+Função que permite adicionar uma coordenada de textura
+ao group especificado como parâmetro da função
+*/
+void addTextureVertice(Group g, float x, float y);
+
+/**
 Método que retorna o vetor no qual se encontram
 representados os vértices a serem desenhados
 pela aplicação

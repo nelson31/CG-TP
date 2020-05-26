@@ -100,6 +100,13 @@ struct group {
 	int numOps;
 	/* Lista de vértices */
 	vector<float>* lv;
+	/* Lista que guarda as normais dos 
+	modelos a serem desenhados dentro 
+	do group */
+	vector<float>* normals;
+	/* Lista que guarda as coordenadas 
+	de textura para os modelos */
+	vector<float>* textures;
 	/* Variável que guarda o número de 
 	vértices inseridos no grupo */
 	int numVertices;
@@ -196,6 +203,8 @@ Group newGroup() {
 	novo->sizeOp = _MIN_OPS;
 	novo->numOps = 0;
 	novo->lv = new vector<float>();
+	novo->normals = new vector<float>();
+	novo->textures = new vector<float>();
 	novo->numVertices = 0;
 
 	return novo;
@@ -346,6 +355,27 @@ void addVertice(Group g, float x, float y, float z) {
 	g->lv->push_back(y);
 	g->lv->push_back(z);
 	g->numVertices++;
+}
+
+/**
+Função que permite adicionar um vértice de normal ao 
+group especificado como parâmetro da função
+*/
+void addNormalVertice(Group g, float x, float y, float z) {
+
+	g->normals->push_back(x);
+	g->normals->push_back(y);
+	g->normals->push_back(z);
+}
+
+/**
+Função que permite adicionar uma coordenada de textura 
+ao group especificado como parâmetro da função
+*/
+void addTextureVertice(Group g, float x, float y) {
+
+	g->textures->push_back(x);
+	g->textures->push_back(y);
 }
 
 /**

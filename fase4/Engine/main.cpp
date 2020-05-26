@@ -406,7 +406,9 @@ void processaModels(TiXmlElement* element, Group g) {
 
 	int vertices;
 
-	float x, y, z;
+	float posx, posy, posz;
+	float normx, normy, normz;
+	float textx, texty;
 	
 	TiXmlNode* ele = NULL;
 
@@ -426,10 +428,16 @@ void processaModels(TiXmlElement* element, Group g) {
 			fscanf(fp, "%d\n", &vertices);
 			/* Lemos os valores do ficheiro em questão e
 			adicionamos ao group em questão */
-			while (fscanf(fp, "%f %f %f\n", &x, &y, &z) != -1) {
+			while (fscanf(fp, "%f %f %f\n%f %f %f\n%f %f\n", &posx, &posy, &posz, &normx, &normy, &normz, &textx, &texty) != -1) {
 				/* Adicionamos o vértice ao
 				respetivo grupo */
-				addVertice(g, x, y, z);
+				addVertice(g, posx, posy, posz);
+				/* Adicionamos o vértice que 
+				corresponde à normal do respetivo ponto */
+				addNormalVertice(g, normx, normy, normz);
+				/* Adicionamos o vértices que corresponde 
+				à textura no respetivo ponto */
+				addTextureVertice(g, textx, texty);
 			}
 			fclose(fp);
 			printf("File %s loaded successfully!\n", filename);
