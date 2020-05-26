@@ -843,7 +843,7 @@ void getDeriv_u(int indice, float** patchCPs, float u, float v) {
 		/* Calcular agora dp/du(u,v) = u' * (vetor resultado anterior) */
 		objectDeriv_u[indice][i] = 0;
 
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < 3; j++) {
 			objectDeriv_u[indice][i] += (3-j)*(float)pow((double)u, (double)2 - j) * vetor2[j];
 		}
 	}
