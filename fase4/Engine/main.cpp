@@ -18,6 +18,7 @@
 #include "groupImpl.h"
 #include "ListGroups.h"
 #include "vertice.h"
+#include "Model.h"
 #include "tinyxml.h"
 
 using std::vector;
@@ -410,18 +411,30 @@ void processaModels(TiXmlElement* element, Group g) {
 
 	int vertices;
 
+	/* Variáveis auxiliares */
 	float posx, posy, posz;
 	float normx, normy, normz;
 	float textx, texty;
+	float diffuse[4], specular[4], emission[4], ambient[4];
+	int shineness;
 	
 	TiXmlNode* ele = NULL;
 
 	TiXmlElement* subelement;
+
+	Model m;
+	vector<float>* points;
+	vector<float>* normals;
+	vector<float>* textures;
+	int id;
 	/* Antes de mais vamos iterar */
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
 		subelement = ele->ToElement();
 		char* tagName = (char*)subelement->Value();
 		if (!strcmp(tagName, "model")) {
+			points = new vector<float>();
+			textures = new vector<float>();
+			normals = new vector<float>();
 			/* Vamos buscar o nome do ficheiro */
 			filename = (char*)subelement->Attribute("file");
 			/* File pointer que será utilzado
@@ -435,20 +448,55 @@ void processaModels(TiXmlElement* element, Group g) {
 			while (fscanf(fp, "%f %f %f\n%f %f %f\n%f %f\n", &posx, &posy, &posz, &normx, &normy, &normz, &textx, &texty) != -1) {
 				/* Adicionamos o vértice ao
 				respetivo grupo */
-				addVertice(g, posx, posy, posz);
+				points->push_back(posx);
+				points->push_back(posy);
+				points->push_back(posz);
 				/* Adicionamos o vértice que 
 				corresponde à normal do respetivo ponto */
-				addNormalVertice(g, normx, normy, normz);
+				normals->push_back(normx);
+				normals->push_back(normy);
+				normals->push_back(normz);
 				/* Adicionamos o vértices que corresponde 
 				à textura no respetivo ponto */
-				addTextureVertice(g, textx, texty);
+				textures->push_back(textx);
+				textures->push_back(texty);
 			}
 			/* Verificamos se existe algum 
 			ficheiro de textura. Caso exista carregamos a respetiva 
 			imagem para memória gráfica e adicionamos ao group em 
 			questão */
-			if (subelement->Attribute("texture") != NULL)
-				addTextureId(g, loadTexture(subelement->Attribute("texture")));
+			if (subelement->Attribute("texture") != NULL) {
+				id = loadTexture(subelement->Attribute("texture"));
+				/* Carregamos a imagem da texture */
+				m = newTextureModel(points, normals, id, textures);
+			}
+			else {
+				(subelement->Attribute("diffR") == NULL) ? diffuse[0] = 0.0f : diffuse[0] = atof(subelement->Attribute("diffR"));
+				(subelement->Attribute("diffG") == NULL) ? diffuse[1] = 0.0f : diffuse[1] = atof(subelement->Attribute("diffG"));
+				(subelement->Attribute("diffB") == NULL) ? diffuse[2] = 0.0f : diffuse[2] = atof(subelement->Attribute("diffB"));
+				diffuse[3] = 1.0f;
+
+				(subelement->Attribute("specR") == NULL) ? specular[0] = 0.0f : specular[0] = atof(subelement->Attribute("specR"));
+				(subelement->Attribute("specG") == NULL) ? specular[1] = 0.0f : specular[1] = atof(subelement->Attribute("specG"));
+				(subelement->Attribute("specB") == NULL) ? specular[2] = 0.0f : specular[2] = atof(subelement->Attribute("specB"));
+				specular[3] = 1.0f;
+
+				(subelement->Attribute("ambR") == NULL) ? ambient[0] = 0.0f : ambient[0] = atof(subelement->Attribute("ambR"));
+				(subelement->Attribute("ambG") == NULL) ? ambient[1] = 0.0f : ambient[1] = atof(subelement->Attribute("ambG"));
+				(subelement->Attribute("ambB") == NULL) ? ambient[2] = 0.0f : ambient[2] = atof(subelement->Attribute("ambB"));
+				ambient[3] = 1.0f;
+
+				(subelement->Attribute("emisR") == NULL) ? emission[0] = 0.0f : emission[0] = atof(subelement->Attribute("emisR"));
+				(subelement->Attribute("emisG") == NULL) ? emission[1] = 0.0f : emission[1] = atof(subelement->Attribute("emisG"));
+				(subelement->Attribute("emisB") == NULL) ? emission[2] = 0.0f : emission[2] = atof(subelement->Attribute("emisB"));
+				emission[3] = 1.0f;
+
+				(subelement->Attribute("shineness") == NULL) ? shineness = 128 : shineness = atof(subelement->Attribute("shineness"));
+
+				m = newMaterialModel(points, normals, diffuse, specular, ambient, emission, shineness);
+			}
+			/* Adicionamos o model ao group */
+			addModel(g, m);
 
 			fclose(fp);
 			printf("File %s loaded successfully!\n", filename);

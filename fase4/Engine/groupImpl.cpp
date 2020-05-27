@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "groupImpl.h"
 #include "ListVertices.h"
+#include "Model.h"
 
 /* Numero de operações */
 #define _MIN_OPS 10
@@ -98,23 +99,10 @@ struct group {
 	/* Variável que guarda o número de 
 	operações do group em questão */
 	int numOps;
-	/* Lista com cada um dos modelos 
-	a desenhar */
-	vector<vector<float>*>* models;
-	/* Lista que guarda as normais dos 
-	modelos a serem desenhados dentro 
-	do group */
-	vector<float>* normals;
-	/* Lista que guarda as coordenadas 
-	de textura para os modelos */
-	vector<float>* textures;
-	/* Variável que guarda os id's para 
-	as texturas que estão carregadas em 
-	memória gráfica */
-	vector<int>* textureIds;
-	/* Variável que guarda o número de 
-	vértices inseridos no grupo */
-	int numVertices;
+	/* Estrutura que guarda o conjunto de 
+	modelos a serem desenhados dentro do 
+	group */
+	vector<Model>* models;
 };
 
 /**
@@ -207,11 +195,7 @@ Group newGroup() {
 	novo->op = (Operacao*)malloc(sizeof(Operacao)*_MIN_OPS);
 	novo->sizeOp = _MIN_OPS;
 	novo->numOps = 0;
-	novo->lv = new vector<float>();
-	novo->normals = new vector<float>();
-	novo->textures = new vector<float>();
-	novo->textureIds = new vector<int>();
-	novo->numVertices = 0;
+	novo->models = new vector<Model>();
 
 	return novo;
 }
@@ -352,68 +336,29 @@ void addDynamicTranslation(Group g, char* operacao, float* param, ListVertices c
 }
 
 /**
-Função que permite adicionar um vértices 
-ao group para também ser desenhado
+Função que permite adicionar um novo model a desenhar 
+para o group especificado por parâmetro na função
 */
-void addVertice(Group g, float x, float y, float z) {
+void addModel(Group g, Model m) {
 
-	g->lv->push_back(x);
-	g->lv->push_back(y);
-	g->lv->push_back(z);
-	g->numVertices++;
+	/* Adicionamos o model ao 
+	respetivo vector */
+	g->models->push_back(m);
 }
 
 /**
-Função que permite adicionar um vértice de normal ao 
-group especificado como parâmetro da função
+Função que permite obter a estrutura com todos os 
+models pertencentes a um group
 */
-void addNormalVertice(Group g, float x, float y, float z) {
+vector<Model>* getModels(Group g) {
 
-	g->normals->push_back(x);
-	g->normals->push_back(y);
-	g->normals->push_back(z);
-}
-
-/**
-Função que permite adicionar uma coordenada de textura 
-ao group especificado como parâmetro da função
-*/
-void addTextureVertice(Group g, float x, float y) {
-
-	g->textures->push_back(x);
-	g->textures->push_back(y);
-}
-
-/**
-Método que permite adicionar um novo id de textura a um group
-*/
-void addTextureId(Group g, int id) {
-
-	g->textureIds->push_back(id);
-}
-
-/**
-Método que retorna o vetor no qual se encontram 
-representados os vértices a serem desenhados 
-pela aplicação
-*/
-vector<float>* getVectorV(Group g) {
-
-	return g->lv;
-}
-
-/**
-Método que retorna o número de vértices 
-incluidos num Group
-*/
-int numVertices(Group g) {
-
-	return g->numVertices;
+	return g->models;
 }
 
 /**
 Método que desenha um group
 */
+/*
 void desenhaGroup(Group g) {
 
 	printf("Operações: {\n");
@@ -424,7 +369,7 @@ void desenhaGroup(Group g) {
 	int j = 0;
 	int size = (int)g->lv->size()/3;
 	printf("Vértices: {\n");
-	/* Imprimimos cada um dos vértices */
+
 	for (int i = 0; i < size; i++) {
 		printf("(%f, %f, %f)\n", g->lv->at(j++), g->lv->at(j++), g->lv->at(j++));
 	}
@@ -438,7 +383,7 @@ void printGroupOps(Group g) {
 		printOp(g->op[i]);
 	printf("}</group>\n\n");
 }
-
+*/
 /**
 Método que permite obter os parâmetros de 
 uma operação dada a própria operação. name 

@@ -46,45 +46,21 @@ que existem os pontos que formam a curva de catmoll-rom
 void addDynamicTranslation(Group g, char* operacao, float* param, ListVertices catmull_rom_points);
 
 /**
-Função que permite adicionar um vértices
-ao group para também ser desenhado
+Função que permite adicionar um novo model a desenhar
+para o group especificado por parâmetro na função
 */
-void addVertice(Group g, float x, float y, float z);
+void addModel(Group g, Model m);
 
 /**
-Função que permite adicionar um vértice de normal ao
-group especificado como parâmetro da função
+Função que permite obter a estrutura com todos os
+models pertencentes a um group
 */
-void addNormalVertice(Group g, float x, float y, float z);
-
-/**
-Função que permite adicionar uma coordenada de textura
-ao group especificado como parâmetro da função
-*/
-void addTextureVertice(Group g, float x, float y);
-
-/**
-Método que permite adicionar um novo id de textura a um group
-*/
-void addTextureId(Group g, int id);
-
-/**
-Método que retorna o vetor no qual se encontram
-representados os vértices a serem desenhados
-pela aplicação
-*/
-vector<float>* getVectorV(Group g);
-
-/**
-Método que retorna o número de vértices
-incluidos num Group
-*/
-int numVertices(Group g);
+vector<Model>* getModels(Group g);
 
 /**
 Método que desenha um group
 */
-void desenhaGroup(Group g);
+//void desenhaGroup(Group g);
 
 /**
 Método que permite obter um array com os
