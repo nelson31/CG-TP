@@ -4,7 +4,7 @@
 	</lights>
 	<group>
 		<models>
-			<model file='sol.3d' texture='textSol.jpg'/>
+			<model file='sol.3d' texture='textSol.jpg' emisR='1.0' emisG='1.0' emisB='1.0'/>
 		</models>
 	</group>
 	<group>
@@ -20,7 +20,7 @@
 			<point X="-116.76" Y="0" Z="116.76" />
 		</translate>
 		<models>
-			<model file='mercurio.3d' texture='textMercurio.jpg'/>
+			<model file='mercurio.3d' texture='textMercurio.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 	</group>
 	<group>
@@ -36,7 +36,7 @@
 			<point X="-126.30" Y="0" Z="126.30" />
 		</translate>
 		<models>
-			<model file='venus.3d' texture='textVenus.jpg'/>
+			<model file='venus.3d' texture='textVenus.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 	</group>
 	<group>
@@ -52,7 +52,7 @@
 			<point X="-138.1" Y="0" Z="138.1" />
 		</translate>
 		<models>
-			<model file='terra.3d' texture='textTerra.jpg'/>
+			<model file='terra.3d' texture='textTerra.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 		<group>
 			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
@@ -67,7 +67,7 @@
 				<point X="-4.95" Y="0" Z="4.95" />
 			</translate>
 			<models>
-				<model file='terraLua.3d' texture='textLuaTerra.jpg'/>
+				<model file='terraLua.3d' texture='textLuaTerra.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 	</group>
@@ -84,7 +84,7 @@
 			<point X="-148.67" Y="0" Z="148.67" />
 		</translate>
 		<models>
-			<model file='marte.3d' texture='textMarte.jpg'/>
+			<model file='marte.3d' texture='textMarte.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 		<group>
 			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
@@ -99,7 +99,7 @@
 				<point X="-3.54" Y="0" Z="3.54" />
 			</translate>
 			<models>
-				<model file='marteLua1.3d' texture='textLua1.jpg'/>
+				<model file='marteLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -115,7 +115,7 @@
 				<point X="-3.54" Y="0" Z="-3.54" />
 			</translate>
 			<models>
-				<model file='marteLua2.3d' texture='textLua2.jpg'/>
+				<model file='marteLua2.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 	</group>
@@ -132,7 +132,7 @@
 			<point X="-196.01" Y="0" Z="196.01" />
 		</translate>
 		<models>
-			<model file='jupiter.3d' texture='textJupiter.jpg'/>
+			<model file='jupiter.3d' texture='textJupiter.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 		<group>
 			<rotate angle="3" axisX="1" axisY="0" axisZ="0" />
@@ -147,7 +147,7 @@
 				<point X="-43.13" Y="0" Z="-43.13" />
 			</translate>
 			<models>
-				<model file='jupiterLua1.3d' texture='textLua1.jpg'/>
+				<model file='jupiterLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -163,7 +163,7 @@
 				<point X="42.43" Y="0" Z="-42.43" />
 			</translate>
 			<models>
-				<model file='jupiterLua2.3d' texture='textLua2.jpg'/>
+				<model file='jupiterLua2.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -179,7 +179,7 @@
 				<point X="41.72" Y="0" Z="41.72" />
 			</translate>
 			<models>
-				<model file='jupiterLua3.3d' texture='textLua3.jpg'/>
+				<model file='jupiterLua3.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -195,7 +195,7 @@
 				<point X="-41.01" Y="0" Z="41.01" />
 			</translate>
 			<models>
-				<model file='jupiterLua4.3d' texture='textLua4.jpg'/>
+				<model file='jupiterLua4.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 	</group>
@@ -212,11 +212,11 @@
 			<point X="304.44" Y="0" Z="304.44" />
 		</translate>
 		<models>
-			<model file='saturno.3d' texture='textSaturno.jpg'/>
+			<model file='saturno.3d' texture='textSaturno.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 		<group>
 			<models>
-				<model file='saturnoAnel.3d' texture='textSaturnoAnel.jpg'/>
+				<model file='saturnoAnel.3d' texture='textSaturnoAnel.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -232,7 +232,7 @@
 				<point X="61.52" Y="0" Z="61.52" />
 			</translate>
 			<models>
-				<model file='saturnoLua1.3d' texture='textLua1.jpg'/>
+				<model file='saturnoLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -248,7 +248,7 @@
 				<point X="-59.4" Y="0" Z="59.4" />
 			</translate>
 			<models>
-				<model file="saturnoLua2.3d" texture='textLua2.jpg'/>
+				<model file="saturnoLua2.3d" texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -264,7 +264,7 @@
 				<point X="-57.28" Y="0" Z="-57.28" />
 			</translate>
 			<models>
-				<model file='saturnoLua3.3d' texture='textLua3.jpg'/>
+				<model file='saturnoLua3.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -280,7 +280,7 @@
 				<point X="55.15" Y="0" Z="-55.15" />
 			</translate>
 			<models>
-				<model file='saturnoLua4.3d' texture='textLua4.jpg'/>
+				<model file='saturnoLua4.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -296,7 +296,7 @@
 				<point X="-75" Y="0" Z="0" />
 			</translate>
 			<models>
-				<model file='saturnoLua5.3d' texture='textLua2.jpg'/>
+				<model file='saturnoLua5.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 	</group>
@@ -313,7 +313,7 @@
 			<point X="-389.5" Y="0" Z="-389.5" />
 		</translate>
 		<models>
-			<model file='urano.3d' texture='textUrano.jpg'/>
+			<model file='urano.3d' texture='textUrano.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 		<group>
 			<rotate angle="6" axisX="1" axisY="0" axisZ="0" />
@@ -328,7 +328,7 @@
 				<point X="18.38" Y="0" Z="-18.38" />
 			</translate>
 			<models>
-				<model file='uranoLua1.3d' texture='textLua2.jpg'/>
+				<model file='uranoLua1.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -344,7 +344,7 @@
 				<point X="16.97" Y="0" Z="16.97" />
 			</translate>
 			<models>
-				<model file='uranoLua2.3d' texture='textLua3.jpg'/>
+				<model file='uranoLua2.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 		<group>
@@ -360,7 +360,7 @@
 				<point X="-15.56" Y="0" Z="15.56" />
 			</translate>
 			<models>
-				<model file='uranoLua3.3d' texture='textLua4.jpg'/>
+				<model file='uranoLua3.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 	</group>
@@ -377,7 +377,7 @@
 			<point X="0" Y="0" Z="-650.9" />
 		</translate>
 		<models>
-			<model file='neptuno.3d' texture='textNeptuno.jpg'/>
+			<model file='neptuno.3d' texture='textNeptuno.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 		</models>
 		<group>
 			<rotate angle="8" axisX="1" axisY="0" axisZ="0" />
@@ -392,7 +392,7 @@
 				<point X="-16.97" Y="0" Z="16.97" />
 			</translate>
 			<models>
-				<model file='neptunoLua.3d' texture='textLua3.jpg'/>
+				<model file='neptunoLua.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
 			</models>
 		</group>
 	</group>
