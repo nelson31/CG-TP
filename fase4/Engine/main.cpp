@@ -779,7 +779,7 @@ void processaLights(TiXmlElement* element) {
 	/* Percorremos cada um dos subelementos 
 	para ler as luzes */
 	while ((ele = element->IterateChildren(ele)) && count<8) {
-		printf("Encontrei um nova light: nº%d\n", count);
+		//printf("Encontrei um nova light: nº%d\n", count);
 		subelement = ele->ToElement();
 		(subelement->Attribute("posx") == NULL ? posx = 0 : posx = atof(subelement->Attribute("posx")));
 		(subelement->Attribute("posy") == NULL ? posy = 0 : posy = atof(subelement->Attribute("posy")));
@@ -881,7 +881,7 @@ Função que faz enable para suportar as luzes
 void enableLights() {
 
 	for (int i = 0; i < numLights; i++) {
-		printf("Ativei a light nº%d\n", i);
+		//printf("Ativei a light nº%d\n", i);
 		switch (i) {
 			case 0: glEnable(GL_LIGHT0); defineColor(i); break;
 			case 1: glEnable(GL_LIGHT1); defineColor(i); break;
@@ -1387,7 +1387,7 @@ int main(int argc, char **argv) {
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(800,800);
-	glutCreateWindow("CG@TP@Fase3");
+	glutCreateWindow("CG@TP@Fase4");
 
 #ifndef __APPLE__
 	glewInit();
