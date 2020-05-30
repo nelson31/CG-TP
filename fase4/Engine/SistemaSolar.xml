@@ -1,6 +1,6 @@
 <scene>
 	<lights>
-		<light type='POINT' posX='0' posY='75' posZ='0' />
+		<light type='POINT' posx='400' posy='400' posz='0' />
 	</lights>
 	<group>
 		<color R='1' G='0.3' B='0' /> 

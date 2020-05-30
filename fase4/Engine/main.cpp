@@ -780,6 +780,7 @@ void processaLights(TiXmlElement* element) {
 	/* Percorremos cada um dos subelementos 
 	para ler as luzes */
 	while ((ele = element->IterateChildren(ele)) && count<8) {
+		printf("Encontrei um nova light: nº%d\n", count);
 		subelement = ele->ToElement();
 		(subelement->Attribute("posx") == NULL ? posx = 0 : posx = atof(subelement->Attribute("posx")));
 		(subelement->Attribute("posy") == NULL ? posy = 0 : posy = atof(subelement->Attribute("posy")));
@@ -787,6 +788,7 @@ void processaLights(TiXmlElement* element) {
 		lights->push_back(posx);
 		lights->push_back(posy);
 		lights->push_back(posz);
+		count++;
 	}
 	numLights = count;
 }
@@ -874,6 +876,7 @@ Função que faz enable para suportar as luzes
 void enableLights() {
 
 	for (int i = 0; i < numLights; i++) {
+		printf("Ativei a light nº%d\n", i);
 		switch (i) {
 			case 0: glEnable(GL_LIGHT0); defineColor(i); break;
 			case 1: glEnable(GL_LIGHT1); defineColor(i); break;
@@ -916,23 +919,23 @@ void prepareData() {
 	glGenBuffers(textureModels, texCoord);
 	/* Passamos os vetores para 
 	a memória gráfica */
-	for (int i = 0; i < groups; i++, vboIndex++) {
+	for (int i = 0; i < groups; i++) {
 		/* Percorremos os models de cada group */
 		size = models[i]->size();
-		numVerticess[vboIndex] = size;
 		/* Percorremos cada um dos models
 		dentro do respetivo group */
-		for (int j = 0; j < size; j++) {
+		for (int j = 0; j < size; j++, vboIndex++) {
 			vec = getVertices(models[i]->at(j));
+			numVerticess[vboIndex] = vec->size() / 3;
 			norm = getNormals(models[i]->at(j));
 			//printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
-			glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
+			glBindBuffer(GL_ARRAY_BUFFER, vertices[vboIndex]);
 			glBufferData(
 				GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
 				sizeof(float) * vec->size(), // tamanho do vector em bytes
 				vec->data(), // os dados do array associado ao vector
 				GL_STATIC_DRAW); // indicativo da utilização (estático e para desenho)
-			glBindBuffer(GL_ARRAY_BUFFER, normals[i]);
+			glBindBuffer(GL_ARRAY_BUFFER, normals[vboIndex]);
 			glBufferData(
 				GL_ARRAY_BUFFER,
 				sizeof(float) * norm->size(),
@@ -944,12 +947,12 @@ void prepareData() {
 				texture = getTextureInfo(models[i]->at(j), &id_texture);
 				glBindBuffer(GL_ARRAY_BUFFER, texCoord[texture_models_id]);
 				glBufferData(GL_ARRAY_BUFFER, 
-					texture->size(),
+					sizeof(float) * texture->size(),
 					texture->data(), 
 					GL_STATIC_DRAW);
 				/* Associamos um valor ao id do buffer do respetivo
 				model com composição texture */
-				setBufferId(models[i]->at(j), texCoord[texture_models_id]);
+				setBufferId(models[i]->at(j), texture_models_id);
 				texture_models_id++;
 			}
 		}
@@ -1248,7 +1251,7 @@ void reposicionaModels(float gt) {
 				/* Associamos a respetiva imagem ao model */
 				glBindTexture(GL_TEXTURE_2D, getTextureId(group_models->at(j)));
 
-				glBindBuffer(GL_ARRAY_BUFFER, getBufferId(group_models->at(j)));
+				glBindBuffer(GL_ARRAY_BUFFER, texCoord[getBufferId(group_models->at(j))]);
 				glTexCoordPointer(2, GL_FLOAT, 0, 0);
 			}
 			/* Desenhamos os respetivos vértices */
