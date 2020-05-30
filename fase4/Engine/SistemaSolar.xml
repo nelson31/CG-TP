@@ -1,6 +1,6 @@
 <scene>
 	<lights>
-		<light type='POINT' posx='0' posy='400' posz='0' />
+		<light type='POINT' posx='0' posy='0' posz='0' />
 	</lights>
 	<group>
 		<models>

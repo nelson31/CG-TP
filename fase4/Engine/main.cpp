@@ -788,6 +788,7 @@ void processaLights(TiXmlElement* element) {
 		lights->push_back(posx);
 		lights->push_back(posy);
 		lights->push_back(posz);
+		lights->push_back(1.0f);
 		count++;
 	}
 	numLights = count;
@@ -1131,11 +1132,12 @@ as 3 coordenadas para a posição da mesma
 */
 float* getLightPosition(int num) {
 
-	int index = 3 * num;
-	float* coord = (float*)malloc(sizeof(float) * 3);
+	int index = 4 * num;
+	float* coord = (float*)malloc(sizeof(float) * 4);
 	coord[0] = lights->at(index);
 	coord[1] = lights->at(index + 1);
 	coord[2] = lights->at(index + 2);
+	coord[3] = lights->at(index + 3);
 	return coord;
 }
 
@@ -1176,6 +1178,7 @@ void reposicionaModels(float gt) {
 	for (int i = 0; i < numLights; i++) {
 		lightPosition = getLightPosition(i);
 		putLight(i, lightPosition);
+		//printf("Vou colocar a light nº%d na posição (%f, %f, %f)\n", i, lightPosition[0], lightPosition[1], lightPosition[2]);
 		free(lightPosition);
 	}
 	/* Percorremos cada um dos groups */
@@ -1248,6 +1251,8 @@ void reposicionaModels(float gt) {
 			/* Estamos perante uma composição do 
 			tipo Texture */
 			else {
+				float white[4] = { 1,1,1,1 };
+				glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
 				/* Associamos a respetiva imagem ao model */
 				glBindTexture(GL_TEXTURE_2D, getTextureId(group_models->at(j)));
 
@@ -1260,6 +1265,7 @@ void reposicionaModels(float gt) {
 
 			glBindBuffer(GL_ARRAY_BUFFER, normals[vboIndex]);
 			glNormalPointer(GL_FLOAT, 0, 0);
+
 			glDrawArrays(GL_TRIANGLES, 0, numVerticess[vboIndex]);
 		}
 
@@ -1289,8 +1295,6 @@ void renderScene(void) {
 
 	// Scene Design
 	reposicionaModels(a);
-
-	printf("Coloquei modelos\n");
 
 	// End of frame
 	glutSwapBuffers();
