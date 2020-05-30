@@ -420,7 +420,7 @@ void processaScale(Group g, char* tagName, float x, float y, float z) {
 Método que permite carregar uma
 textura para memória gráfica
 */
-int loadTexture(std::string s) {
+int loadTexture(const char* s) {
 
 	unsigned int t, tw, th;
 	unsigned char* texData;
@@ -434,7 +434,7 @@ int loadTexture(std::string s) {
 	// Carregar a textura para a memoria
 	ilGenImages(1, &t);
 	ilBindImage(t);
-	ilLoadImage((ILstring)s.c_str());
+	ilLoadImage((ILstring)s);
 	tw = ilGetInteger(IL_IMAGE_WIDTH);
 	th = ilGetInteger(IL_IMAGE_HEIGHT);
 	// Assegurar que a textura se encontra em RGBA(Red,Green,Blue,Alpha)
@@ -528,6 +528,7 @@ void processaModels(TiXmlElement* element, Group g) {
 			questão */
 			if (subelement->Attribute("texture") != NULL) {
 				id = loadTexture(subelement->Attribute("texture"));
+				printf("Nova imagem de textura carregada: %s\n", subelement->Attribute("texture"));
 				/* Carregamos a imagem da texture */
 				m = newTextureModel(points, normals, id, textures);
 				/* Incrementamos ao número de models que 
@@ -946,10 +947,10 @@ void prepareData() {
 					texture->size(),
 					texture->data(), 
 					GL_STATIC_DRAW);
-				texture_models_id++;
-				/* Associamos um valor ao id do buffer do respetivo 
+				/* Associamos um valor ao id do buffer do respetivo
 				model com composição texture */
 				setBufferId(models[i]->at(j), texCoord[texture_models_id]);
+				texture_models_id++;
 			}
 		}
 	}
@@ -1245,7 +1246,7 @@ void reposicionaModels(float gt) {
 			tipo Texture */
 			else {
 				/* Associamos a respetiva imagem ao model */
-				glBindTexture(GL_TEXTURE_2D,getTextureId(group_models->at(j)));
+				glBindTexture(GL_TEXTURE_2D, getTextureId(group_models->at(j)));
 
 				glBindBuffer(GL_ARRAY_BUFFER, getBufferId(group_models->at(j)));
 				glTexCoordPointer(2, GL_FLOAT, 0, 0);
@@ -1256,7 +1257,6 @@ void reposicionaModels(float gt) {
 
 			glBindBuffer(GL_ARRAY_BUFFER, normals[vboIndex]);
 			glNormalPointer(GL_FLOAT, 0, 0);
-
 			glDrawArrays(GL_TRIANGLES, 0, numVerticess[vboIndex]);
 		}
 
@@ -1287,7 +1287,7 @@ void renderScene(void) {
 	// Scene Design
 	reposicionaModels(a);
 
-	//printf("%f\n", a);
+	printf("Coloquei modelos\n");
 
 	// End of frame
 	glutSwapBuffers();
