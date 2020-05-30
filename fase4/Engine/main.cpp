@@ -58,7 +58,7 @@ int* numOps;
 Variáveis usadas para desenhar o 
 conteudo da ListGroups
 */
-GLuint* vertices, *numVerticess, *vertPercursos;
+GLuint *vertices, *normals, *texCoord, *numVerticess, *vertPercursos;
 
 /**
 Variáveis para ir buscar as
@@ -120,6 +120,12 @@ Variáveis que guardam os vetores que
 representam os eixos do teapot
 */
 float** X, **Y, **Z;
+
+/**
+Variável que nos informa acerca do número 
+de models que possuem textura
+*/
+int textureModels = 0;
 
 
 void buildRotMatrix(float* x, float* y, float* z, float* m) {
@@ -469,6 +475,9 @@ void processaModels(TiXmlElement* element, Group g) {
 				id = loadTexture(subelement->Attribute("texture"));
 				/* Carregamos a imagem da texture */
 				m = newTextureModel(points, normals, id, textures);
+				/* Incrementamos ao número de models que 
+				possuem textura */
+				textureModels++;
 			}
 			else {
 				(subelement->Attribute("diffR") == NULL) ? diffuse[0] = 0.0f : diffuse[0] = atof(subelement->Attribute("diffR"));
@@ -791,26 +800,62 @@ cada grupo é preparado um vbo diferente
 */
 void prepareData() {
 
-	int groups = numGroups(lg);
-	vertices = (GLuint*)malloc(sizeof(GLuint)*groups);
-	numVerticess = (GLuint*)malloc(sizeof(GLuint) * groups);
-	int* sizes=(int*)malloc(sizeof(int)*groups);
+	int size = 0, vboIndex = 0, texture_models_id = 0, id_texture;
+	int groups = numGroups(lg), int n_models = getNumModelsTotal(lg);
+	vertices = (GLuint*)malloc(sizeof(GLuint)*n_models);
+	numVerticess = (GLuint*)malloc(sizeof(GLuint) * n_models);
+	texCoord = (GLuint*)malloc(sizeof(GLuint) * textureModels);
 	/* Sizes é parâmetro de saida */
-	vector<float>** vec = getVectors(lg, &sizes);
-	/* Criamos os vbo's para desenhar os modelos */
-	glGenBuffers(groups, vertices);
+	vector<Model>** models = (vector<Model>**) getModels(lg);
+
+	vector<float>* vec;
+	vector<float>* norm;
+	vector<float>* texture;
+	/* Criamos os vbo's para os vértices e 
+	para as normais */
+	glGenBuffers(n_models, vertices);
+	glGenBuffers(n_models, normals);
+	glGenBuffers(textureModels, texCoord);
+
 	/* Passamos os vetores para 
 	a memória gráfica */
-	for (int i = 0; i < groups; i++) {
-		//printf("Nº de vértices do group %d\n", i);
-		numVerticess[i] = sizes[i];
-		//printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
-		glBufferData(
-			GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
-			sizeof(float)*(*(vec[i])).size(), // tamanho do vector em bytes
-			(*(vec[i])).data(), // os dados do array associado ao vector
-			GL_STATIC_DRAW); // indicativo da utilização (estático e para desenho)
+	for (int i = 0; i < groups; i++, vboIndex++) {
+		/* Percorremos os models de cada group */
+		size = models[i]->size();
+		numVerticess[vboIndex] = size;
+		/* Percorremos cada um dos models 
+		dentro do respetivo group */
+		for (int j = 0; j < size; j++) {
+			vec = getVertices(models[i]->at(j));
+			norm = getNormals(models[i]->at(j));
+			//printf("N vertices do modelo %d: %d\n", i, numVerticess[i]);
+			glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
+			glBufferData(
+				GL_ARRAY_BUFFER, // tipo do buffer, só é relevante na altura do desenho
+				sizeof(float) * vec->size(), // tamanho do vector em bytes
+				vec->data(), // os dados do array associado ao vector
+				GL_STATIC_DRAW); // indicativo da utilização (estático e para desenho)
+			glBindBuffer(GL_ARRAY_BUFFER, normals[i]);
+			glBufferData(
+				GL_ARRAY_BUFFER,
+				sizeof(float) * norm->size(),
+				norm->data(),
+				GL_STATIC_DRAW);
+			/* Verificamos se a sua composição é 
+			do tipo texture */
+			if (hasTexture(models[i]->at(j))) {
+				texture = getTextureInfo(models[i]->at(j), &id_texture);
+				glBindBuffer(GL_ARRAY_BUFFER, texCoord[texture_models_id]);
+				glBufferData(GL_ARRAY_BUFFER, 
+					texture->size(),
+					texture->data(), 
+					GL_STATIC_DRAW);
+				texture_models_id++;
+				/* Associamos um valor ao id do buffer do respetivo 
+				model com composição texture */
+				setBufferId(models[i]->at(j), texCoord[texture_models_id]);
+			}
+		}
 	}
 }
 
@@ -989,8 +1034,11 @@ t
 */
 void reposicionaModels(float gt) {
 
+	int vboIndex = 0, nModels;
 	float matrix[4][4];
 	float position[3], deriv[3];
+	float diffuse[4], specular[4], emission[4], ambient[4]; int shineness;
+	vector<Model>* group_models;
 	/* Percorremos cada um dos groups */
 	for (int i = 0; i < size; i++) {
 		glPushMatrix();
@@ -1041,10 +1089,41 @@ void reposicionaModels(float gt) {
 				break;
 			}
 		}
-		/* Desenhamos os respetivos vértices */
-		glBindBuffer(GL_ARRAY_BUFFER, vertices[i]);
-		glVertexPointer(3, GL_FLOAT, 0, 0);
-		glDrawArrays(GL_TRIANGLES, 0, numVerticess[i]);
+		/* Vamos buscar o número de models do respetivo group */
+		nModels = getNumModels(getGroup(lg, i));
+		group_models = (vector<Model>*)getModelsGroup(getGroup(lg, i));
+		/* Desenhamos cada model pertencente 
+		a esse group */
+		for (int j = 0; j < nModels; j++, vboIndex++) {
+			/* Estamos perante uma compisição 
+			material */
+			if (!hasTexture(group_models->at(j))) {
+				getMaterialInfo(group_models->at(j), diffuse, specular, ambient, emission, &shineness);
+				/* Definimos o material para o modelo */
+				glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+				glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+				glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+				glMaterialfv(GL_FRONT, GL_EMISSION, emission);
+				glMaterialf(GL_FRONT, GL_SHININESS, shineness);
+			}
+			/* Estamos perante uma composição do 
+			tipo Texture */
+			else {
+				/* Associamos a respetiva imagem ao model */
+				glBindTexture(GL_TEXTURE_2D,getTextureId(group_models->at(j)));
+
+				glBindBuffer(GL_ARRAY_BUFFER, getBufferId(group_models->at(j)));
+				glTexCoordPointer(2, GL_FLOAT, 0, 0);
+			}
+			/* Desenhamos os respetivos vértices */
+			glBindBuffer(GL_ARRAY_BUFFER, vertices[vboIndex]);
+			glVertexPointer(3, GL_FLOAT, 0, 0);
+
+			glBindBuffer(GL_ARRAY_BUFFER, normals[vboIndex]);
+			glNormalPointer(GL_FLOAT, 0, 0);
+
+			glDrawArrays(GL_TRIANGLES, 0, numVerticess[vboIndex]);
+		}
 
 		/* Fazemos pop da matrix */
 		glPopMatrix();
@@ -1178,7 +1257,11 @@ int main(int argc, char **argv) {
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 // Prepare the scene to draw
 	loadFile();

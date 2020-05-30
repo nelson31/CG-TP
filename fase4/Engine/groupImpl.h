@@ -55,7 +55,7 @@ void addModel(Group g, Model m);
 Função que permite obter a estrutura com todos os
 models pertencentes a um group
 */
-vector<Model>* getModels(Group g);
+vector<Model>* getModelsGroup(Group g);
 
 /**
 Método que desenha um group
@@ -80,6 +80,12 @@ dos vértices correspondente à operação com o
 mesmo índice no group
 */
 ListVertices* getGroupPoints(Group g);
+
+/**
+Função que retorna o número de models que
+existem numa estrutura de dados do tipo group
+*/
+int getNumModels(Group g);
 
 /**
 Método que liberta uma estrutura

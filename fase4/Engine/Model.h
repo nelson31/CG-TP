@@ -32,12 +32,39 @@ bool hasTexture(Model m);
 Função que permite obter informação acerca do
 material de um dado model
 */
-Material getMaterialInfo(Model m);
+void getMaterialInfo(Model m, float difuse[], float specular[], float ambient[], float emission[], int* shineness);
 
 /**
 Função que permite obter informação acerca da
 textura de um dado model
 */
-Texture getTextureInfo(Model m);
+vector<float>* getTextureInfo(Model m, int* idTexture);
+
+/**
+Função que retorna o id de texture de um
+determinado model
+*/
+int getTextureId(Model m);
+
+/**
+Função que retorna os vértices de um dado model
+*/
+vector<float>* getVertices(Model m);
+
+/**
+Função que retorna as normais de um dado model
+*/
+vector<float>* getNormals(Model m);
+
+/**
+Função que permite atribuir um id de buffer a um model
+*/
+void setBufferId(Model m, int bufferId);
+
+/**
+Função que permite aceder ao id de buffer do model
+de texture passado como parâmetro da função
+*/
+int getBufferId(Model m);
 
 #endif __MODEL_H__

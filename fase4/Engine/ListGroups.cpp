@@ -1,4 +1,5 @@
 #include "ListGroups.h"
+#include "Model.h"
 #include <stdio.h>
 
 #define _INITIAL_SIZE 10
@@ -61,13 +62,12 @@ enviada por parâmetro. Os respetivos tamanhos
 são passados pelo parâmetro de saida designado 
 por sizes
 */
-vector<float>** getVectors(ListGroups lg, int** sizes) {
+vector<Model>** getModels(ListGroups lg) {
 
-	vector<float>** ret = (vector<float>**)malloc(sizeof(vector<float>*) * lg->numGroups);
+	vector<Model>** ret = (vector<Model>**)malloc(sizeof(vector<Model>*) * lg->numGroups);
 	/* Para cada group vamos buscar o respetivo vector */
 	for (int i = 0; i < lg->numGroups; i++) {
-		ret[i] = getVectorV(lg->groups[i]);
-		(*sizes)[i] = numVertices(lg->groups[i]);
+		ret[i] = (vector<Model>*)getModelsGroup(lg->groups[i]);
 	}
 	return ret;
 }
@@ -85,6 +85,7 @@ int numGroups(ListGroups lg) {
 /**
 Método que desenha uma ListGroups no ecrã
 */
+/*
 void desenhaListGroups(ListGroups lg) {
 
 	for (int i = 0; i < lg->numGroups; i++) {
@@ -93,7 +94,7 @@ void desenhaListGroups(ListGroups lg) {
 		printf("</Group nº%d>\n", i);
 	}
 }
-
+*/
 /**
 Método que permite obter as diferentes 
 transformações para cada group indexado 
@@ -156,4 +157,17 @@ void printOpsLG(ListGroups lg) {
 
 	for (int i = 0; i < lg->numGroups; i++)
 		printGroupOps(lg->groups[i]);
+}
+
+/**
+Função que retorna o número total de modelos 
+existentes numa estrutura de dados do tipo 
+ListGroups
+*/
+int getNumModelsTotal(ListGroups lg) {
+
+	int num = 0;
+	for (int i = 0; i < lg->size; i++)
+		num += getNumModels(lg->groups[i]);
+	return num;
 }

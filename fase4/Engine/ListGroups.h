@@ -30,7 +30,7 @@ enviada por parâmetro. Os respetivos tamanhos
 são passados pelo parâmetro de saida designado
 por sizes
 */
-vector<float>** getVectors(ListGroups lg, int** sizes);
+vector<Model>** getModels(ListGroups lg);
 
 /**
 Método que retorna o número de groups existentes
@@ -42,7 +42,7 @@ int numGroups(ListGroups lg);
 /**
 Método que desenha uma ListGroups no ecrã
 */
-void desenhaListGroups(ListGroups lg);
+//void desenhaListGroups(ListGroups lg);
 
 /**
 Método que permite obter as diferentes
@@ -61,6 +61,18 @@ dentro de cada group
 */
 ListVertices** getCatmollPoints(ListGroups lg);
 
+/**
+ funcao que devolve o grupo posicionado na posicao i
+*/
+Group getGroup(ListGroups lg, int i);
+
 void printOpsLG(ListGroups lg);
+
+/**
+Função que retorna o número total de modelos
+existentes numa estrutura de dados do tipo
+ListGroups
+*/
+int getNumModelsTotal(ListGroups lg);
 
 #endif

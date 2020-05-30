@@ -21,6 +21,10 @@ typedef struct texture {
 	/* Inteiro que identifica o id da imagem
 	aquando do seu load para memória gráfica */
 	int id;
+	/* Inteiro que identifica o id do buffer que 
+	contem as coordenadas de textura do model em 
+	questão guardadas em mem gráfica */
+	int buffer_id;
 	/* Estrutura de dados que guarda as coordenadas
 	de textura para o model em questão */
 	vector<float>* textureCoord;
@@ -142,16 +146,65 @@ bool hasTexture(Model m) {
 Função que permite obter informação acerca do 
 material de um dado model
 */
-Material getMaterialInfo(Model m) {
+void getMaterialInfo(Model m, float difuse[], float specular[], float ambient[], float emission[], int *shineness) {
 
-	return m->c.mat;
+	for (int i = 0; i < 4; i++) {
+		difuse[i] = m->c.mat->diffuse[i];
+		specular[i] = m->c.mat->specular[i];
+		ambient[i] = m->c.mat->ambient[i];
+		emission[i] = m->c.mat->emission[i];
+		*shineness = m->c.mat->shineness;
+	}
 }
 
 /**
 Função que permite obter informação acerca da 
 textura de um dado model
 */
-Texture getTextureInfo(Model m) {
+vector<float>* getTextureInfo(Model m, int *idTexture) {
 
-	return m->c.tex;
+	*idTexture = m->c.tex->id;
+	return m->c.tex->textureCoord;
+}
+
+/**
+Função que retorna o id de texture de um 
+determinado model
+*/
+int getTextureId(Model m) {
+
+	return m->c.tex->id;
+}
+
+/**
+Função que retorna os vértices de um dado model
+*/
+vector<float>* getVertices(Model m) {
+
+	return m->vertices;
+}
+
+/**
+Função que retorna as normais de um dado model
+*/
+vector<float>* getNormals(Model m) {
+
+	return m->normals;
+}
+
+/**
+Função que permite atribuir um id de buffer a um model
+*/
+void setBufferId(Model m, int bufferId) {
+
+	m->c.tex->buffer_id = bufferId;
+}
+
+/**
+Função que permite aceder ao id de buffer do model 
+de texture passado como parâmetro da função
+*/
+int getBufferId(Model m) {
+
+	return m->c.tex->buffer_id;
 }

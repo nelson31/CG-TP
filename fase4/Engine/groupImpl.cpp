@@ -350,7 +350,7 @@ void addModel(Group g, Model m) {
 Função que permite obter a estrutura com todos os 
 models pertencentes a um group
 */
-vector<Model>* getModels(Group g) {
+vector<Model>* getModelsGroup(Group g) {
 
 	return g->models;
 }
@@ -481,6 +481,15 @@ ListVertices* getGroupPoints(Group g) {
 		list == NULL ? lv[i] = NULL : lv[i] = list;
 	}
 	return lv;
+}
+
+/**
+Função que retorna o número de models que 
+existem numa estrutura de dados do tipo group
+*/
+int getNumModels(Group g) {
+
+	return g->models->size();
 }
 
 /**
