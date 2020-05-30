@@ -1274,6 +1274,8 @@ void reposicionaModels(float gt) {
 			glNormalPointer(GL_FLOAT, 0, 0);
 
 			glDrawArrays(GL_TRIANGLES, 0, numVerticess[vboIndex]);
+
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 		/* Fazemos pop da matrix */

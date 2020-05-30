@@ -216,7 +216,7 @@
 		</models>
 		<group>
 			<models>
-				<model file='saturnoAnel.3d' texture='textSaturnoAnel.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				<model file='saturnoAnel.3d' texture='textSaturnoAnel.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.4' ambG='0.4' ambB='0.4'/>
 			</models>
 		</group>
 		<group>
@@ -392,7 +392,7 @@
 				<point X="-16.97" Y="0" Z="16.97" />
 			</translate>
 			<models>
-				<model file='neptunoLua.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				<model file='neptunoLua.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.7' ambG='0.7' ambB='0.7'/>
 			</models>
 		</group>
 	</group>
@@ -412,7 +412,7 @@
 			</translate>
 			<scale X="8" Y="8" Z="8" />
 			<models>
-				<model file='teapot.3d' />
+				<model file='teapot.3d' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.7' ambG='0.7' ambB='0.7'/>
 			</models>
 		</group>
 	</group>
