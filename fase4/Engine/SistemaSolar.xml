@@ -1,9 +1,8 @@
 <scene>
 	<lights>
-		<light type='POINT' posx='400' posy='400' posz='0' />
+		<light type='POINT' posx='0' posy='400' posz='0' />
 	</lights>
 	<group>
-		<color R='1' G='0.3' B='0' /> 
 		<models>
 			<model file='sol.3d' texture='textSol.jpg'/>
 		</models>
@@ -20,7 +19,6 @@
 			<point X="0" Y="0" Z="165.13" />
 			<point X="-116.76" Y="0" Z="116.76" />
 		</translate>
-		<color R='1' G='0' B='0' />
 		<models>
 			<model file='mercurio.3d' texture='textMercurio.jpg'/>
 		</models>
@@ -37,7 +35,6 @@
 			<point X="0" Y="0" Z="178.62" />
 			<point X="-126.30" Y="0" Z="126.30" />
 		</translate>
-		<color R='1' G='0.85' B='0' />
 		<models>
 			<model file='venus.3d' texture='textVenus.jpg'/>
 		</models>
@@ -54,7 +51,6 @@
 			<point X="0" Y="0" Z="195.3" />
 			<point X="-138.1" Y="0" Z="138.1" />
 		</translate>
-		<color R='0' G='0' B='1' />
 		<models>
 			<model file='terra.3d' texture='textTerra.jpg'/>
 		</models>
@@ -70,7 +66,6 @@
 				<point X="0" Y="0" Z="7" />
 				<point X="-4.95" Y="0" Z="4.95" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='terraLua.3d' texture='textLuaTerra.jpg'/>
 			</models>
@@ -88,7 +83,6 @@
 			<point X="0" Y="0" Z="210.26" />
 			<point X="-148.67" Y="0" Z="148.67" />
 		</translate>
-		<color R='0.55' G='0' B='0' />
 		<models>
 			<model file='marte.3d' texture='textMarte.jpg'/>
 		</models>
@@ -104,7 +98,6 @@
 				<point X="0" Y="0" Z="5" />
 				<point X="-3.54" Y="0" Z="3.54" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='marteLua1.3d' texture='textLua1.jpg'/>
 			</models>
@@ -121,7 +114,6 @@
 				<point X="-5" Y="0" Z="0" />
 				<point X="-3.54" Y="0" Z="-3.54" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='marteLua2.3d' texture='textLua2.jpg'/>
 			</models>
@@ -139,7 +131,6 @@
 			<point X="0" Y="0" Z="277.2" />
 			<point X="-196.01" Y="0" Z="196.01" />
 		</translate>
-		<color R='0.59' G='0.29' B='0' />
 		<models>
 			<model file='jupiter.3d' texture='textJupiter.jpg'/>
 		</models>
@@ -155,7 +146,6 @@
 				<point X="-61" Y="0" Z="0" />
 				<point X="-43.13" Y="0" Z="-43.13" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='jupiterLua1.3d' texture='textLua1.jpg'/>
 			</models>
@@ -172,7 +162,6 @@
 				<point X="0" Y="0" Z="-60" />
 				<point X="42.43" Y="0" Z="-42.43" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='jupiterLua2.3d' texture='textLua2.jpg'/>
 			</models>
@@ -189,7 +178,6 @@
 				<point X="59" Y="0" Z="0" />
 				<point X="41.72" Y="0" Z="41.72" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='jupiterLua3.3d' texture='textLua3.jpg'/>
 			</models>
@@ -206,7 +194,6 @@
 				<point X="0" Y="0" Z="58" />
 				<point X="-41.01" Y="0" Z="41.01" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='jupiterLua4.3d' texture='textLua4.jpg'/>
 			</models>
@@ -224,12 +211,10 @@
 			<point X="430.54" Y="0" Z="0" />
 			<point X="304.44" Y="0" Z="304.44" />
 		</translate>
-		<color R='0.82' G='0.71' B='0.55' />
 		<models>
 			<model file='saturno.3d' texture='textSaturno.jpg'/>
 		</models>
 		<group>
-			<color R='0.93' G='0.91' B='0.67' />
 			<models>
 				<model file='saturnoAnel.3d' texture='textSaturnoAnel.jpg'/>
 			</models>
@@ -246,7 +231,6 @@
 				<point X="87" Y="0" Z="0" />
 				<point X="61.52" Y="0" Z="61.52" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='saturnoLua1.3d' texture='textLua1.jpg'/>
 			</models>
@@ -263,7 +247,6 @@
 				<point X="0" Y="0" Z="84" />
 				<point X="-59.4" Y="0" Z="59.4" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file="saturnoLua2.3d" texture='textLua2.jpg'/>
 			</models>
@@ -280,7 +263,6 @@
 				<point X="-81" Y="0" Z="0" />
 				<point X="-57.28" Y="0" Z="-57.28" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='saturnoLua3.3d' texture='textLua3.jpg'/>
 			</models>
@@ -297,7 +279,6 @@
 				<point X="0" Y="0" Z="-78" />
 				<point X="55.15" Y="0" Z="-55.15" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='saturnoLua4.3d' texture='textLua4.jpg'/>
 			</models>
@@ -314,7 +295,6 @@
 				<point X="-53.03" Y="0" Z="53.03" />
 				<point X="-75" Y="0" Z="0" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='saturnoLua5.3d' texture='textLua2.jpg'/>
 			</models>
@@ -332,7 +312,6 @@
 			<point X="-550.84" Y="0" Z="0" />
 			<point X="-389.5" Y="0" Z="-389.5" />
 		</translate>
-		<color R='0.13' G='0.55' B='0.13' />
 		<models>
 			<model file='urano.3d' texture='textUrano.jpg'/>
 		</models>
@@ -348,7 +327,6 @@
 				<point X="0" Y="0" Z="-26" />
 				<point X="18.38" Y="0" Z="-18.38" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='uranoLua1.3d' texture='textLua2.jpg'/>
 			</models>
@@ -365,7 +343,6 @@
 				<point X="24" Y="0" Z="0" />
 				<point X="16.97" Y="0" Z="16.97" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='uranoLua2.3d' texture='textLua3.jpg'/>
 			</models>
@@ -382,7 +359,6 @@
 				<point X="0" Y="0" Z="22" />
 				<point X="-15.56" Y="0" Z="15.56" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='uranoLua3.3d' texture='textLua4.jpg'/>
 			</models>
@@ -400,7 +376,6 @@
 			<point X="-460.26" Y="0" Z="-460.26" />
 			<point X="0" Y="0" Z="-650.9" />
 		</translate>
-		<color R='0.68' G='0.85' B='0.9' />
 		<models>
 			<model file='neptuno.3d' texture='textNeptuno.jpg'/>
 		</models>
@@ -416,7 +391,6 @@
 				<point X="0" Y="0" Z="24" />
 				<point X="-16.97" Y="0" Z="16.97" />
 			</translate>
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='neptunoLua.3d' texture='textLua3.jpg'/>
 			</models>
@@ -437,7 +411,6 @@
 				<point X="-707.11" Y="0" Z="-707.11" />
 			</translate>
 			<scale X="8" Y="8" Z="8" />
-			<color R='0.5' G='0.5' B='0.5' />
 			<models>
 				<model file='teapot.3d' />
 			</models>
