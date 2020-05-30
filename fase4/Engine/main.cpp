@@ -773,7 +773,7 @@ Função que processa a leitura das luzes
 void processaLights(TiXmlElement* element) {
 	
 	int count = 0;
-	float posx, posy, posz;
+	float posx, posy, posz, type;
 	TiXmlElement* subelement;
 	TiXmlNode* ele = NULL;
 	/* Percorremos cada um dos subelementos 
@@ -787,7 +787,12 @@ void processaLights(TiXmlElement* element) {
 		lights->push_back(posx);
 		lights->push_back(posy);
 		lights->push_back(posz);
-		lights->push_back(1.0f);
+		if (subelement->Attribute("type") == NULL || !strcmp(subelement->Attribute("type"), "POINT"))
+			type = 1.0f;
+		else if (!strcmp(subelement->Attribute("type"), "DIRECTIONAL"))
+			type = 0.0f;
+
+		lights->push_back(type);
 		count++;
 	}
 	numLights = count;
