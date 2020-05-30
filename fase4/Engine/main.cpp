@@ -127,6 +127,16 @@ de models que possuem textura
 */
 int textureModels = 0;
 
+/**
+Variável que guarda as posições das luzes 
+a serem colocadas pelo nosso engine
+*/
+vector<float>* lights;
+
+/* Variável que guarda o número de 
+luzes em vigor */
+int numLights = 0;
+
 
 void buildRotMatrix(float* x, float* y, float* z, float* m) {
 
@@ -757,6 +767,29 @@ void processaGroup(TiXmlElement* element, char** opNames, float** params, ListVe
 	free(localParams);
 }
 
+/**
+Função que processa a leitura das luzes
+*/
+void processaLights(TiXmlElement* element) {
+	
+	int count = 0;
+	float posx, posy, posz;
+	TiXmlElement* subelement;
+	TiXmlNode* ele = NULL;
+	/* Percorremos cada um dos subelementos 
+	para ler as luzes */
+	while ((ele = element->IterateChildren(ele)) && count<8) {
+		subelement = ele->ToElement();
+		(subelement->Attribute("posx") == NULL ? posx = 0 : posx = atof(subelement->Attribute("posx")));
+		(subelement->Attribute("posy") == NULL ? posy = 0 : posy = atof(subelement->Attribute("posy")));
+		(subelement->Attribute("posz") == NULL ? posz = 0 : posz = atof(subelement->Attribute("posz")));
+		lights->push_back(posx);
+		lights->push_back(posy);
+		lights->push_back(posz);
+	}
+	numLights = count;
+}
+
 
 /**
  * Funcao que carrega o nome do ficheiro que se pretende reproduzir a partir do ficheiro XML
@@ -782,6 +815,7 @@ void loadFile() {
 
 	/* Lemos o elemento scene */
 	TiXmlElement* element = doc.FirstChildElement("scene");
+	TiXmlElement* lights;
 	ele = NULL;
 	/*
 	Retirar os nomes do XML e carregar os 
@@ -789,7 +823,65 @@ void loadFile() {
 	estruturas de dados
 	*/
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
+		/* Lemos o elemento "lights" */
+		if(!strcmp(ele->ToElement()->Value(),"lights"))
+			processaLights(ele->ToElement());
 		processaGroup(ele->ToElement(),NULL,NULL,NULL,0);
+	}
+}
+
+/**
+Função que define a cor para uma 
+luz em específico
+*/
+void defineColor(int num) {
+
+	GLfloat dark[4] = { 0.2, 0.2, 0.2, 1.0 };
+	GLfloat white[4] = { 1.0, 1.0, 1.0, 1.0 };
+	switch (num) {
+		case 0: glLightfv(GL_LIGHT0, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT0, GL_SPECULAR, white); break;
+		case 1: glLightfv(GL_LIGHT1, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT1, GL_SPECULAR, white); break;
+		case 2: glLightfv(GL_LIGHT2, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT2, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT2, GL_SPECULAR, white); break;
+		case 3: glLightfv(GL_LIGHT3, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT3, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT3, GL_SPECULAR, white); break;
+		case 4: glLightfv(GL_LIGHT4, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT4, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT4, GL_SPECULAR, white); break;
+		case 5: glLightfv(GL_LIGHT5, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT5, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT5, GL_SPECULAR, white); break;
+		case 6: glLightfv(GL_LIGHT6, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT6, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT6, GL_SPECULAR, white); break;
+		case 7: glLightfv(GL_LIGHT7, GL_AMBIENT, dark);
+				glLightfv(GL_LIGHT7, GL_DIFFUSE, white);
+				glLightfv(GL_LIGHT7, GL_SPECULAR, white); break;
+	}
+}
+
+/**
+Função que faz enable para suportar as luzes
+*/
+void enableLights() {
+
+	for (int i = 0; i < numLights; i++) {
+		switch (i) {
+			case 0: glEnable(GL_LIGHT0); defineColor(i); break;
+			case 1: glEnable(GL_LIGHT1); defineColor(i); break;
+			case 2: glEnable(GL_LIGHT2); defineColor(i); break;
+			case 3: glEnable(GL_LIGHT3); defineColor(i); break;
+			case 4: glEnable(GL_LIGHT4); defineColor(i); break;
+			case 5: glEnable(GL_LIGHT5); defineColor(i); break;
+			case 6: glEnable(GL_LIGHT6); defineColor(i); break;
+			case 7: glEnable(GL_LIGHT7); defineColor(i); break;
+		}
 	}
 }
 
@@ -811,19 +903,21 @@ void prepareData() {
 	vector<float>* vec;
 	vector<float>* norm;
 	vector<float>* texture;
+	/* Ativamos as luzes */
+	enableLights();
+
 	/* Criamos os vbo's para os vértices e 
 	para as normais */
 	glGenBuffers(n_models, vertices);
 	glGenBuffers(n_models, normals);
 	glGenBuffers(textureModels, texCoord);
-
 	/* Passamos os vetores para 
 	a memória gráfica */
 	for (int i = 0; i < groups; i++, vboIndex++) {
 		/* Percorremos os models de cada group */
 		size = models[i]->size();
 		numVerticess[vboIndex] = size;
-		/* Percorremos cada um dos models 
+		/* Percorremos cada um dos models
 		dentro do respetivo group */
 		for (int j = 0; j < size; j++) {
 			vec = getVertices(models[i]->at(j));
@@ -1026,6 +1120,38 @@ void drawRotas(int group, int indiceOP) {
 }
 
 /**
+Método que dado um número de light nos devolve 
+as 3 coordenadas para a posição da mesma
+*/
+float* getLightPosition(int num) {
+
+	int index = 3 * num;
+	float* coord = (float*)malloc(sizeof(float) * 3);
+	coord[0] = lights->at(index);
+	coord[1] = lights->at(index + 1);
+	coord[2] = lights->at(index + 2);
+	return coord;
+}
+
+/**
+Função que permite posicionar cada 
+uma das luzes
+*/
+void putLight(int num, float* pos) {
+
+	switch (num) {
+		case 0: glLightfv(GL_LIGHT0, GL_POSITION, pos); break;
+		case 1: glLightfv(GL_LIGHT1, GL_POSITION, pos); break;
+		case 2: glLightfv(GL_LIGHT2, GL_POSITION, pos); break;
+		case 3: glLightfv(GL_LIGHT3, GL_POSITION, pos); break;
+		case 4: glLightfv(GL_LIGHT4, GL_POSITION, pos); break;
+		case 5: glLightfv(GL_LIGHT5, GL_POSITION, pos); break;
+		case 6: glLightfv(GL_LIGHT6, GL_POSITION, pos); break;
+		case 7: glLightfv(GL_LIGHT7, GL_POSITION, pos); break;
+	}
+}
+
+/**
 Função que trata das transformações
 geométricas para um determinado group
 tendo em conta o instante. Para além disso 
@@ -1034,11 +1160,18 @@ t
 */
 void reposicionaModels(float gt) {
 
+	float* lightPosition;
 	int vboIndex = 0, nModels;
 	float matrix[4][4];
 	float position[3], deriv[3];
 	float diffuse[4], specular[4], emission[4], ambient[4]; int shineness;
 	vector<Model>* group_models;
+	/* Colocamos cada uma das luzes */
+	for (int i = 0; i < numLights; i++) {
+		lightPosition = getLightPosition(i);
+		putLight(i, lightPosition);
+		free(lightPosition);
+	}
 	/* Percorremos cada um dos groups */
 	for (int i = 0; i < size; i++) {
 		glPushMatrix();
