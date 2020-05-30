@@ -440,7 +440,7 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 	float x, y, z;
 
 	/* Definição do número de vértices */
-	fprintf(fp, "%d\n", 2 * 3 * slices );
+	fprintf(fp, "%d\n", 3*(2 * 3 * slices) );
 
 	// Desenhar os circulos de cima e de baixo
 	for (int j = 0; j < slices; j++) {
@@ -675,7 +675,7 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 
 	// Numero de Vertices = 2*(numPatches * tesselationlevel^2 * 3Vertices * 2triangulos)
 	// 2x por causa das normais
-	int numVertices = 2*(numP * tesselevel * tesselevel * 3 * 2);
+	int numVertices = 3*(numP * (tesselevel-1) * (tesselevel-1) * 3 * 2);
 	// Variavel usada para a normal a um ponto
 	float* normal = (float*)malloc(sizeof(float) * NUM_COORDENADAS);
 	float x, y, z;
