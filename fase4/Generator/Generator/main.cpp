@@ -465,6 +465,12 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Textura
+		x = 0.0f;
+		y = 0.0f;
+
+		fprintf(fp, "%f %f\n", x, y);
+
 		// Posicao
 		x = (radius2 * sin(angleA));
 		y = 0.0f;
@@ -479,6 +485,12 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Textura
+		x = 1.0f;
+		y = 0.0f;
+
+		fprintf(fp, "%f %f\n", x, y);
+
 		// Posicao
 		x = (radius1 * sin(nextAngle));
 		y = 0.0f;
@@ -492,6 +504,12 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 		z = 0.0f;
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		// Textura
+		x = 1.0f;
+		y = 1.0f;
+
+		fprintf(fp, "%f %f\n", x, y);
 
 		// Segundo triangulo
 
@@ -509,6 +527,12 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Textura
+		x = 1.0f;
+		y = 0.0f;
+
+		fprintf(fp, "%f %f\n", x, y);
+
 		// Posicao
 		x = (radius2 * sin(nextAngle));
 		y = 0.0f;
@@ -523,6 +547,12 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
 
+		// Textura
+		x = 1.0f;
+		y = 1.0f;
+
+		fprintf(fp, "%f %f\n", x, y);
+
 		// Posicao
 		x = (radius1 * sin(nextAngle));
 		y = 0.0f;
@@ -536,6 +566,12 @@ void drawCrown(FILE* fp, int radius1, int radius2, int slices) {
 		z = 0.0f;
 
 		fprintf(fp, "%f %f %f\n", x, y, z);
+
+		// Textura
+		x = 0.0f;
+		y = 1.0f;
+
+		fprintf(fp, "%f %f\n", x, y);
 	}
 }
 
@@ -666,6 +702,13 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 
 				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
 
+				// Textura
+
+				x = 0.0f;
+				y = 1.0f;
+
+				fprintf(fp, "%f %f\n", x, y);
+
 				//Posicao
 				x = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][0];
 				y = objectVertices[numoldV + (j + 1) * tesselevel + (k + 1)][1];
@@ -678,6 +721,13 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 
 				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
 
+				// Textura
+
+				x = 1.0f;
+				y = 0.0f;
+
+				fprintf(fp, "%f %f\n", x, y);
+
 				// Posicao
 				x = objectVertices[numoldV + j * tesselevel + (k + 1)][0];
 				y = objectVertices[numoldV + j * tesselevel + (k + 1)][1];
@@ -689,6 +739,12 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 				normalize(normal);
 
 				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
+
+				// Textura
+				x = 1.0f;
+				y = 1.0f;
+
+				fprintf(fp, "%f %f\n", x, y);
 
 				// Vértices do segundo triangulo do quadrado respetivo
 				//Posicao
@@ -703,6 +759,12 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 
 				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
 
+				// Textura
+				x = 1.0f;
+				y = 0.0f;
+
+				fprintf(fp, "%f %f\n", x, y);
+
 				// Posicao
 				x = objectVertices[numoldV + j * tesselevel + k][0];
 				y = objectVertices[numoldV + j * tesselevel + k][1];
@@ -715,6 +777,12 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 
 				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
 
+				// Textura
+				x = 0.0f;
+				y = 1.0f;
+
+				fprintf(fp, "%f %f\n", x, y);
+
 				// Posicao
 				x = objectVertices[numoldV + (j + 1) * tesselevel + k][0];
 				y = objectVertices[numoldV + (j + 1) * tesselevel + k][1];
@@ -726,6 +794,12 @@ void drawObjectBP(FILE* fp, int tesselevel) {
 				normalize(normal);
 
 				fprintf(fp, "%f %f %f\n", normal[0], normal[1], normal[2]);
+
+				// Textura
+				x = 0.0f;
+				y = 0.0f;
+
+				fprintf(fp, "%f %f\n", x, y);
 			}
 		}
 	}
