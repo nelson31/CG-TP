@@ -487,7 +487,7 @@ void processaModels(TiXmlElement* element, Group g) {
 	vector<float>* points;
 	vector<float>* normals;
 	vector<float>* textures;
-	int id;
+	int id = -1;
 	/* Antes de mais vamos iterar */
 	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
 		subelement = ele->ToElement();
@@ -527,39 +527,38 @@ void processaModels(TiXmlElement* element, Group g) {
 			imagem para memória gráfica e adicionamos ao group em 
 			questão */
 			if (subelement->Attribute("texture") != NULL) {
+				/* Carregamos a imagem da texture */
 				id = loadTexture(subelement->Attribute("texture"));
 				printf("Nova imagem de textura carregada: %s\n", subelement->Attribute("texture"));
-				/* Carregamos a imagem da texture */
-				m = newTextureModel(points, normals, id, textures);
 				/* Incrementamos ao número de models que 
 				possuem textura */
 				textureModels++;
 			}
-			else {
-				(subelement->Attribute("diffR") == NULL) ? diffuse[0] = 0.0f : diffuse[0] = atof(subelement->Attribute("diffR"));
-				(subelement->Attribute("diffG") == NULL) ? diffuse[1] = 0.0f : diffuse[1] = atof(subelement->Attribute("diffG"));
-				(subelement->Attribute("diffB") == NULL) ? diffuse[2] = 0.0f : diffuse[2] = atof(subelement->Attribute("diffB"));
-				diffuse[3] = 1.0f;
+			(subelement->Attribute("diffR") == NULL) ? diffuse[0] = 0.0f : diffuse[0] = atof(subelement->Attribute("diffR"));
+			(subelement->Attribute("diffG") == NULL) ? diffuse[1] = 0.0f : diffuse[1] = atof(subelement->Attribute("diffG"));
+			(subelement->Attribute("diffB") == NULL) ? diffuse[2] = 0.0f : diffuse[2] = atof(subelement->Attribute("diffB"));
+			diffuse[3] = 1.0f;
 
-				(subelement->Attribute("specR") == NULL) ? specular[0] = 0.0f : specular[0] = atof(subelement->Attribute("specR"));
-				(subelement->Attribute("specG") == NULL) ? specular[1] = 0.0f : specular[1] = atof(subelement->Attribute("specG"));
-				(subelement->Attribute("specB") == NULL) ? specular[2] = 0.0f : specular[2] = atof(subelement->Attribute("specB"));
-				specular[3] = 1.0f;
+			(subelement->Attribute("specR") == NULL) ? specular[0] = 0.0f : specular[0] = atof(subelement->Attribute("specR"));
+			(subelement->Attribute("specG") == NULL) ? specular[1] = 0.0f : specular[1] = atof(subelement->Attribute("specG"));
+			(subelement->Attribute("specB") == NULL) ? specular[2] = 0.0f : specular[2] = atof(subelement->Attribute("specB"));
+			specular[3] = 1.0f;
 
-				(subelement->Attribute("ambR") == NULL) ? ambient[0] = 0.0f : ambient[0] = atof(subelement->Attribute("ambR"));
-				(subelement->Attribute("ambG") == NULL) ? ambient[1] = 0.0f : ambient[1] = atof(subelement->Attribute("ambG"));
-				(subelement->Attribute("ambB") == NULL) ? ambient[2] = 0.0f : ambient[2] = atof(subelement->Attribute("ambB"));
-				ambient[3] = 1.0f;
+			(subelement->Attribute("ambR") == NULL) ? ambient[0] = 0.0f : ambient[0] = atof(subelement->Attribute("ambR"));
+			(subelement->Attribute("ambG") == NULL) ? ambient[1] = 0.0f : ambient[1] = atof(subelement->Attribute("ambG"));
+			(subelement->Attribute("ambB") == NULL) ? ambient[2] = 0.0f : ambient[2] = atof(subelement->Attribute("ambB"));
+			ambient[3] = 1.0f;
 
-				(subelement->Attribute("emisR") == NULL) ? emission[0] = 0.0f : emission[0] = atof(subelement->Attribute("emisR"));
-				(subelement->Attribute("emisG") == NULL) ? emission[1] = 0.0f : emission[1] = atof(subelement->Attribute("emisG"));
-				(subelement->Attribute("emisB") == NULL) ? emission[2] = 0.0f : emission[2] = atof(subelement->Attribute("emisB"));
-				emission[3] = 1.0f;
+			(subelement->Attribute("emisR") == NULL) ? emission[0] = 0.0f : emission[0] = atof(subelement->Attribute("emisR"));
+			(subelement->Attribute("emisG") == NULL) ? emission[1] = 0.0f : emission[1] = atof(subelement->Attribute("emisG"));
+			(subelement->Attribute("emisB") == NULL) ? emission[2] = 0.0f : emission[2] = atof(subelement->Attribute("emisB"));
+			emission[3] = 1.0f;
 
-				(subelement->Attribute("shineness") == NULL) ? shineness = 128 : shineness = atof(subelement->Attribute("shineness"));
+			(subelement->Attribute("shineness") == NULL) ? shineness = 128 : shineness = atof(subelement->Attribute("shineness"));
 
-				m = newMaterialModel(points, normals, diffuse, specular, ambient, emission, shineness);
-			}
+			/* Criamos o novo modelo */
+			m = newModel(points, normals, id, textures, diffuse, specular, ambient, emission, shineness);
+
 			/* Adicionamos o model ao group */
 			addModel(g, m);
 
@@ -1117,7 +1116,12 @@ void drawRotas(int group, int indiceOP) {
 		referenciada para a operação respetiva */
 		if (groupOpToPercurso[i][0] == group && groupOpToPercurso[i][1] == indiceOP) {
 
-			glColor3f(1.0f, 1.0f, 1.0f);
+			float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			float black[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+			glMaterialfv(GL_FRONT, GL_AMBIENT, white);
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
+			glMaterialfv(GL_FRONT, GL_SPECULAR, black);
+			glMaterialfv(GL_FRONT, GL_EMISSION, black);
 			/* Desenhamos os respetivos vértices */
 			glBindBuffer(GL_ARRAY_BUFFER, vertPercursos[i]);
 			glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -1239,20 +1243,18 @@ void reposicionaModels(float gt) {
 		for (int j = 0; j < nModels; j++, vboIndex++) {
 			/* Estamos perante uma compisição 
 			material */
-			if (!hasTexture(group_models->at(j))) {
-				getMaterialInfo(group_models->at(j), diffuse, specular, ambient, emission, &shineness);
-				/* Definimos o material para o modelo */
-				glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-				glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-				glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-				glMaterialfv(GL_FRONT, GL_EMISSION, emission);
-				glMaterialf(GL_FRONT, GL_SHININESS, shineness);
-			}
-			/* Estamos perante uma composição do 
-			tipo Texture */
-			else {
+			getMaterialInfo(group_models->at(j), diffuse, specular, ambient, emission, &shineness);
+			/* Definimos o material para o modelo */
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+			glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+			glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+			glMaterialfv(GL_FRONT, GL_EMISSION, emission);
+			glMaterialf(GL_FRONT, GL_SHININESS, shineness);
+			/* Estamos perante um model que possui 
+			um textura associada */
+			if (hasTexture(group_models->at(j))) {
 				float white[4] = { 1,1,1,1 };
-				glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+				//glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
 				/* Associamos a respetiva imagem ao model */
 				glBindTexture(GL_TEXTURE_2D, getTextureId(group_models->at(j)));
 

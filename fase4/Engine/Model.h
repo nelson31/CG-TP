@@ -10,17 +10,11 @@ todas as informações acerca de um model
 typedef struct model* Model;
 
 /**
-Função que permite criar uma nova estrutura de dados
-do tipo model cuja composição é material
+Função que permite criar uma nova estrutura de
+dados do tipo Model
 */
-Model newMaterialModel(vector<float>* vertices, vector<float>* normals, float difuse[], float specular[],
+Model newModel(vector<float>* vertices, vector<float>* normals, int id, vector<float>* texCoord, float difuse[], float specular[],
 	float ambient[], float emission[], int shineness);
-
-/**
-Função que permite criar uma nova estrutura de dados do
-tipo model cuja composição é texture
-*/
-Model newTextureModel(vector<float>* vertices, vector<float>* normals, int id, vector<float>* texCoord);
 
 /**
 Função que nos diz se um dado model é

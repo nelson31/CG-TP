@@ -50,7 +50,7 @@ typedef struct material {
 Definição de uma estrutura de dados que 
 define a composição do model
 */
-typedef union composicao {
+typedef struct composicao {
 
 	Material mat;
 	Texture tex;
@@ -63,7 +63,6 @@ representa um model a ser desenhado
 struct model {
 
 	composicao c;
-	int type;
 	/* Estrutura que guarda os vértices 
 	do model a ser desenhado */
 	vector<float>* vertices;
@@ -84,6 +83,7 @@ Material newMaterial(float difuse[], float specular[], float ambient[], float em
 		ret->diffuse[i] = difuse[i];
 		ret->specular[i] = specular[i];
 		ret->emission[i] = emission[i];
+		ret->ambient[i] = ambient[i];
 	}
 	ret->shineness = shineness;
 	return ret;
@@ -102,29 +102,15 @@ Texture newTexture(int id, vector<float>* textureCoord) {
 }
 
 /**
-Função que permite criar uma nova estrutura de dados 
-do tipo model cuja composição é material
+Função que permite criar uma nova estrutura de 
+dados do tipo Model
 */
-Model newMaterialModel(vector<float>* vertices, vector<float>* normals, float difuse[], float specular[], 
+Model newModel(vector<float>* vertices, vector<float>* normals, int id, vector<float>* texCoord, float difuse[], float specular[],
 	float ambient[], float emission[], int shineness) {
 
 	Model m = (Model)malloc(sizeof(struct model));
 	m->c.mat = newMaterial(difuse, specular, ambient, emission, shineness);
-	m->type = MATERIAL;
-	m->vertices = vertices;
-	m->normals = normals;
-	return m;
-}
-
-/**
-Função que permite criar uma nova estrutura de dados do 
-tipo model cuja composição é texture
-*/
-Model newTextureModel(vector<float>* vertices, vector<float>* normals, int id, vector<float>* texCoord) {
-
-	Model m = (Model)malloc(sizeof(struct model));
 	m->c.tex = newTexture(id, texCoord);
-	m->type = TEXTURE;
 	m->vertices = vertices;
 	m->normals = normals;
 	return m;
@@ -136,10 +122,7 @@ definido por uma textura
 */
 bool hasTexture(Model m) {
 
-	if (m->type == TEXTURE)
-		return true;
-	else
-		return false;
+	return (m->c.tex->id > 0);
 }
 
 /**
