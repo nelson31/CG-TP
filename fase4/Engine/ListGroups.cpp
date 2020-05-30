@@ -152,12 +152,13 @@ ListVertices** getCatmollPoints(ListGroups lg) {
 	return lv;
 }
 
-
+/*
 void printOpsLG(ListGroups lg) {
 
 	for (int i = 0; i < lg->numGroups; i++)
 		printGroupOps(lg->groups[i]);
 }
+*/
 
 /**
 Função que retorna o número total de modelos 
@@ -167,7 +168,7 @@ ListGroups
 int getNumModelsTotal(ListGroups lg) {
 
 	int num = 0;
-	for (int i = 0; i < lg->size; i++)
+	for (int i = 0; i < lg->numGroups; i++)
 		num += getNumModels(lg->groups[i]);
 	return num;
 }

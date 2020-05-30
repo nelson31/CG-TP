@@ -417,6 +417,51 @@ void processaScale(Group g, char* tagName, float x, float y, float z) {
 }
 
 /**
+Método que permite carregar uma
+textura para memória gráfica
+*/
+int loadTexture(std::string s) {
+
+	unsigned int t, tw, th;
+	unsigned char* texData;
+	unsigned int texID;
+
+	// Iniciar o DevIL
+	ilInit();
+	// Colocar a origem da textura no canto inferior esquerdo
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+	// Carregar a textura para a memoria
+	ilGenImages(1, &t);
+	ilBindImage(t);
+	ilLoadImage((ILstring)s.c_str());
+	tw = ilGetInteger(IL_IMAGE_WIDTH);
+	th = ilGetInteger(IL_IMAGE_HEIGHT);
+	// Assegurar que a textura se encontra em RGBA(Red,Green,Blue,Alpha)
+	// com um byte (0-255) por componente
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	texData = ilGetData();
+
+	// Gerar a textura para a placa gráfica
+	glGenTextures(1, &texID);
+
+	glBindTexture(GL_TEXTURE_2D, texID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	// Upload dos dados da imagem
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tw, th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return texID;
+}
+
+/**
 Método que adiciona um modelo ao grupo 
 ao qual é passado por parâmetro para 
 ser desenhado
@@ -539,51 +584,6 @@ void addOperacoes(Group g, char** opNames, float** params, ListVertices* catmoll
 			addDynamicTranslation(g, opNames[i], params[i], catmollpoints[i]);
 		//printf("Parametros: (%f,%f,%f,%f,%f)\n", params[i][0], params[i][1], params[i][2], params[i][3], params[i][4]);
 	}
-}
-
-/**
-Método que permite carregar uma 
-textura para memória gráfica
-*/
-int loadTexture(std::string s) {
-
-	unsigned int t,tw,th;
-	unsigned char *texData;
-	unsigned int texID;
-
-	// Iniciar o DevIL
-	ilInit();
-	// Colocar a origem da textura no canto inferior esquerdo
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
-	// Carregar a textura para a memoria
-	ilGenImages(1,&t);
-	ilBindImage(t);
-	ilLoadImage((ILstring)s.c_str());
-	tw = ilGetInteger(IL_IMAGE_WIDTH);
-	th = ilGetInteger(IL_IMAGE_HEIGHT);
-	// Assegurar que a textura se encontra em RGBA(Red,Green,Blue,Alpha)
-	// com um byte (0-255) por componente
-	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-	texData = ilGetData();
-
-	// Gerar a textura para a placa gráfica
-	glGenTextures(1,&texID);
-	
-	glBindTexture(GL_TEXTURE_2D,texID);
-	glTexParameteri(GL_TEXTURE_2D,	GL_TEXTURE_WRAP_S,		GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D,	GL_TEXTURE_WRAP_T,		GL_REPEAT);
-
-	glTexParameteri(GL_TEXTURE_2D,	GL_TEXTURE_MAG_FILTER,   	GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,	GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	
-	// Upload dos dados da imagem
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tw, th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	return texID;
 }
 
 /**
@@ -799,6 +799,7 @@ void processaLights(TiXmlElement* element) {
 */
 void loadFile() {
 
+	lights = new vector<float>();
 	/* Inicializamos a 
 	lista de groups */
 	lg = newListGroups();
@@ -893,8 +894,9 @@ cada grupo é preparado um vbo diferente
 void prepareData() {
 
 	int size = 0, vboIndex = 0, texture_models_id = 0, id_texture;
-	int groups = numGroups(lg), int n_models = getNumModelsTotal(lg);
+	int groups = numGroups(lg), n_models = getNumModelsTotal(lg);
 	vertices = (GLuint*)malloc(sizeof(GLuint)*n_models);
+	normals = (GLuint*)malloc(sizeof(GLuint) * n_models);
 	numVerticess = (GLuint*)malloc(sizeof(GLuint) * n_models);
 	texCoord = (GLuint*)malloc(sizeof(GLuint) * textureModels);
 	/* Sizes é parâmetro de saida */

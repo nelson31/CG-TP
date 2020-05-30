@@ -2,6 +2,7 @@
 #define __LISTGROUPS_H__
 
 #include "groupImpl.h"
+#include "Model.h"
 using std::vector;
 
 /**
@@ -66,7 +67,7 @@ ListVertices** getCatmollPoints(ListGroups lg);
 */
 Group getGroup(ListGroups lg, int i);
 
-void printOpsLG(ListGroups lg);
+//void printOpsLG(ListGroups lg);
 
 /**
 Função que retorna o número total de modelos

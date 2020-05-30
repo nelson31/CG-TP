@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "ListVertices.h"
 #include <vector>
+#include "Model.h"
 using std::vector;
 
 /* Máximo do tamanho do array
