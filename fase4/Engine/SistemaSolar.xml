@@ -19,9 +19,12 @@
 			<point X="0" Y="0" Z="165.13" />
 			<point X="-116.76" Y="0" Z="116.76" />
 		</translate>
-		<models>
-			<model file='mercurio.3d' texture='textMercurio.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
+		<group>
+			<rotate time=24 axisX=0 axisY=1 axisZ=0 />
+			<models>
+				<model file='mercurio.3d' texture='textMercurio.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+			</models>
+		</group>
 	</group>
 	<group>
 		<rotate angle="3.39" axisX="0" axisY="0" axisZ="1" />
@@ -35,9 +38,12 @@
 			<point X="0" Y="0" Z="178.62" />
 			<point X="-126.30" Y="0" Z="126.30" />
 		</translate>
-		<models>
-			<model file='venus.3d' texture='textVenus.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
+		<group>
+			<rotate time=100 axisX=0 axisY=1 axisZ=0 />
+			<models>
+				<model file='venus.3d' texture='textVenus.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+			</models>
+		</group>
 	</group>
 	<group>
 		<rotate angle="0.5" axisX="1" axisY="0" axisZ="0" />
@@ -51,24 +57,29 @@
 			<point X="0" Y="0" Z="195.3" />
 			<point X="-138.1" Y="0" Z="138.1" />
 		</translate>
-		<models>
-			<model file='terra.3d' texture='textTerra.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
 		<group>
-			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
-			<translate time="7.84" >
-				<point X="-7" Y="0" Z="0" />
-				<point X="-4.95" Y="0" Z="-4.95" />
-				<point X="0" Y="0" Z="-7" />
-				<point X="4.95" Y="0" Z="-4.95" />
-				<point X="7" Y="0" Z="0" />
-				<point X="4.95" Y="0" Z="4.95" />
-				<point X="0" Y="0" Z="7" />
-				<point X="-4.95" Y="0" Z="4.95" />
-			</translate>
-			<models>
-				<model file='terraLua.3d' texture='textLuaTerra.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
+			<group>
+				<rotate time=10 axisX=0 axisY=1 axisZ=0 />
+				<models>
+					<model file='terra.3d' texture='textTerra.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+				<translate time="7.84" >
+					<point X="-7" Y="0" Z="0" />
+					<point X="-4.95" Y="0" Z="-4.95" />
+					<point X="0" Y="0" Z="-7" />
+					<point X="4.95" Y="0" Z="-4.95" />
+					<point X="7" Y="0" Z="0" />
+					<point X="4.95" Y="0" Z="4.95" />
+					<point X="0" Y="0" Z="7" />
+					<point X="-4.95" Y="0" Z="4.95" />
+				</translate>
+				<models>
+					<model file='terraLua.3d' texture='textLuaTerra.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
 		</group>
 	</group>
 	<group>
@@ -83,40 +94,45 @@
 			<point X="0" Y="0" Z="210.26" />
 			<point X="-148.67" Y="0" Z="148.67" />
 		</translate>
-		<models>
-			<model file='marte.3d' texture='textMarte.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
 		<group>
-			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="-5" Y="0" Z="0" />
-				<point X="-3.54" Y="0" Z="-3.54" />
-				<point X="0" Y="0" Z="-5" />
-				<point X="3.54" Y="0" Z="-3.54" />
-				<point X="5" Y="0" Z="0" />
-				<point X="3.54" Y="0" Z="3.54" />
-				<point X="0" Y="0" Z="5" />
-				<point X="-3.54" Y="0" Z="3.54" />
-			</translate>
-			<models>
-				<model file='marteLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="15" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="0" Y="0" Z="-5" />
-				<point X="3.54" Y="0" Z="-3.54" />
-				<point X="5" Y="0" Z="0" />
-				<point X="3.54" Y="0" Z="3.54" />
-				<point X="0" Y="0" Z="5" />
-				<point X="-3.54" Y="0" Z="3.54" />
-				<point X="-5" Y="0" Z="0" />
-				<point X="-3.54" Y="0" Z="-3.54" />
-			</translate>
-			<models>
-				<model file='marteLua2.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
+			<group>
+				<rotate time=11 axisX=0 axisY=1 axisZ=0 />
+				<models>
+					<model file='marte.3d' texture='textMarte.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="-5" Y="0" Z="0" />
+					<point X="-3.54" Y="0" Z="-3.54" />
+					<point X="0" Y="0" Z="-5" />
+					<point X="3.54" Y="0" Z="-3.54" />
+					<point X="5" Y="0" Z="0" />
+					<point X="3.54" Y="0" Z="3.54" />
+					<point X="0" Y="0" Z="5" />
+					<point X="-3.54" Y="0" Z="3.54" />
+				</translate>
+				<models>
+					<model file='marteLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="15" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="0" Y="0" Z="-5" />
+					<point X="3.54" Y="0" Z="-3.54" />
+					<point X="5" Y="0" Z="0" />
+					<point X="3.54" Y="0" Z="3.54" />
+					<point X="0" Y="0" Z="5" />
+					<point X="-3.54" Y="0" Z="3.54" />
+					<point X="-5" Y="0" Z="0" />
+					<point X="-3.54" Y="0" Z="-3.54" />
+				</translate>
+				<models>
+					<model file='marteLua2.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
 		</group>
 	</group>
 	<group>
@@ -131,72 +147,77 @@
 			<point X="0" Y="0" Z="277.2" />
 			<point X="-196.01" Y="0" Z="196.01" />
 		</translate>
-		<models>
-			<model file='jupiter.3d' texture='textJupiter.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
 		<group>
-			<rotate angle="3" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="0" Y="0" Z="-61" />
-				<point X="43.13" Y="0" Z="-43.13" />
-				<point X="61" Y="0" Z="0" />
-				<point X="43.13" Y="0" Z="43.13" />
-				<point X="0" Y="0" Z="61" />
-				<point X="-43.13" Y="0" Z="43.13" />
-				<point X="-61" Y="0" Z="0" />
-				<point X="-43.13" Y="0" Z="-43.13" />
-			</translate>
-			<models>
-				<model file='jupiterLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="9" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="60" Y="0" Z="0" />
-				<point X="42.43" Y="0" Z="42.43" />
-				<point X="0" Y="0" Z="60" />
-				<point X="-42.43" Y="0" Z="42.43" />
-				<point X="-60" Y="0" Z="0" />
-				<point X="-42.43" Y="0" Z="-42.43" />
-				<point X="0" Y="0" Z="-60" />
-				<point X="42.43" Y="0" Z="-42.43" />
-			</translate>
-			<models>
-				<model file='jupiterLua2.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="0" Y="0" Z="59" />
-				<point X="-41.72" Y="0" Z="41.72" />
-				<point X="-59" Y="0" Z="0" />
-				<point X="-41.72" Y="0" Z="-41.72" />
-				<point X="0" Y="0" Z="-59" />
-				<point X="41.72" Y="0" Z="-41.72" />
-				<point X="59" Y="0" Z="0" />
-				<point X="41.72" Y="0" Z="41.72" />
-			</translate>
-			<models>
-				<model file='jupiterLua3.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="15" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="-58" Y="0" Z="0" />
-				<point X="-41.01" Y="0" Z="-41.01" />
-				<point X="0" Y="0" Z="-58" />
-				<point X="41.01" Y="0" Z="-41.01" />
-				<point X="58" Y="0" Z="0" />
-				<point X="41.01" Y="0" Z="41.01" />
-				<point X="0" Y="0" Z="58" />
-				<point X="-41.01" Y="0" Z="41.01" />
-			</translate>
-			<models>
-				<model file='jupiterLua4.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
+			<group>
+				<rotate time=5 axisX=0 axisY=1 axisZ=0 />
+				<models>
+					<model file='jupiter.3d' texture='textJupiter.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="3" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="0" Y="0" Z="-61" />
+					<point X="43.13" Y="0" Z="-43.13" />
+					<point X="61" Y="0" Z="0" />
+					<point X="43.13" Y="0" Z="43.13" />
+					<point X="0" Y="0" Z="61" />
+					<point X="-43.13" Y="0" Z="43.13" />
+					<point X="-61" Y="0" Z="0" />
+					<point X="-43.13" Y="0" Z="-43.13" />
+				</translate>
+				<models>
+					<model file='jupiterLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="9" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="60" Y="0" Z="0" />
+					<point X="42.43" Y="0" Z="42.43" />
+					<point X="0" Y="0" Z="60" />
+					<point X="-42.43" Y="0" Z="42.43" />
+					<point X="-60" Y="0" Z="0" />
+					<point X="-42.43" Y="0" Z="-42.43" />
+					<point X="0" Y="0" Z="-60" />
+					<point X="42.43" Y="0" Z="-42.43" />
+				</translate>
+				<models>
+					<model file='jupiterLua2.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="0" Y="0" Z="59" />
+					<point X="-41.72" Y="0" Z="41.72" />
+					<point X="-59" Y="0" Z="0" />
+					<point X="-41.72" Y="0" Z="-41.72" />
+					<point X="0" Y="0" Z="-59" />
+					<point X="41.72" Y="0" Z="-41.72" />
+					<point X="59" Y="0" Z="0" />
+					<point X="41.72" Y="0" Z="41.72" />
+				</translate>
+				<models>
+					<model file='jupiterLua3.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="15" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="-58" Y="0" Z="0" />
+					<point X="-41.01" Y="0" Z="-41.01" />
+					<point X="0" Y="0" Z="-58" />
+					<point X="41.01" Y="0" Z="-41.01" />
+					<point X="58" Y="0" Z="0" />
+					<point X="41.01" Y="0" Z="41.01" />
+					<point X="0" Y="0" Z="58" />
+					<point X="-41.01" Y="0" Z="41.01" />
+				</translate>
+				<models>
+					<model file='jupiterLua4.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
 		</group>
 	</group>
 	<group>
@@ -211,93 +232,99 @@
 			<point X="430.54" Y="0" Z="0" />
 			<point X="304.44" Y="0" Z="304.44" />
 		</translate>
-		<models>
-			<model file='saturno.3d' texture='textSaturno.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
 		<group>
-			<models>
-				<model file='saturnoAnel.3d' texture='textSaturnoAnel.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.4' ambG='0.4' ambB='0.4'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="0" Y="0" Z="87" />
-				<point X="-61.52" Y="0" Z="61.52" />
-				<point X="-87" Y="0" Z="0" />
-				<point X="-61.52" Y="0" Z="-61.52" />
-				<point X="0" Y="0" Z="-87" />
-				<point X="61.52" Y="0" Z="-61.52" />
-				<point X="87" Y="0" Z="0" />
-				<point X="61.52" Y="0" Z="61.52" />
-			</translate>
-			<models>
-				<model file='saturnoLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="13" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="-84" Y="0" Z="0" />
-				<point X="-59.4" Y="0" Z="-59.4" />
-				<point X="0" Y="0" Z="-84" />
-				<point X="59.4" Y="0" Z="-59.4" />
-				<point X="84" Y="0" Z="0" />
-				<point X="59.4" Y="0" Z="59.4" />
-				<point X="0" Y="0" Z="84" />
-				<point X="-59.4" Y="0" Z="59.4" />
-			</translate>
-			<models>
-				<model file="saturnoLua2.3d" texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="7" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="0" Y="0" Z="-81" />
-				<point X="57.28" Y="0" Z="-57.28" />
-				<point X="81" Y="0" Z="0" />
-				<point X="57.28" Y="0" Z="57.28" />
-				<point X="0" Y="0" Z="81" />
-				<point X="-57.28" Y="0" Z="57.28" />
-				<point X="-81" Y="0" Z="0" />
-				<point X="-57.28" Y="0" Z="-57.28" />
-			</translate>
-			<models>
-				<model file='saturnoLua3.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="17" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="78" Y="0" Z="0" />
-				<point X="55.15" Y="0" Z="55.15" />
-				<point X="0" Y="0" Z="78" />
-				<point X="-55.15" Y="0" Z="55.15" />
-				<point X="-78" Y="0" Z="0" />
-				<point X="-55.15" Y="0" Z="-55.15" />
-				<point X="0" Y="0" Z="-78" />
-				<point X="55.15" Y="0" Z="-55.15" />
-			</translate>
-			<models>
-				<model file='saturnoLua4.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="3" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="-53.03" Y="0" Z="-53.03" />
-				<point X="0" Y="0" Z="-75" />
-				<point X="53.03" Y="0" Z="-53.03" />
-				<point X="75" Y="0" Z="0" />
-				<point X="53.03" Y="0" Z="53.03" />
-				<point X="0" Y="0" Z="75" />
-				<point X="-53.03" Y="0" Z="53.03" />
-				<point X="-75" Y="0" Z="0" />
-			</translate>
-			<models>
-				<model file='saturnoLua5.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
+			<group>
+				<rotate time=6 axisX=0 axisY=1 axisZ=0 />
+				<models>
+					<model file='saturno.3d' texture='textSaturno.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="10.49" axisX="1" axisY="0" axisZ="0" />
+				<models>
+					<model file='saturnoAnel.3d' texture='textSaturnoAnel.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.4' ambG='0.4' ambB='0.4'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="5" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="0" Y="0" Z="87" />
+					<point X="-61.52" Y="0" Z="61.52" />
+					<point X="-87" Y="0" Z="0" />
+					<point X="-61.52" Y="0" Z="-61.52" />
+					<point X="0" Y="0" Z="-87" />
+					<point X="61.52" Y="0" Z="-61.52" />
+					<point X="87" Y="0" Z="0" />
+					<point X="61.52" Y="0" Z="61.52" />
+				</translate>
+				<models>
+					<model file='saturnoLua1.3d' texture='textLua1.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="13" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="-84" Y="0" Z="0" />
+					<point X="-59.4" Y="0" Z="-59.4" />
+					<point X="0" Y="0" Z="-84" />
+					<point X="59.4" Y="0" Z="-59.4" />
+					<point X="84" Y="0" Z="0" />
+					<point X="59.4" Y="0" Z="59.4" />
+					<point X="0" Y="0" Z="84" />
+					<point X="-59.4" Y="0" Z="59.4" />
+				</translate>
+				<models>
+					<model file="saturnoLua2.3d" texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="7" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="0" Y="0" Z="-81" />
+					<point X="57.28" Y="0" Z="-57.28" />
+					<point X="81" Y="0" Z="0" />
+					<point X="57.28" Y="0" Z="57.28" />
+					<point X="0" Y="0" Z="81" />
+					<point X="-57.28" Y="0" Z="57.28" />
+					<point X="-81" Y="0" Z="0" />
+					<point X="-57.28" Y="0" Z="-57.28" />
+				</translate>
+				<models>
+					<model file='saturnoLua3.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="17" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="78" Y="0" Z="0" />
+					<point X="55.15" Y="0" Z="55.15" />
+					<point X="0" Y="0" Z="78" />
+					<point X="-55.15" Y="0" Z="55.15" />
+					<point X="-78" Y="0" Z="0" />
+					<point X="-55.15" Y="0" Z="-55.15" />
+					<point X="0" Y="0" Z="-78" />
+					<point X="55.15" Y="0" Z="-55.15" />
+				</translate>
+				<models>
+					<model file='saturnoLua4.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="3" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="-53.03" Y="0" Z="-53.03" />
+					<point X="0" Y="0" Z="-75" />
+					<point X="53.03" Y="0" Z="-53.03" />
+					<point X="75" Y="0" Z="0" />
+					<point X="53.03" Y="0" Z="53.03" />
+					<point X="0" Y="0" Z="75" />
+					<point X="-53.03" Y="0" Z="53.03" />
+					<point X="-75" Y="0" Z="0" />
+				</translate>
+				<models>
+					<model file='saturnoLua5.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
 		</group>
 	</group>
 	<group>
@@ -312,56 +339,61 @@
 			<point X="-550.84" Y="0" Z="0" />
 			<point X="-389.5" Y="0" Z="-389.5" />
 		</translate>
-		<models>
-			<model file='urano.3d' texture='textUrano.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
 		<group>
-			<rotate angle="6" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="26" Y="0" Z="0" />
-				<point X="18.38" Y="0" Z="18.38" />
-				<point X="0" Y="0" Z="26" />
-				<point X="-18.38" Y="0" Z="18.38" />
-				<point X="-26" Y="0" Z="0" />
-				<point X="-18.38" Y="0" Z="-18.38" />
-				<point X="0" Y="0" Z="-26" />
-				<point X="18.38" Y="0" Z="-18.38" />
-			</translate>
-			<models>
-				<model file='uranoLua1.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="14" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="0" Y="0" Z="24" />
-				<point X="-16.97" Y="0" Z="16.97" />
-				<point X="-24" Y="0" Z="0" />
-				<point X="-16.97" Y="0" Z="-16.97" />
-				<point X="0" Y="0" Z="-24" />
-				<point X="16.97" Y="0" Z="-16.97" />
-				<point X="24" Y="0" Z="0" />
-				<point X="16.97" Y="0" Z="16.97" />
-			</translate>
-			<models>
-				<model file='uranoLua2.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
-		</group>
-		<group>
-			<rotate angle="4" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="-22" Y="0" Z="0" />
-				<point X="-15.56" Y="0" Z="-15.56" />
-				<point X="0" Y="0" Z="-22" />
-				<point X="15.56" Y="0" Z="-15.56" />
-				<point X="22" Y="0" Z="0" />
-				<point X="15.56" Y="0" Z="15.56" />
-				<point X="0" Y="0" Z="22" />
-				<point X="-15.56" Y="0" Z="15.56" />
-			</translate>
-			<models>
-				<model file='uranoLua3.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-			</models>
+			<group>
+				<rotate time=8 axisX=0 axisY=1 axisZ=0 />
+				<models>
+					<model file='urano.3d' texture='textUrano.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="6" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="26" Y="0" Z="0" />
+					<point X="18.38" Y="0" Z="18.38" />
+					<point X="0" Y="0" Z="26" />
+					<point X="-18.38" Y="0" Z="18.38" />
+					<point X="-26" Y="0" Z="0" />
+					<point X="-18.38" Y="0" Z="-18.38" />
+					<point X="0" Y="0" Z="-26" />
+					<point X="18.38" Y="0" Z="-18.38" />
+				</translate>
+				<models>
+					<model file='uranoLua1.3d' texture='textLua2.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="14" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="0" Y="0" Z="24" />
+					<point X="-16.97" Y="0" Z="16.97" />
+					<point X="-24" Y="0" Z="0" />
+					<point X="-16.97" Y="0" Z="-16.97" />
+					<point X="0" Y="0" Z="-24" />
+					<point X="16.97" Y="0" Z="-16.97" />
+					<point X="24" Y="0" Z="0" />
+					<point X="16.97" Y="0" Z="16.97" />
+				</translate>
+				<models>
+					<model file='uranoLua2.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="4" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="-22" Y="0" Z="0" />
+					<point X="-15.56" Y="0" Z="-15.56" />
+					<point X="0" Y="0" Z="-22" />
+					<point X="15.56" Y="0" Z="-15.56" />
+					<point X="22" Y="0" Z="0" />
+					<point X="15.56" Y="0" Z="15.56" />
+					<point X="0" Y="0" Z="22" />
+					<point X="-15.56" Y="0" Z="15.56" />
+				</translate>
+				<models>
+					<model file='uranoLua3.3d' texture='textLua4.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
 		</group>
 	</group>
 	<group>
@@ -376,24 +408,29 @@
 			<point X="-460.26" Y="0" Z="-460.26" />
 			<point X="0" Y="0" Z="-650.9" />
 		</translate>
-		<models>
-			<model file='neptuno.3d' texture='textNeptuno.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
-		</models>
 		<group>
-			<rotate angle="8" axisX="1" axisY="0" axisZ="0" />
-			<translate time="10" >
-				<point X="-24" Y="0" Z="0" />
-				<point X="-16.97" Y="0" Z="-16.97" />
-				<point X="0" Y="0" Z="-24" />
-				<point X="16.97" Y="0" Z="-16.97" />
-				<point X="24" Y="0" Z="0" />
-				<point X="16.97" Y="0" Z="16.97" />
-				<point X="0" Y="0" Z="24" />
-				<point X="-16.97" Y="0" Z="16.97" />
-			</translate>
-			<models>
-				<model file='neptunoLua.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.7' ambG='0.7' ambB='0.7'/>
-			</models>
+			<group>
+				<rotate time=8 axisX=0 axisY=1 axisZ=0 />
+				<models>
+					<model file='neptuno.3d' texture='textNeptuno.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.2' ambG='0.2' ambB='0.2'/>
+				</models>
+			</group>
+			<group>
+				<rotate angle="8" axisX="1" axisY="0" axisZ="0" />
+				<translate time="10" >
+					<point X="-24" Y="0" Z="0" />
+					<point X="-16.97" Y="0" Z="-16.97" />
+					<point X="0" Y="0" Z="-24" />
+					<point X="16.97" Y="0" Z="-16.97" />
+					<point X="24" Y="0" Z="0" />
+					<point X="16.97" Y="0" Z="16.97" />
+					<point X="0" Y="0" Z="24" />
+					<point X="-16.97" Y="0" Z="16.97" />
+				</translate>
+				<models>
+					<model file='neptunoLua.3d' texture='textLua3.jpg' diffR='1.0' diffG='1.0' diffB='1.0' ambR='0.7' ambG='0.7' ambB='0.7'/>
+				</models>
+			</group>
 		</group>
 	</group>
 	<group>
