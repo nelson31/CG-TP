@@ -26,14 +26,18 @@ using std::vector;
 /*Nome do Ficheiro XML*/
 const char* FILE_XML_NAME = "SistemaSolar.xml";
 
-// VARIAVEIS GLOBAIS
-float varx = -1000, vary = 250, varz = 0;
+int camera_mode = 0;
 
-// Camera 
-float raio = 1000, alfa = -90, beta = 20;
+// First Person Camera
+float px = 0.0f, py = 200.0f, pz = 500.0f;
+float lx = 0.0f, ly = 199.5f, lz = 499.0f;
+float d[3];
+int startX, startY, tracking = 0;
 
-// Ultimo x e y lidos do ecra
-int lastX, lastY;
+// Explorer Camera
+float camX = 0.0f, camY = 0.0f, camZ = 500.0f;
+
+float alfa = 180.0f, beta = -27.0f, raio = 500;
 
 /**
 Conjuntos de grupos a serem 
@@ -324,9 +328,9 @@ void changeSize(int w, int h) {
 
 
 void sphericalToCartesian() {
-	varx = raio * sin(alfa * 3.14 / 180.0) * cos(beta * 3.14 / 180.0);
-	varz = raio * cos(alfa * 3.14 / 180.0) * cos(beta * 3.14 / 180.0);
-	vary = raio * sin(beta * 3.14 / 180.0);
+	camX = raio * sin(alfa * 3.14 / 180.0) * cos(beta * 3.14 / 180.0);
+	camY = raio * cos(alfa * 3.14 / 180.0) * cos(beta * 3.14 / 180.0);
+	camZ = raio * sin(beta * 3.14 / 180.0);
 }
 
 /**
@@ -1298,9 +1302,16 @@ void renderScene(void) {
 
 	// set the camera
 	glLoadIdentity();
-	gluLookAt(varx, vary, varz, // camera position
-		0.0, 0.0, 0.0,  // look at point
-		0.0f, 1.0f, 0.0f);  // “up vector” (0.0f, 1.0f, 0.0f)
+	if (camera_mode == 0) {
+		gluLookAt(px, py, pz,
+			lx, ly, lz,
+			0.0f, 1.0f, 0.0f);
+	}
+	else {
+		gluLookAt(camX, camY, camZ,
+			0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f);
+	}
 
 	// Scene Design
 	reposicionaModels(a);
@@ -1311,58 +1322,191 @@ void renderScene(void) {
 	a += 0.0001*deltaTime;
 }
 
-/**
-Função que reaje à interação do utilizador com o teclado
-*/
+
 void processKeys(unsigned char c, int xx, int yy) {
 
-	switch (c) {
+	// put code to process regular keys in here
 
+	float k = 1.8f;
+
+	float r[3];
+	float up[3] = { 0.0f,1.0f,0.0f };
+
+	d[0] = lx - px;
+	d[1] = ly - py; 
+	d[2] = lz - pz;
+	normalize(d);
+
+	if (camera_mode == 0) {
+		switch (c)
+		{
+		case 'w':
+			px += k * d[0];
+			py += k * d[1];
+			pz += k * d[2];
+			lx += k * d[0];
+			ly += k * d[1];
+			lz += k * d[2];
+			break;
+		case 's':
+			px -= k * d[0];
+			py -= k * d[1];
+			pz -= k * d[2];
+			lx -= k * d[0];
+			ly -= k * d[1];
+			lz -= k * d[2];
+			break;
+		case 'a':
+			// Produto vetorial (r = d x up;)
+			cross(d, up, r);
+			px -= k * r[0];
+			py -= k * r[1];
+			pz -= k * r[2];
+			lx -= k * r[0];
+			ly -= k * r[1];
+			lz -= k * r[2];
+			break;
+		case 'd':
+			// Produto vetorial(r = d x up;)
+			cross(d, up, r);
+			px += k * r[0];
+			py += k * r[1];
+			pz += k * r[2];
+			lx += k * r[0];
+			ly += k * r[1];
+			lz += k * r[2];
+			break;
 		case 'r':
 			showRotas = !showRotas;
 			break;
-
-		default :
-			break;
+		}
 	}
+	else {
+		switch (c)
+		{
+		case 'r':
+			showRotas = !showRotas;
+			break;
+		}
+	}
+	glutPostRedisplay();
 }
 
 
 void processSpecialKeys(int key, int xx, int yy) {
 
-	// Process special keys
+	// put code to process special keys in here
 
+	if ( camera_mode == 0 ) {
+		switch (key)
+		{
+		case GLUT_KEY_UP:
+			beta += (float)2.5f;
+			if (beta > 85.0)
+				beta = 85.0;
+			else if (beta < -85.0)
+				beta = -85.0;
+			break;
+		case GLUT_KEY_DOWN:
+			beta -= (float)2.5f;
+			if (beta > 85.0)
+				beta = 85.0;
+			else if (beta < -85.0)
+				beta = -85.0;
+			break;
+		case GLUT_KEY_LEFT:
+			alfa += (float)2.5f;
+			break;
+		case GLUT_KEY_RIGHT:
+			alfa -= (float)2.5f;
+			break;
+		}
+
+		lx = px + cos(beta * 3.14 / 180.0) * sin(alfa * 3.14 / 180.0);
+		ly = py + sin(beta * 3.14 / 180.0);
+		lz = pz + cos(beta * 3.14 / 180.0) * cos(alfa * 3.14 / 180.0);
+	}
 	switch (key)
 	{
-	case GLUT_KEY_UP:
-		beta += (float)1.0;
-		if (beta > 85.0)
-			beta = 85.0;
+	case GLUT_KEY_F1:
+		// First Person Camera
+		camera_mode = 0;
 		break;
-	case GLUT_KEY_DOWN:
-		beta -= (float)1.0;
-		if (beta < -85.0)
-			beta = -85.0;
-		break;
-	case GLUT_KEY_LEFT:
-		alfa -= (float)1.0;
-		break;
-	case GLUT_KEY_RIGHT:
-		alfa += (float)1.0;
-		break;
-	case GLUT_KEY_PAGE_UP:
-		raio -= 10;
-		if (raio < 150)
-			raio = 150;
-		break;
-	case GLUT_KEY_PAGE_DOWN:
-		raio += 10;
-		break;
-	default:
-		break;
+	case GLUT_KEY_F2:
+		// Explorer Camera
+		camera_mode = 1;
+		alfa = 0.0f;
+		beta = 0.0f;
 	}
+	glutPostRedisplay();
+}
 
-	sphericalToCartesian();
+void processMouseButtons(int button, int state, int xx, int yy)
+{
+	if (camera_mode == 1) {
+		if (state == GLUT_DOWN) {
+			startX = xx;
+			startY = yy;
+			if (button == GLUT_LEFT_BUTTON)
+				tracking = 1;
+			else if (button == GLUT_RIGHT_BUTTON)
+				tracking = 2;
+		}
+		else if (state == GLUT_UP) {
+			if (tracking == 1) {
+				alfa += (xx - startX);
+				beta += (yy - startY);
+			}
+			else if (tracking == 2) {
+
+				raio -= yy - startY;
+				if (raio < 160)
+					raio = 160.0;
+			}
+			tracking = 0;
+		}
+	}
+}
+
+
+void processMouseMotion(int xx, int yy)
+{
+
+	int deltaX, deltaY;
+	int alphaAux, betaAux;
+	int rAux;
+
+	if (!tracking)
+		return;
+
+	deltaX = xx - startX;
+	deltaY = yy - startY;
+	if (camera_mode == 1) {
+		if (tracking == 1) {
+
+
+			alphaAux = alfa + deltaX;
+			betaAux = beta + deltaY;
+
+			if (betaAux > 85.0)
+				betaAux = 85.0;
+			else if (betaAux < -85.0)
+				betaAux = -85.0;
+
+			rAux = raio;
+		}
+		else if (tracking == 2) {
+
+			alphaAux = alfa;
+			betaAux = beta;
+			rAux = raio - deltaY;
+			if (rAux < 160)
+				rAux = 160;
+		}
+		camX = rAux * sin(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
+		camZ = rAux * cos(alphaAux * 3.14 / 180.0) * cos(betaAux * 3.14 / 180.0);
+		camY = rAux * sin(betaAux * 3.14 / 180.0);
+	}
 
 	glutPostRedisplay();
 }
@@ -1404,6 +1548,8 @@ int main(int argc, char **argv) {
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
 	glutSpecialFunc(processSpecialKeys);
+	glutMouseFunc(processMouseButtons);
+	glutMotionFunc(processMouseMotion);
 
 //  OpenGL settings
 	glEnable(GL_DEPTH_TEST);
