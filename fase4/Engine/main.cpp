@@ -41,6 +41,7 @@ int startX, startY, tracking = 0;
 float camX = 0.0f, camY = 0.0f, camZ = 500.0f;
 
 float alfa = 180.0f, beta = -27.0f, raio = 500;
+float prevAlpha = 0.0f, prevBeta = 0.0f, prevCam = 1;
 
 /**
 Conjuntos de grupos a serem 
@@ -1547,6 +1548,7 @@ void releaseKeys(unsigned char c, int xx, int yy) {
 
 void processSpecialKeys(int key, int xx, int yy) {
 
+	int aux;
 	// put code to process special keys in here
 
 	if ( camera_mode == 0 ) {
@@ -1570,13 +1572,21 @@ void processSpecialKeys(int key, int xx, int yy) {
 	{
 	case GLUT_KEY_F1:
 		// First Person Camera
-		camera_mode = 0;
+		if (prevCam == 0) {
+			camera_mode = 0;
+			prevCam = 1;
+			aux = prevAlpha; prevAlpha = alfa; alfa = aux;
+			aux = prevBeta; prevBeta = beta; beta = aux;
+		}
 		break;
 	case GLUT_KEY_F2:
 		// Explorer Camera
-		camera_mode = 1;
-		alfa = 0.0f;
-		beta = 0.0f;
+		if (prevCam == 1) {
+			camera_mode = 1;
+			prevCam = 0;
+			aux = prevAlpha; prevAlpha = alfa; alfa = aux;
+			aux = prevBeta; prevBeta = beta; beta = aux;
+		}
 	}
 	glutPostRedisplay();
 }
