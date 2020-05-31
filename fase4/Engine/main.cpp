@@ -542,7 +542,7 @@ void processaModels(TiXmlElement* element, Group g) {
 			if (subelement->Attribute("texture") != NULL) {
 				/* Carregamos a imagem da texture */
 				id = loadTexture(subelement->Attribute("texture"));
-				printf("Nova imagem de textura carregada: %s\n", subelement->Attribute("texture"));
+				//printf("Nova imagem de textura carregada: %s\n", subelement->Attribute("texture"));
 				/* Incrementamos ao número de models que 
 				possuem textura */
 				textureModels++;
@@ -1559,7 +1559,12 @@ informações no ecrã
 */
 void printInfo() {
 
-	printf("Press 'r' to switch the orbits' lines off...");
+	printf("\n---------------------ENGINE ACTIONS------------------------\n");
+	printf("Press 'r' to switch the orbits' lines off...\n");
+	printf("Press 'f' to freeze al the dynamic transformations\n");
+	printf("Press 'F1' to switch to FPS camera\n");
+	printf("Press 'F2' to switch to explorer camera\n");
+	printf("-----------------------------------------------------------\n");
 }
 
 
