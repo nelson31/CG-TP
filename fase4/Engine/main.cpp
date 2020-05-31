@@ -812,13 +812,114 @@ void processaLights(TiXmlElement* element) {
 }
 
 
+bool validaModels(TiXmlElement* element) {
+
+	TiXmlNode* ele = NULL;
+	bool ret = true;
+	for (int j = 0; (ele = element->IterateChildren(ele)) && ret; j++) {
+		/* Caso exista uma tag que não seja model o
+		ficheiro xml está errado */
+		if (strcmp(ele->ToElement()->Value(), "model"))
+			ret = false;
+	}
+	return ret;
+}
+
+/**
+Função que valida um
+element group
+*/
+bool validaGroup(TiXmlElement* element) {
+
+	bool ret = true;
+	TiXmlNode* ele = NULL;
+	int translates, rotates, scales, models;
+	translates = rotates = scales = models = 0;
+	for (int j = 0; (ele = element->IterateChildren(ele)) && ret; j++) {
+		/* caso haja uma tag dentro sem ser light devolvemos erro */
+		if (!strcmp(ele->ToElement()->Value(), "translate"))
+			translates++;
+		else if (!strcmp(ele->ToElement()->Value(), "rotate"))
+			rotates++;
+		else if (!strcmp(ele->ToElement()->Value(), "scale"))
+			scales++;
+		else if (!strcmp(ele->ToElement()->Value(), "models")) {
+			models++;
+			ret = ret && validaModels(ele->ToElement());
+		}
+		else if (!strcmp(ele->ToElement()->Value(), "group")) {
+			ret = ret && validaGroup(ele->ToElement());
+		}
+		else
+			ret = false;
+	}
+	/* Se ao chegar aqui estiver tudo bem mas
+	se existir mais que 1 operação do mesmo tipo
+	retornamos erro */
+	if (ret && (translates > 1 || rotates > 1 || scales > 1 || models > 1))
+		ret = false;
+	return ret;
+}
+
+/**
+Função que valida um element do tipo Lights
+*/
+bool validaLights(TiXmlElement* element) {
+
+	int count = 0;
+	bool ret = true;
+	TiXmlNode* ele = NULL;
+	for (int j = 0; (ele = element->IterateChildren(ele)) && ret; j++) {
+		/* caso haja uma tag dentro sem ser light devolvemos erro */
+		if (strcmp(ele->ToElement()->Value(), "light"))
+			ret = false;
+		count++;
+	}
+	/* Caso esteja tudo bem até ao momento e
+	haja mais que 8 luzes retornamos erro */
+	if (count > 8 && ret)
+		ret = false;
+	return ret;
+}
+
+/**
+Função utilizada para reconhecer um ficheiro
+de xml válido para o engine
+*/
+bool validaXML(TiXmlDocument doc) {
+
+	int n_lights_ele = 0;
+	TiXmlNode* ele = NULL;
+	bool ret = true;
+	/* Lemos o elemento scene */
+	TiXmlElement* element = doc.FirstChildElement("scene");
+	/* Se não existir tag scene o
+	ficheiro não é válido */
+	if (element == NULL)
+		ret = false;
+	for (int j = 0; (ele = element->IterateChildren(ele)) && ret; j++) {
+		/* Lemos o elemento "lights" */
+		if (!strcmp(ele->ToElement()->Value(), "lights")) {
+			n_lights_ele++;
+			ret = ret && validaLights(ele->ToElement());
+		}
+		else if (!strcmp(ele->ToElement()->Value(), "group"))
+			ret = ret && validaGroup(ele->ToElement());
+	}
+	/* Se houver mais que um element lights 
+	o ficheiro está errado */
+	if (ret && n_lights_ele > 1)
+		ret = !ret;
+	return ret;
+}
+
 /**
  * Funcao que carrega o nome do ficheiro que se pretende reproduzir a partir do ficheiro XML
  * SistemaSolar.xml. Para isso recorreu-se ao uso da biblioteca de funcoes C++ 'TinyXML' de modo a
  * se efetuar o parse do ficheiro xml para se retirar o nome do ficheiro que contem as coordenadas
  * dos vários vértices que compoe a figura.
 */
-void loadFile() {
+bool loadFile() {
 
 	lights = new vector<float>();
 	/* Inicializamos a 
@@ -829,26 +930,36 @@ void loadFile() {
 	/* Carregamos o ficheiro xml 
 	para a variável acima */
 	doc.LoadFile(FILE_XML_NAME);
-
 	TiXmlHandle docH(&doc);
-	/* Variável para iterar as 
-	tags do elemento */
-	TiXmlNode* ele = NULL;
+	/* Se o xml for válido vamos processá-lo 
+	para desenhar */
+	if (validaXML(doc)) {
 
-	/* Lemos o elemento scene */
-	TiXmlElement* element = doc.FirstChildElement("scene");
-	TiXmlElement* lights;
-	ele = NULL;
-	/*
-	Retirar os nomes do XML e carregar os 
-	ficheiros respetivos para as devidas 
-	estruturas de dados
-	*/
-	for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
-		/* Lemos o elemento "lights" */
-		if(!strcmp(ele->ToElement()->Value(),"lights"))
-			processaLights(ele->ToElement());
-		processaGroup(ele->ToElement(),NULL,NULL,NULL,0);
+		printf("> XML file correct...\n> Starting its loading\n");
+		/* Variável para iterar as
+		tags do elemento */
+		TiXmlNode* ele = NULL;
+
+		/* Lemos o elemento scene */
+		TiXmlElement* element = doc.FirstChildElement("scene");
+		TiXmlElement* lights;
+		ele = NULL;
+		/*
+		Retirar os nomes do XML e carregar os
+		ficheiros respetivos para as devidas
+		estruturas de dados
+		*/
+		for (int j = 0; ((ele = element->IterateChildren(ele))); j++) {
+			/* Lemos o elemento "lights" */
+			if (!strcmp(ele->ToElement()->Value(), "lights"))
+				processaLights(ele->ToElement());
+			processaGroup(ele->ToElement(), NULL, NULL, NULL, 0);
+		}
+		return true;
+	}
+	else {
+		printf("> [ERROR] XML invalid format...\n");
+		return false;
 	}
 }
 
@@ -1560,10 +1671,10 @@ informações no ecrã
 void printInfo() {
 
 	printf("\n---------------------ENGINE ACTIONS------------------------\n");
-	printf("Press 'r' to switch the orbits' lines off...\n");
-	printf("Press 'f' to freeze al the dynamic transformations\n");
-	printf("Press 'F1' to switch to FPS camera\n");
-	printf("Press 'F2' to switch to explorer camera\n");
+	printf("> Press 'r' to switch the orbits' lines off...\n");
+	printf("> Press 'f' to freeze al the dynamic transformations\n");
+	printf("> Press 'F1' to switch to FPS camera\n");
+	printf("> Press 'F2' to switch to explorer camera\n");
 	printf("-----------------------------------------------------------\n");
 }
 
@@ -1610,18 +1721,21 @@ int main(int argc, char **argv) {
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 // Prepare the scene to draw
-	loadFile();
+	/* Se o ficheiro for válido preparamos 
+	tudo e desenhamos */
+	if (loadFile()) {
 
-	//printOpsLG(lg);
+		//printOpsLG(lg);
 
-	size = numGroups(lg);
+		size = numGroups(lg);
 
-	prepareScene();
+		prepareScene();
 
-	printInfo();
+		printInfo();
 
-// enter GLUT's main cycle
-	glutMainLoop();
+		// enter GLUT's main cycle
+		glutMainLoop();
+	}
 
 	return 0;
 }
