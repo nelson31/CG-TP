@@ -29,6 +29,9 @@ const char* FILE_XML_NAME = "SistemaSolar.xml";
 int camera_mode = 0;
 
 // First Person Camera
+float deltaAlpha = 0.0f, deltaBeta = 0.0f;
+float deltaPos = 0.0f, deltaLeftRight = 0.0f;
+
 float px = 0.0f, py = 200.0f, pz = 500.0f;
 float lx = 0.0f, ly = 199.5f, lz = 499.0f;
 float d[3];
@@ -84,6 +87,12 @@ Variável que guarda o número de catmoll-rom
 points em cada operação de cada group
 */
 float** numPoints;
+
+/**
+Variável que nos permite para o movimento 
+de rotação dos planetas
+*/
+bool freeze = false;
 
 /**
 Variáveis que possibilitam a adição do efeito 
@@ -1191,7 +1200,6 @@ void reposicionaModels(float gt) {
 	for (int i = 0; i < numLights; i++) {
 		lightPosition = getLightPosition(i);
 		putLight(i, lightPosition);
-		//printf("Vou colocar a light nº%d na posição (%f, %f, %f)\n", i, lightPosition[0], lightPosition[1], lightPosition[2]);
 		free(lightPosition);
 	}
 	/* Percorremos cada um dos groups */
@@ -1262,8 +1270,6 @@ void reposicionaModels(float gt) {
 			/* Estamos perante um model que possui 
 			um textura associada */
 			if (hasTexture(group_models->at(j))) {
-				float white[4] = { 1,1,1,1 };
-				//glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
 				/* Associamos a respetiva imagem ao model */
 				glBindTexture(GL_TEXTURE_2D, getTextureId(group_models->at(j)));
 
@@ -1285,6 +1291,42 @@ void reposicionaModels(float gt) {
 		/* Fazemos pop da matrix */
 		glPopMatrix();
 	}
+}
+
+void computeMove() {
+
+	float k = 1.8f;
+
+	float r[3];
+	float up[3] = { 0.0f,1.0f,0.0f };
+
+	d[0] = lx - px;
+	d[1] = ly - py;
+	d[2] = lz - pz;
+	normalize(d);
+
+	cross(d, up, r);
+
+	px += k * d[0] * deltaPos + k * r[0] * deltaLeftRight;
+	py += k * d[1] * deltaPos + k * r[1] * deltaLeftRight;
+	pz += k * d[2] * deltaPos + k * r[2] * deltaLeftRight;
+	lx += k * d[0] * deltaPos + k * r[0] * deltaLeftRight;
+	ly += k * d[1] * deltaPos + k * r[1] * deltaLeftRight;
+	lz += k * d[2] * deltaPos + k * r[2] * deltaLeftRight;
+}
+
+void computeAlphaBeta() {
+
+	alfa += deltaAlpha;
+	beta += deltaBeta;
+	if (beta > 85.0)
+		beta = 85.0;
+	else if (beta < -85.0)
+		beta = -85.0;
+	/* No final atualizamos a direção do olhar */
+	lx = px + cos(beta * 3.14 / 180.0) * sin(alfa * 3.14 / 180.0);
+	ly = py + sin(beta * 3.14 / 180.0);
+	lz = pz + cos(beta * 3.14 / 180.0) * cos(alfa * 3.14 / 180.0);
 }
 
 /**
@@ -1313,13 +1355,18 @@ void renderScene(void) {
 			0.0f, 1.0f, 0.0f);
 	}
 
+	computeMove();
+
+	computeAlphaBeta();
+
 	// Scene Design
 	reposicionaModels(a);
 
 	// End of frame
 	glutSwapBuffers();
 
-	a += 0.0001*deltaTime;
+	if(!freeze)
+		a += 0.0001*deltaTime;
 }
 
 
@@ -1341,43 +1388,23 @@ void processKeys(unsigned char c, int xx, int yy) {
 		switch (c)
 		{
 		case 'w':
-			px += k * d[0];
-			py += k * d[1];
-			pz += k * d[2];
-			lx += k * d[0];
-			ly += k * d[1];
-			lz += k * d[2];
+			deltaPos = 1.0f;
 			break;
 		case 's':
-			px -= k * d[0];
-			py -= k * d[1];
-			pz -= k * d[2];
-			lx -= k * d[0];
-			ly -= k * d[1];
-			lz -= k * d[2];
+			deltaPos = -1.0f;
 			break;
 		case 'a':
-			// Produto vetorial (r = d x up;)
-			cross(d, up, r);
-			px -= k * r[0];
-			py -= k * r[1];
-			pz -= k * r[2];
-			lx -= k * r[0];
-			ly -= k * r[1];
-			lz -= k * r[2];
+			deltaLeftRight = -1.0f;
 			break;
 		case 'd':
 			// Produto vetorial(r = d x up;)
-			cross(d, up, r);
-			px += k * r[0];
-			py += k * r[1];
-			pz += k * r[2];
-			lx += k * r[0];
-			ly += k * r[1];
-			lz += k * r[2];
+			deltaLeftRight = 1.0f;
 			break;
 		case 'r':
 			showRotas = !showRotas;
+			break;
+		case 'f':
+			freeze = !freeze;
 			break;
 		}
 	}
@@ -1387,11 +1414,25 @@ void processKeys(unsigned char c, int xx, int yy) {
 		case 'r':
 			showRotas = !showRotas;
 			break;
+		case 'f':
+			freeze = !freeze;
 		}
 	}
 	glutPostRedisplay();
 }
 
+void releaseKeys(unsigned char c, int xx, int yy) {
+
+	if (camera_mode == 0) {
+		switch (c)
+		{
+			case 'w': deltaPos = 0.0f; break;
+			case 's': deltaPos = 0.0f; break;
+			case 'a': deltaLeftRight = 0.0f; break;
+			case 'd': deltaLeftRight = 0.0f; break;
+		}
+	}
+}
 
 void processSpecialKeys(int key, int xx, int yy) {
 
@@ -1401,30 +1442,18 @@ void processSpecialKeys(int key, int xx, int yy) {
 		switch (key)
 		{
 		case GLUT_KEY_UP:
-			beta += (float)2.5f;
-			if (beta > 85.0)
-				beta = 85.0;
-			else if (beta < -85.0)
-				beta = -85.0;
+			deltaBeta = 0.8f;
 			break;
 		case GLUT_KEY_DOWN:
-			beta -= (float)2.5f;
-			if (beta > 85.0)
-				beta = 85.0;
-			else if (beta < -85.0)
-				beta = -85.0;
+			deltaBeta = -0.8f;
 			break;
 		case GLUT_KEY_LEFT:
-			alfa += (float)2.5f;
+			deltaAlpha = 0.8f;
 			break;
 		case GLUT_KEY_RIGHT:
-			alfa -= (float)2.5f;
+			deltaAlpha = -0.8f;
 			break;
 		}
-
-		lx = px + cos(beta * 3.14 / 180.0) * sin(alfa * 3.14 / 180.0);
-		ly = py + sin(beta * 3.14 / 180.0);
-		lz = pz + cos(beta * 3.14 / 180.0) * cos(alfa * 3.14 / 180.0);
 	}
 	switch (key)
 	{
@@ -1439,6 +1468,19 @@ void processSpecialKeys(int key, int xx, int yy) {
 		beta = 0.0f;
 	}
 	glutPostRedisplay();
+}
+
+void releaseSpecialKeys(int key, int xx, int yy) {
+
+	if (camera_mode == 0) {
+		switch (key)
+		{
+			case GLUT_KEY_UP: deltaBeta = 0.0f; break;
+			case GLUT_KEY_DOWN: deltaBeta = 0.0f; break;
+			case GLUT_KEY_LEFT: deltaAlpha = 0.0f; break;
+			case GLUT_KEY_RIGHT: deltaAlpha = 0.0f; break;
+		}
+	}
 }
 
 void processMouseButtons(int button, int state, int xx, int yy)
@@ -1547,7 +1589,9 @@ int main(int argc, char **argv) {
 	
 // Callback registration for keyboard processing
 	glutKeyboardFunc(processKeys);
+	glutKeyboardUpFunc(releaseKeys);
 	glutSpecialFunc(processSpecialKeys);
+	glutSpecialUpFunc(releaseSpecialKeys);
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
 
