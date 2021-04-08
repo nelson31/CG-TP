@@ -1,2 +1,2 @@
 # CG-TP
-Trabalho Prático de Computação Gráfica!
+**Trabalho Prático e guiões das aulas práticas de Computação Gráfica!**
